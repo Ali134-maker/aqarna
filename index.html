@@ -1,0 +1,1490 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#F4F6F8">
+<title>خيارنا عقارنا | كل ما يخص السكن في ليبيا</title>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/png" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="خيارنا عقارنا">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Readex+Pro:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F4F6F8;--surface:#FFFFFF;--surface2:#EEF2F5;--ink:#0F1B24;--muted:#5E6E78;--line:#E1E7EC;
+  --brand:#0A7EA4;--brand-soft:#E3F2F7;--on-brand:#FFFFFF;--heart:#E5484D;--gold:#B7791F;
+  --ok:#23845A;--idc:#2563C9;--agent:#B7791F;--none:#71818B;--danger:#D13F3A;
+  --glass:rgba(255,255,255,.78);--glass-line:rgba(15,27,36,.08);
+  --shadow:0 10px 30px -12px rgba(15,27,36,.18);--shadow-s:0 2px 8px rgba(15,27,36,.06);
+  --font:"Readex Pro",system-ui,"Segoe UI",Tahoma,sans-serif;
+  --ease:cubic-bezier(.2,.8,.2,1);
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0B1117;--surface:#121A22;--surface2:#19232D;--ink:#E8EEF2;--muted:#93A3AE;--line:#22303B;
+  --brand:#38B6D8;--brand-soft:#123342;--on-brand:#04131A;--heart:#FF6B6F;--gold:#E0A84A;
+  --ok:#4CC38A;--idc:#6EA8FE;--agent:#E0A84A;--none:#8B9BA5;--danger:#FF6B6F;
+  --glass:rgba(18,26,34,.78);--glass-line:rgba(255,255,255,.08);--shadow:0 10px 30px -12px rgba(0,0,0,.6);--shadow-s:none;color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0B1117;--surface:#121A22;--surface2:#19232D;--ink:#E8EEF2;--muted:#93A3AE;--line:#22303B;
+  --brand:#38B6D8;--brand-soft:#123342;--on-brand:#04131A;--heart:#FF6B6F;--gold:#E0A84A;
+  --ok:#4CC38A;--idc:#6EA8FE;--agent:#E0A84A;--none:#8B9BA5;--danger:#FF6B6F;
+  --glass:rgba(18,26,34,.78);--glass-line:rgba(255,255,255,.08);--shadow:0 10px 30px -12px rgba(0,0,0,.6);--shadow-s:none;color-scheme:dark}
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*::before,*::after{box-sizing:inherit}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);font-size:15px;line-height:1.6;-webkit-tap-highlight-color:transparent;-webkit-font-smoothing:antialiased}
+body.locked{overflow:hidden}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer;transition:transform .15s var(--ease),background-color .2s,color .2s}
+button:active{transform:scale(.97)}
+svg{max-width:100%}
+:focus-visible{outline:2px solid var(--brand);outline-offset:2px}
+h1,h2,h3{margin:0;font-weight:600;line-height:1.3}
+.wrap{max-width:1120px;margin:0 auto;padding:0 18px}
+.muted{color:var(--muted)}
+.ico{width:20px;height:20px;flex:0 0 auto}
+
+/* Header */
+.top{display:flex;align-items:center;justify-content:space-between;padding:14px 0 6px}
+.hello{font-size:13.5px;color:var(--muted)}
+.brand{display:flex;align-items:center;gap:8px;font-size:21px;font-weight:700;letter-spacing:-.2px}
+.logo{width:34px;height:34px;border-radius:11px;background:var(--brand);color:var(--on-brand);display:grid;place-items:center}
+.logo svg{width:20px;height:20px}
+.round{width:42px;height:42px;border-radius:50%;border:1px solid var(--line);background:var(--surface);display:grid;place-items:center}
+.round svg{width:20px;height:20px}
+.headline{font-size:clamp(26px,7vw,38px);font-weight:600;letter-spacing:-.5px;margin:10px 0 14px;max-width:18ch}
+.demo{font-size:12px;color:var(--muted);background:var(--surface2);border-radius:999px;padding:3px 12px;display:inline-block;margin-top:4px}
+
+/* Search pill */
+.search-pill{width:100%;display:flex;align-items:center;gap:10px;background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:8px 8px 8px 14px;box-shadow:var(--shadow-s);text-align:start}
+.search-pill .spark{width:38px;height:38px;border-radius:12px;background:var(--brand-soft);color:var(--brand);display:grid;place-items:center;flex:0 0 auto}
+.search-pill .txt{flex:1;min-width:0}
+.search-pill b{display:block;font-weight:500;font-size:15px}
+.search-pill small{display:block;color:var(--muted);font-size:12.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.search-pill .go{width:40px;height:40px;border-radius:12px;background:var(--brand);color:var(--on-brand);display:grid;place-items:center}
+.search-pill:active{transform:scale(.99)}
+
+/* Segmented */
+.seg{display:flex;background:var(--surface2);border-radius:14px;padding:4px;margin:16px 0 4px;overflow-x:auto;scrollbar-width:none}
+.seg::-webkit-scrollbar{display:none}
+.seg button{flex:1;border:0;background:transparent;border-radius:11px;padding:8px 12px;font-size:14px;font-weight:500;color:var(--muted);white-space:nowrap}
+.seg button[aria-pressed="true"]{background:var(--surface);color:var(--ink);box-shadow:var(--shadow-s)}
+
+/* Categories */
+.cats{display:flex;gap:10px;overflow-x:auto;padding:12px 0 4px;scrollbar-width:none}
+.cats::-webkit-scrollbar{display:none}
+.cat{border:0;background:none;display:flex;flex-direction:column;align-items:center;gap:6px;min-width:64px;font-size:12.5px;color:var(--muted)}
+.cat span{width:56px;height:56px;border-radius:18px;background:var(--surface);border:1px solid var(--line);display:grid;place-items:center;color:var(--ink)}
+.cat span svg{width:24px;height:24px}
+.cat[aria-pressed="true"]{color:var(--brand);font-weight:600}
+.cat[aria-pressed="true"] span{background:var(--brand);border-color:var(--brand);color:var(--on-brand)}
+
+/* Section headers */
+.sec{display:flex;align-items:baseline;justify-content:space-between;margin:22px 0 10px}
+.sec h2{font-size:19px}
+.link{border:0;background:none;color:var(--brand);font-weight:500;font-size:14px}
+
+/* Carousel */
+.rail{display:grid;grid-auto-flow:column;grid-auto-columns:min(80%,340px);gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:6px;scrollbar-width:none;margin:0 -18px;padding-inline:18px}
+.rail::-webkit-scrollbar{display:none}
+.rail>*{scroll-snap-align:start}
+
+/* Cards */
+.grid{display:grid;grid-template-columns:1fr;gap:18px}
+@media (min-width:640px){.grid{grid-template-columns:1fr 1fr}}
+@media (min-width:1000px){.grid{grid-template-columns:1fr 1fr 1fr}}
+.card{display:flex;flex-direction:column;gap:10px;min-width:0}
+.media{position:relative;border-radius:22px;overflow:hidden;aspect-ratio:4/3;background:var(--surface2)}
+.media svg{width:100%;height:100%;display:block}
+.media .hit{position:absolute;inset:0;border:0;background:transparent;border-radius:22px}
+.media::after{content:"";position:absolute;inset:auto 0 0 0;height:55%;background:linear-gradient(to top,rgba(5,15,22,.72),transparent);pointer-events:none}
+.on-img{position:absolute;z-index:2}
+.glass{background:var(--glass);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid var(--glass-line)}
+.kind-tag{top:12px;right:12px;border-radius:999px;padding:3px 11px;font-size:12.5px;font-weight:500;pointer-events:none}
+.heart{top:10px;left:10px;width:38px;height:38px;border-radius:50%;display:grid;place-items:center;border:0}
+.heart svg{width:19px;height:19px}
+.heart[aria-pressed="true"]{color:var(--heart)}
+.img-price{bottom:12px;right:14px;color:#fff;font-size:20px;font-weight:600;pointer-events:none;text-shadow:0 1px 8px rgba(0,0,0,.3)}
+.img-price small{font-size:13px;font-weight:400;opacity:.9}
+.img-id{bottom:14px;left:14px;color:#fff;font-size:11.5px;opacity:.85;direction:ltr;pointer-events:none}
+.rev{top:12px;left:56px;background:var(--gold);color:#fff;border-radius:999px;padding:2px 10px;font-size:12px}
+.meta{padding:0 4px;display:flex;flex-direction:column;gap:3px}
+.ctitle{border:0;background:none;padding:0;text-align:start;font-weight:600;font-size:15.5px;line-height:1.4}
+.place{font-size:13.5px;color:var(--muted);display:flex;align-items:center;gap:4px}
+.place svg{width:15px;height:15px}
+.specs{display:flex;gap:14px;font-size:13.5px;color:var(--muted);flex-wrap:wrap}
+.specs span{display:inline-flex;align-items:center;gap:4px}
+.specs svg{width:16px;height:16px}
+.row{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;margin-top:2px}
+.vbadge{display:inline-flex;align-items:center;gap:5px;font-size:12.5px;font-weight:500;border-radius:999px;padding:2px 10px 2px 8px}
+.vb-ok{color:var(--ok);background:color-mix(in srgb,var(--ok) 12%,transparent)}
+.vb-idc{color:var(--idc);background:color-mix(in srgb,var(--idc) 12%,transparent)}
+.vb-agent{color:var(--agent);background:color-mix(in srgb,var(--agent) 14%,transparent)}
+.vb-none{color:var(--none);background:color-mix(in srgb,var(--none) 14%,transparent)}
+.vbadge svg{width:14px;height:14px}
+.mini{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:3px 12px;font-size:12.5px}
+.mini[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.insight{font-size:12.5px;color:var(--ok);font-weight:500}
+.reasons{display:flex;gap:6px;flex-wrap:wrap;margin-top:4px}
+.reasons span{font-size:12px;background:var(--brand-soft);color:var(--brand);border-radius:8px;padding:2px 8px}
+.empty{background:var(--surface);border:1px dashed var(--line);border-radius:22px;padding:28px 20px;text-align:center;grid-column:1/-1}
+.empty p{margin:0 0 14px;color:var(--muted)}
+
+/* Skeleton */
+.sk .media,.sk .l{background:linear-gradient(90deg,var(--surface2) 25%,var(--line) 50%,var(--surface2) 75%);background-size:200% 100%;animation:sh 1.1s linear infinite}
+.sk .media::after{display:none}
+.sk .l{height:12px;border-radius:6px;margin:4px}
+@keyframes sh{to{background-position:-200% 0}}
+
+/* Chips */
+.parsed{margin-top:14px;display:none}
+.parsed.show{display:block}
+.parsed-head{font-size:13px;color:var(--muted);margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{display:inline-flex;align-items:center;gap:4px;background:var(--brand-soft);color:var(--brand);border-radius:999px;padding:4px 6px 4px 12px;font-size:13.5px;font-weight:500;animation:pop .3s var(--ease) both}
+.chip button{border:0;background:transparent;color:inherit;width:22px;height:22px;border-radius:50%;display:grid;place-items:center;opacity:.7}
+@keyframes pop{from{opacity:0;transform:scale(.85)}}
+.pnote{font-size:13px;color:var(--gold);margin-top:8px;display:flex;gap:6px}
+.toolbar{display:flex;align-items:center;gap:8px;margin:18px 0 12px}
+.toolbar .count{font-weight:600;font-size:17px;margin-inline-end:auto}
+.toolbar select{border:1px solid var(--line);background:var(--surface);border-radius:12px;padding:7px 10px;font-size:13.5px}
+.pill-btn{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--surface);border-radius:12px;padding:7px 12px;font-size:13.5px}
+.pill-btn svg{width:17px;height:17px}
+
+/* Buttons */
+.btn{border:0;border-radius:14px;padding:12px 18px;font-weight:600;background:var(--brand);color:var(--on-brand);display:inline-flex;align-items:center;justify-content:center;gap:8px}
+.btn.ghost{background:var(--surface2);color:var(--ink)}
+.btn.small{padding:8px 14px;font-size:13.5px;border-radius:12px}
+.btn.danger{background:transparent;color:var(--danger);border:1px solid var(--line)}
+.btn.block{width:100%}
+.btn:disabled{opacity:.4;cursor:not-allowed;transform:none}
+.btn svg{width:18px;height:18px}
+
+/* Views */
+main{padding-bottom:120px}
+.view{display:none}
+.view.active{display:block;animation:fade .25s ease both}
+@keyframes fade{from{opacity:0}}
+.page-title{font-size:26px;letter-spacing:-.3px;margin:18px 0 6px}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:22px;padding:16px;margin-bottom:14px}
+
+/* Map */
+.map-box{background:var(--surface);border:1px solid var(--line);border-radius:24px;overflow:hidden;margin-top:12px}
+.map-box svg{display:block;width:100%;height:auto}
+.pin{cursor:pointer}
+.city-list{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.city-list button{border:1px solid var(--line);background:var(--surface);border-radius:16px;padding:12px 14px;text-align:start;display:flex;justify-content:space-between;align-items:center}
+.city-list b{background:var(--brand-soft);color:var(--brand);border-radius:999px;padding:0 10px;font-size:13px}
+
+/* Forms */
+.field{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}
+.field label{font-size:13.5px;font-weight:500;color:var(--muted)}
+.field input,.field select,.field textarea{border:1px solid var(--line);background:var(--surface2);border-radius:14px;padding:11px 12px;width:100%}
+.field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(--brand);background:var(--surface)}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.toggles{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+.toggles label{position:relative}
+.toggles input{position:absolute;opacity:0;inset:0}
+.toggles span{display:inline-block;border:1px solid var(--line);border-radius:999px;padding:7px 14px;font-size:14px;background:var(--surface)}
+.toggles input:checked+span{background:var(--brand);color:var(--on-brand);border-color:var(--brand)}
+.toggles input:focus-visible+span{outline:2px solid var(--brand);outline-offset:2px}
+.steps{display:flex;gap:6px;margin-bottom:16px}
+.steps span{flex:1;height:5px;border-radius:5px;background:var(--line);transition:background .3s}
+.steps span.on{background:var(--brand)}
+.err{color:var(--danger);font-size:13px;min-height:1.2em;margin-bottom:6px}
+.step-h{font-size:18px;margin-bottom:12px}
+
+/* Tabbar */
+.tabbar{position:fixed;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom,0px));z-index:30;border-radius:24px;box-shadow:var(--shadow);max-width:520px;margin:0 auto}
+.tabbar .in{display:grid;grid-template-columns:repeat(5,1fr);height:66px}
+.tabbar button{border:0;background:transparent;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:11px;color:var(--muted);position:relative}
+.tabbar button svg{width:23px;height:23px}
+.tabbar button[aria-current="page"]{color:var(--brand);font-weight:600}
+.tabbar .plus{width:48px;height:48px;border-radius:16px;background:var(--brand);color:var(--on-brand);display:grid;place-items:center}
+.tabbar .plus svg{width:24px;height:24px}
+.badge{position:absolute;top:9px;right:calc(50% - 21px);background:var(--heart);color:#fff;border-radius:999px;font-size:10.5px;min-width:17px;height:17px;display:grid;place-items:center;padding:0 4px}
+
+/* Compare tray */
+.tray{position:fixed;left:12px;right:12px;bottom:calc(88px + env(safe-area-inset-bottom,0px));z-index:25;border-radius:18px;padding:10px 12px;display:none;align-items:center;gap:10px;max-width:520px;margin:0 auto;box-shadow:var(--shadow)}
+.tray.show{display:flex;animation:up .3s var(--ease) both}
+@keyframes up{from{transform:translateY(20px);opacity:0}}
+
+/* Sheet */
+.sheet{position:fixed;inset:0;z-index:50;display:flex;flex-direction:column;justify-content:flex-end;pointer-events:none}
+.sheet .scrim{position:absolute;inset:0;background:rgba(5,12,18,.5);opacity:0;transition:opacity .3s}
+.sheet-box{position:relative;background:var(--bg);display:flex;flex-direction:column;height:100%;width:100%;transform:translateY(100%);transition:transform .38s var(--ease);padding-top:env(safe-area-inset-top,0px)}
+.sheet.show{pointer-events:auto}
+.sheet.show .scrim{opacity:1}
+.sheet.show .sheet-box{transform:none}
+@media (min-width:760px){.sheet{justify-content:center;padding:24px}.sheet-box{max-width:720px;margin:0 auto;border-radius:26px;height:auto;max-height:100%;overflow:hidden;padding-top:0}}
+.sheet-head{display:flex;align-items:center;gap:10px;padding:10px 14px}
+.sheet-head h2{font-size:18px;flex:1}
+.sheet-head.floating{position:absolute;top:env(safe-area-inset-top,0px);left:0;right:0;z-index:5;justify-content:space-between;pointer-events:none}
+.sheet-head.floating>*{pointer-events:auto}
+.sheet-head.floating h2{display:none}
+.sheet-body{overflow-y:auto;flex:1;overscroll-behavior:contain}
+.sheet-foot{display:flex;align-items:center;gap:10px;padding:12px 16px calc(12px + env(safe-area-inset-bottom,0px));border-top:1px solid var(--line);background:var(--surface)}
+.foot-price{flex:1;font-weight:600;font-size:18px;line-height:1.2}
+.foot-price small{display:block;font-weight:400;font-size:12px;color:var(--muted)}
+@media (prefers-reduced-motion:reduce){.sheet-box,.sheet .scrim,button,.view.active,.chip,.tray.show{transition:none;animation:none}}
+
+/* Detail */
+.gallery{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;position:relative}
+.gallery::-webkit-scrollbar{display:none}
+.gallery svg{flex:0 0 100%;scroll-snap-align:center;aspect-ratio:4/3;height:auto;display:block}
+.gwrap{position:relative}
+.dots{position:absolute;bottom:34px;left:50%;transform:translateX(-50%);display:flex;gap:5px}
+.dots i{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.5);transition:width .2s}
+.dots i.on{background:#fff;width:18px;border-radius:4px}
+.d-in{position:relative;background:var(--bg);border-radius:24px 24px 0 0;margin-top:-22px;padding:20px 18px 24px}
+.d-title{font-size:22px;letter-spacing:-.2px;margin:6px 0 4px}
+.specgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:16px 0}
+.specgrid div{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:10px 12px}
+.specgrid b{display:block;font-size:16px;font-weight:600}
+.specgrid span{font-size:12px;color:var(--muted)}
+.box{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:16px;margin:12px 0}
+.box h3{font-size:16px;margin-bottom:8px}
+.box p{margin:0}
+.feat{display:flex;flex-wrap:wrap;gap:6px}
+.feat span{background:var(--surface2);border-radius:10px;padding:4px 12px;font-size:13.5px}
+.owner{display:flex;align-items:center;gap:12px}
+.avatar{width:50px;height:50px;border-radius:16px;background:var(--brand-soft);color:var(--brand);display:grid;place-items:center;font-size:21px;font-weight:600;flex:0 0 auto}
+.legal{font-size:12.5px;color:var(--muted);margin-top:8px!important}
+.bar{height:8px;border-radius:8px;background:var(--surface2);position:relative;margin:12px 0 4px;overflow:visible}
+.bar i{position:absolute;top:-4px;width:16px;height:16px;border-radius:50%;border:3px solid var(--surface);transform:translateX(50%)}
+.bar-l{display:flex;justify-content:space-between;font-size:12px;color:var(--muted)}
+.actions3{display:flex;gap:8px;flex-wrap:wrap}
+
+/* Calendar */
+.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-top:10px}
+.cal .wd{font-size:12px;color:var(--muted);text-align:center;padding-bottom:2px}
+.cal button{border:0;background:var(--surface2);border-radius:12px;aspect-ratio:1;font-size:14px}
+.cal button:disabled{text-decoration:line-through;opacity:.35;cursor:not-allowed}
+.cal button.sel{background:var(--brand);color:var(--on-brand);font-weight:600}
+.cal button.mid{background:var(--brand-soft);color:var(--brand)}
+.sum{display:flex;justify-content:space-between;font-size:14px;margin-top:10px}
+.sum.total{font-weight:600;font-size:15.5px;border-top:1px solid var(--line);padding-top:8px}
+
+/* AI search */
+.ai{padding:6px 18px 24px}
+.ai-field{display:flex;gap:8px;background:var(--surface);border:1.5px solid var(--brand);border-radius:18px;padding:6px 6px 6px 10px}
+.ai-field textarea{flex:1;border:0;background:transparent;resize:none;padding:8px 6px;min-height:52px;font-size:16px}
+.ai-field textarea:focus{outline:none}
+.ai-field .btn{align-self:flex-end}
+.ai small{display:block;color:var(--muted);margin:10px 2px 18px;font-size:12.5px}
+.ai h3{font-size:14px;color:var(--muted);font-weight:500;margin:6px 0 10px}
+.sugg{display:flex;flex-direction:column;gap:8px}
+.sugg button{border:1px solid var(--line);background:var(--surface);border-radius:14px;padding:12px 14px;text-align:start;display:flex;align-items:center;gap:10px;font-size:14.5px}
+.sugg button svg{width:18px;height:18px;color:var(--muted);flex:0 0 auto}
+.thinking{display:flex;align-items:center;gap:10px;padding:14px 4px;color:var(--brand);font-weight:500}
+.thinking i{width:8px;height:8px;border-radius:50%;background:currentColor;animation:bl 1s infinite}
+.thinking i:nth-child(2){animation-delay:.15s}.thinking i:nth-child(3){animation-delay:.3s}
+@keyframes bl{50%{opacity:.25}}
+
+/* Compare table */
+.tbl-wrap{overflow-x:auto;padding:4px 16px 20px}
+table{border-collapse:separate;border-spacing:0;width:100%;min-width:440px;background:var(--surface);border:1px solid var(--line);border-radius:18px;overflow:hidden}
+th,td{border-bottom:1px solid var(--line);padding:10px 12px;text-align:start;font-size:14px;vertical-align:top}
+tr:last-child th,tr:last-child td{border-bottom:0}
+th{color:var(--muted);font-weight:500;white-space:nowrap}
+.best{color:var(--ok);font-weight:600}
+
+/* Lists */
+.note{display:flex;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}
+.note:last-child{border-bottom:0}
+.note .ic{width:40px;height:40px;border-radius:14px;background:var(--surface2);display:grid;place-items:center;flex:0 0 auto;font-size:18px}
+.note.unread .txt{font-weight:600}
+.note.unread .ic{background:var(--brand-soft)}
+.note time{font-size:12px;color:var(--muted);display:block}
+.srow{display:flex;align-items:center;gap:8px;padding:10px 0;border-bottom:1px solid var(--line)}
+.srow:last-child{border-bottom:0}
+.srow .lbl{flex:1;font-size:14px}
+.mine{display:flex;gap:12px;align-items:center;padding:10px 0;border-bottom:1px solid var(--line)}
+.mine:last-child{border-bottom:0}
+.mine .thumb{width:84px;flex:0 0 auto;border-radius:14px;overflow:hidden}
+.mine .thumb svg{display:block}
+.mine .info{flex:1;min-width:0;font-size:14px}
+.status{font-size:12.5px;font-weight:600}
+
+/* Toast */
+.toast{position:fixed;left:50%;bottom:calc(96px + env(safe-area-inset-bottom,0px));transform:translate(-50%,16px);color:var(--ink);padding:11px 16px;border-radius:16px;z-index:80;opacity:0;pointer-events:none;transition:opacity .25s,transform .25s var(--ease);max-width:calc(100% - 32px);font-size:14px;box-shadow:var(--shadow)}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+
+/* ---- v3: promotions, sponsored, account, chat, admin ---- */
+.promo{top:46px;right:12px;border-radius:999px;padding:2px 10px;font-size:12px;font-weight:600;display:inline-flex;align-items:center;gap:4px;pointer-events:none}
+.promo svg{width:13px;height:13px}
+.promo-featured{background:#F5C451;color:#3A2A05}
+.promo-pinned{background:var(--brand);color:var(--on-brand)}
+.sponsor{grid-column:1/-1;display:flex;align-items:center;gap:14px;background:var(--surface2);border:1px solid var(--line);border-radius:20px;padding:14px;text-align:start;width:100%;position:relative}
+.sponsor .mark{width:54px;height:54px;border-radius:16px;display:grid;place-items:center;flex:0 0 auto;color:#fff;font-weight:700;font-size:20px}
+.sponsor .tx{flex:1;min-width:0}
+.sponsor b{display:block;font-size:15px}
+.sponsor small{display:block;color:var(--muted);font-size:13px;line-height:1.5}
+.sponsor .who{font-size:12px;color:var(--muted);margin-top:2px}
+.sponsor .adl{position:absolute;top:8px;left:10px;font-size:11px;color:var(--muted);border:1px solid var(--line);border-radius:6px;padding:0 6px;background:var(--surface)}
+.sponsor .go{font-size:13px;font-weight:600;color:var(--brand);white-space:nowrap;align-self:flex-end}
+.acc-head{display:flex;align-items:center;gap:14px}
+.acc-head .avatar{width:56px;height:56px;font-size:22px}
+.meter{height:8px;border-radius:99px;background:var(--surface2);overflow:hidden;margin:8px 0 4px}
+.meter i{display:block;height:100%;background:var(--brand);border-radius:99px}
+.meter.full i{background:var(--gold)}
+.plans{display:grid;gap:12px}
+@media (min-width:700px){.plans{grid-template-columns:repeat(3,1fr)}}
+.plan{border:1.5px solid var(--line);border-radius:20px;padding:16px;background:var(--surface);display:flex;flex-direction:column;gap:8px}
+.plan.cur{border-color:var(--brand)}
+.plan h3{font-size:17px}
+.plan .pp{font-size:26px;font-weight:700;letter-spacing:-.5px}
+.plan .pp small{font-size:13px;font-weight:400;color:var(--muted)}
+.plan ul{margin:0;padding:0 18px 0 0;font-size:14px;color:var(--muted);flex:1}
+.plan li{margin:3px 0}
+.opts{display:grid;gap:10px;margin-bottom:14px}
+.opt{position:relative;display:flex;gap:12px;align-items:flex-start;border:1.5px solid var(--line);border-radius:16px;padding:12px 14px;background:var(--surface);cursor:pointer}
+.opt input{position:absolute;opacity:0;inset:0;cursor:pointer}
+.opt .rd{width:20px;height:20px;border-radius:50%;border:2px solid var(--line);flex:0 0 auto;margin-top:2px}
+.opt:has(input:checked){border-color:var(--brand);background:var(--brand-soft)}
+.opt:has(input:checked) .rd{border:6px solid var(--brand)}
+.opt:has(input:focus-visible){outline:2px solid var(--brand);outline-offset:2px}
+.opt:has(input:disabled){opacity:.5;cursor:not-allowed}
+.opt .ot{flex:1}
+.opt b{display:block;font-size:15px}
+.opt small{color:var(--muted);font-size:13px;display:block}
+.opt .price{font-weight:700;white-space:nowrap}
+.paysum{display:flex;justify-content:space-between;align-items:baseline;background:var(--surface2);border-radius:16px;padding:14px 16px;margin-bottom:14px}
+.paysum b{font-size:22px}
+.filebox{display:flex;align-items:center;gap:10px;border:1.5px dashed var(--line);border-radius:16px;padding:14px;margin-bottom:12px;position:relative;background:var(--surface)}
+.filebox input{position:absolute;inset:0;opacity:0;cursor:pointer}
+.filebox .fi{width:42px;height:42px;border-radius:12px;background:var(--surface2);display:grid;place-items:center;flex:0 0 auto}
+.filebox .fi svg{width:22px;height:22px}
+.filebox.done{border-style:solid;border-color:var(--ok)}
+.filebox.done .fi{background:var(--ok);color:#fff}
+.check{display:flex;gap:10px;align-items:flex-start;font-size:14px;margin:6px 0 14px}
+.check input{width:20px;height:20px;accent-color:var(--brand);flex:0 0 auto;margin-top:2px}
+.lock{display:flex;gap:10px;align-items:flex-start;background:var(--surface2);border-radius:14px;padding:12px;font-size:13.5px;color:var(--muted)}
+.lock svg{width:20px;height:20px;flex:0 0 auto;color:var(--brand);margin-top:1px}
+.lock.open svg{color:var(--ok)}
+.chat{display:flex;flex-direction:column;gap:8px;padding:14px 16px 8px;min-height:40vh}
+.msg{max-width:80%;padding:9px 13px;border-radius:18px;font-size:14.5px;line-height:1.55;white-space:pre-wrap;word-wrap:break-word}
+.msg.me{align-self:flex-start;background:var(--brand);color:var(--on-brand);border-bottom-right-radius:6px}
+.msg.them{align-self:flex-end;background:var(--surface2);border-bottom-left-radius:6px}
+.msg time{display:block;font-size:11px;opacity:.7;margin-top:2px}
+.sysmsg{align-self:center;max-width:92%;background:var(--brand-soft);color:var(--ink);border-radius:14px;padding:8px 12px;font-size:13px;text-align:center}
+.chat-in{display:flex;gap:8px;width:100%}
+.chat-in input{flex:1;border:1px solid var(--line);background:var(--surface2);border-radius:14px;padding:11px 12px;min-width:0}
+.tag{display:inline-block;border-radius:999px;padding:1px 10px;font-size:12px;font-weight:600}
+.t-pend{background:#FBEFD5;color:#8A5A0B}
+.t-ok{background:#DDF3E8;color:#17613F}
+.t-no{background:#FBE1E0;color:#9B2C28}
+.t-info{background:var(--brand-soft);color:var(--brand)}
+:root[data-theme="dark"] .t-pend{background:#3A2C12;color:#F1C77A}
+:root[data-theme="dark"] .t-ok{background:#123626;color:#7FDDAE}
+:root[data-theme="dark"] .t-no{background:#3A1817;color:#FF9B98}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .t-pend{background:#3A2C12;color:#F1C77A}:root:not([data-theme="light"]) .t-ok{background:#123626;color:#7FDDAE}:root:not([data-theme="light"]) .t-no{background:#3A1817;color:#FF9B98}}
+.lrow{display:flex;gap:12px;align-items:center;padding:12px 0;border-bottom:1px solid var(--line)}
+.lrow:last-child{border-bottom:0}
+.lrow .li{flex:1;min-width:0}
+.lrow .li b{display:block;font-size:14.5px;font-weight:600}
+.lrow .li span{font-size:13px;color:var(--muted)}
+.lrow .acts{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+.kpis{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin:14px 0}
+@media (min-width:700px){.kpis{grid-template-columns:repeat(4,1fr)}}
+.kpi{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:14px}
+.kpi b{display:block;font-size:26px;font-weight:700;line-height:1.2}
+.kpi span{font-size:13px;color:var(--muted)}
+.kpi.hot b{color:var(--gold)}
+.rev-total{font-size:32px;font-weight:700;letter-spacing:-.6px;margin:2px 0 10px}
+.rev-total small{font-size:15px;font-weight:400;color:var(--muted)}
+.hbar{margin:10px 0}
+.hbar .hl{display:flex;justify-content:space-between;font-size:14px;margin-bottom:4px}
+.hbar .ht{height:10px;background:var(--surface2);border-radius:99px;overflow:hidden}
+.hbar .ht i{display:block;height:100%;border-radius:99px}
+.admin-note{background:var(--surface2);border-radius:14px;padding:10px 14px;font-size:13px;color:var(--muted);margin:6px 0 4px}
+.menu-row{display:flex;align-items:center;gap:12px;width:100%;border:0;background:transparent;padding:13px 0;border-bottom:1px solid var(--line);text-align:start;font-size:15px}
+.menu-row:last-child{border-bottom:0}
+.menu-row .mi{width:40px;height:40px;border-radius:13px;background:var(--surface2);display:grid;place-items:center;flex:0 0 auto}
+.menu-row .mi svg{width:20px;height:20px}
+.menu-row .ml{flex:1}
+.menu-row .ml small{display:block;color:var(--muted);font-size:12.5px}
+.menu-row .cnt{background:var(--brand);color:var(--on-brand);border-radius:99px;font-size:12px;min-width:22px;height:22px;display:grid;place-items:center;padding:0 6px}
+/* price drop */
+.drop{display:inline-flex;align-items:center;gap:4px;font-size:12.5px;font-weight:600;color:var(--ok);background:color-mix(in srgb,var(--ok) 12%,transparent);border-radius:999px;padding:2px 10px;margin-top:6px}
+.was{font-size:13px;color:var(--muted);margin-top:4px}.was s{margin-inline-start:4px}
+/* market */
+.kpis{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.kpi{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:14px}
+.kpi b{display:block;font-size:26px;letter-spacing:-.5px;font-variant-numeric:tabular-nums}
+.kpi span{color:var(--muted);font-size:13px}
+.mkt{width:100%;min-width:0;border-collapse:collapse;font-size:14px;border:0;border-radius:0;background:none}
+.mkt th,.mkt td{padding:10px 5px;white-space:nowrap;border-bottom:1px solid var(--line);text-align:start}
+.mkt th{color:var(--muted);font-weight:500;font-size:12.5px}
+.mkt td.n{font-variant-numeric:tabular-nums}
+.mkt tr:last-child td{border-bottom:0}
+.mkt button{background:none;border:0;color:var(--brand);font:inherit;font-weight:600;padding:0;cursor:pointer}
+@media (min-width:640px){.kpis{grid-template-columns:repeat(4,1fr)}}
+/* form actions stay reachable above the tab bar */
+.form-actions{position:sticky;bottom:calc(90px + env(safe-area-inset-bottom,0px));z-index:20;background:var(--surface);margin:8px -16px -16px;padding:12px 16px 16px;border-radius:0 0 22px 22px;box-shadow:0 -10px 18px -14px rgba(0,0,0,.25)}
+.form-actions .btn{min-height:50px;font-size:16px}
+body.typing .tabbar,body.typing .tray{display:none}
+body.typing .form-actions{bottom:0}
+main.wrap{padding-bottom:calc(150px + env(safe-area-inset-bottom,0px))}
+/* share + location */
+.locbox{display:flex;align-items:center;gap:12px}
+.locbox .lic{width:44px;height:44px;border-radius:14px;background:var(--brand-soft);color:var(--brand);display:grid;place-items:center;flex:0 0 auto}
+.locbox .lic svg{width:22px;height:22px}
+a.btn{text-decoration:none}
+.post{width:100%;min-height:260px;border:1px solid var(--line);background:var(--surface2);border-radius:14px;padding:12px;font:inherit;font-size:14.5px;line-height:1.8;resize:vertical}
+.sharebar{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.sharedbar{background:var(--brand-soft);color:var(--brand);border-radius:14px;padding:10px 14px;font-size:13.5px;margin:10px 0 0;display:flex;gap:8px;align-items:center}
+.inline-btn{border:1px solid var(--line);background:var(--surface);border-radius:12px;padding:8px 12px;font-size:13.5px;display:inline-flex;gap:6px;align-items:center;margin-top:-6px;margin-bottom:12px}
+.inline-btn svg{width:16px;height:16px}
+/* onboarding */
+.ob{position:fixed;inset:0;z-index:90;display:flex;flex-direction:column;background:linear-gradient(160deg,var(--brand) 0%,color-mix(in srgb,var(--brand) 55%,#06222D) 100%);color:#fff;padding:24px 20px calc(24px + env(safe-area-inset-bottom));animation:fade .3s}
+.ob[hidden],.badge[hidden]{display:none}
+.ob .skip{align-self:flex-start;background:rgba(255,255,255,.16);border:0;color:#fff;border-radius:999px;padding:8px 16px;font:inherit;font-size:14px;cursor:pointer}
+.ob .slide{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;max-width:420px;margin:0 auto;animation:up .35s}
+.ob .orb{width:96px;height:96px;border-radius:50%;background:rgba(255,255,255,.16);display:grid;place-items:center;margin-bottom:26px}
+.ob .orb svg{width:44px;height:44px}
+.ob h2{font-size:27px;margin:0 0 10px;letter-spacing:-.3px}
+.ob p{margin:0;font-size:16px;line-height:1.75;opacity:.9}
+.ob .dotsb{display:flex;gap:6px;justify-content:center;margin:0 0 18px}
+.ob .dotsb i{width:8px;height:8px;border-radius:99px;background:rgba(255,255,255,.4);transition:width .25s}
+.ob .dotsb i.on{width:24px;background:#fff}
+.ob .next{width:100%;max-width:420px;margin:0 auto;background:#fff;color:#06323F;border:0;border-radius:16px;padding:15px;font:inherit;font-size:16px;font-weight:700;cursor:pointer}
+@media (prefers-reduced-motion:reduce){.ob,.ob .slide{animation:none}.ob .dotsb i{transition:none}}
+</style>
+</head>
+<body>
+<main class="wrap">
+  <header class="top">
+    <div class="brand"><span class="logo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 11 12 4l8.5 7"/><path d="M5.5 9.5V20h13V9.5"/><path d="m9 14.5 2 2 4-4"/></svg></span>خيارنا عقارنا</div>
+    <span style="display:flex;gap:8px"><button class="round" data-act="nav" data-v="account" aria-label="حسابي"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8.5" r="3.8"/><path d="M4.5 20.5a7.5 7.5 0 0 1 15 0"/></svg></button><button class="round" data-act="theme" aria-label="تبديل الوضع الليلي"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button></span>
+  </header>
+
+  <section class="view active" id="v-home" aria-label="الرئيسية">
+    <span class="demo" id="demoTag">نسخة تجريبية: الإعلانات أمثلة وليست حقيقية</span>
+    <h1 class="headline">أين تريد أن تسكن؟</h1>
+    <button class="search-pill" data-act="ai-open">
+      <span class="spark"><svg class="ico" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l1.8 5.2L19 9l-5.2 1.8L12 16l-1.8-5.2L5 9l5.2-1.8zM19 14l.9 2.1L22 17l-2.1.9L19 20l-.9-2.1L16 17l2.1-.9z"/></svg></span>
+      <span class="txt"><b>ابحث بكلامك</b><small>"شقة في طرابلس 3 غرف أقل من 400 ألف"</small></span>
+      <span class="go"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg></span>
+    </button>
+    <div class="parsed" id="parsed" aria-live="polite"></div>
+    <div class="seg" id="kindTabs" role="group" aria-label="نوع العرض"></div>
+    <div class="cats" id="cats" role="group" aria-label="نوع العقار"></div>
+    <div id="homeBody"></div>
+  </section>
+
+  <section class="view" id="v-map" aria-label="الخريطة">
+    <h2 class="page-title">استكشف السوق</h2>
+    <p class="muted" style="margin:0">اضغط على أي مدينة لعرض عقاراتها.</p>
+    <div class="map-box" id="mapBox"></div>
+    <div class="city-list" id="cityList"></div>
+    <div id="market"></div>
+  </section>
+
+  <section class="view" id="v-add" aria-label="أضف إعلان">
+    <h2 class="page-title">أضف إعلانك</h2>
+    <p class="muted" style="margin:0 0 12px">ثلاث خطوات سريعة، ثم يراجع فريقنا الإعلان قبل نشره.</p>
+    <div class="panel" id="addPanel"></div>
+  </section>
+
+  <section class="view" id="v-saved" aria-label="المحفوظات">
+    <h2 class="page-title">المحفوظات</h2>
+    <div class="sec"><h2>المفضلة</h2></div>
+    <div class="grid" id="favGrid"></div>
+    <div class="sec"><h2>عمليات البحث المحفوظة</h2></div>
+    <div class="panel" id="savedList"></div>
+    <div class="sec"><h2>إعلاناتي</h2></div>
+    <div class="panel" id="mineList"></div>
+  </section>
+
+  <section class="view" id="v-alerts" aria-label="التنبيهات">
+    <h2 class="page-title">التنبيهات</h2>
+    <div class="panel" id="alertList"></div>
+  </section>
+
+  <section class="view" id="v-account" aria-label="حسابي">
+    <h2 class="page-title">حسابي</h2>
+    <div id="accBody"></div>
+  </section>
+
+  <section class="view" id="v-admin" aria-label="لوحة المدير">
+    <h2 class="page-title">لوحة المدير</h2>
+    <p class="admin-note">شاشة تجريبية لترى كيف تدير التطبيق. في النسخة الحقيقية تظهر لك وحدك بعد تسجيل الدخول كمدير.</p>
+    <div id="adminBody"></div>
+  </section>
+</main>
+
+<div class="tray glass" id="tray" role="region" aria-label="المقارنة">
+  <span id="trayText" style="flex:1;font-size:14px;font-weight:500"></span>
+  <button class="btn ghost small" data-act="compare-clear">إلغاء</button>
+  <button class="btn small" data-act="compare-open">قارن الآن</button>
+</div>
+
+<nav class="tabbar glass" aria-label="التنقل"><div class="in">
+  <button data-act="nav" data-v="home" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20V10.5L12 4l8 6.5V20a1 1 0 0 1-1 1h-4v-6h-6v6H5a1 1 0 0 1-1-1z"/></svg>الرئيسية</button>
+  <button data-act="nav" data-v="map"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 4L3 6.5v13.5L9 17.5l6 2.5 6-2.5V4l-6 2.5z"/><path d="M9 4v13.5M15 6.5V20"/></svg>الخريطة</button>
+  <button data-act="nav" data-v="add" aria-label="أضف إعلان"><span class="plus"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></button>
+  <button data-act="nav" data-v="saved"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20s-7.5-4.6-7.5-10.3A4.2 4.2 0 0 1 12 7a4.2 4.2 0 0 1 7.5 2.7C19.5 15.4 12 20 12 20z"/></svg>المحفوظات</button>
+  <button data-act="nav" data-v="alerts"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 16V11a6 6 0 0 1 12 0v5l2 2H4z"/><path d="M10 20.5a2 2 0 0 0 4 0"/></svg>التنبيهات<span class="badge" id="badge" hidden></span></button>
+</div></nav>
+
+<div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="sheetTitle">
+  <div class="scrim" data-act="close"></div>
+  <div class="sheet-box">
+    <div class="sheet-head" id="sheetHead">
+      <button class="round" data-act="close" aria-label="رجوع"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M9 6l6 6-6 6"/></svg></button>
+      <h2 id="sheetTitle"></h2>
+      <span id="headExtra" style="display:flex;gap:8px"></span>
+    </div>
+    <div class="sheet-body" id="sheetBody"></div>
+    <div class="sheet-foot" id="sheetFoot" hidden></div>
+  </div>
+</div>
+<div class="ob" id="ob" role="dialog" aria-modal="true" aria-label="مرحباً بك في خيارنا عقارنا" hidden></div>
+<div class="toast glass" id="toast" role="status" aria-live="polite"></div>
+<script>
+/* ---------- Storage ---------- */
+const store={
+  get(k,d){try{const v=localStorage.getItem('miftah:'+k);return v?JSON.parse(v):d}catch(e){return d}},
+  set(k,v){try{localStorage.setItem('miftah:'+k,JSON.stringify(v))}catch(e){}}
+};
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fmt=n=>Number(n).toLocaleString('en-US');
+
+/* ---------- Dictionaries ---------- */
+const TYPES={apartment:'شقة',villa:'فيلا',house:'منزل',land:'أرض',chalet:'شاليه',shop:'محل',office:'مكتب',hotel:'غرفة فندقية'};
+const KINDS={all:'الكل',sale:'للبيع',rent:'للإيجار',daily:'إيجار يومي',hotel:'فنادق'};
+const UNIT={sale:'',rent:' / شهر',daily:' / ليلة',hotel:' / ليلة'};
+const VERIFY={
+  phone:{t:'رقم الهاتف مؤكد',c:'ok',d:'تم تأكيد رقم الهاتف برسالة تحقق.'},
+  id:{t:'هوية موثقة',c:'idc',d:'راجع فريقنا هوية صاحب الإعلان.'},
+  agent:{t:'وسيط موثق',c:'agent',d:'وسيط عقاري تمت مراجعة بياناته ومكتبه.'},
+  none:{t:'غير موثق',c:'none',d:'لم يتم التحقق من صاحب الإعلان بعد. لا تدفع أي مبلغ قبل المعاينة.'}
+};
+const CITIES=[
+  {n:'طرابلس',x:112,y:62,areas:['حي الأندلس','عين زارة','النوفليين','جنزور','تاجوراء','قرقارش','سوق الجمعة','بن عاشور']},
+  {n:'الزاوية',x:80,y:66,areas:['وسط المدينة']},
+  {n:'الخمس',x:146,y:68,areas:['الشاطئ','وسط المدينة']},
+  {n:'مصراتة',x:176,y:82,areas:['وسط المدينة','الزروق']},
+  {n:'بنغازي',x:284,y:94,areas:['الفويهات','الحدائق','السلماني']},
+  {n:'سبها',x:150,y:204,areas:['وسط المدينة']}
+];
+
+/* ---------- Sample data (demo only) ---------- */
+let seq=100;
+function mk(kind,type,city,area,price,o){
+  seq++;
+  return Object.assign({id:'LY-'+String(seq).padStart(6,'0'),kind,type,city,area,price,size:null,beds:null,baths:null,floor:null,
+    elevator:false,parking:false,furnished:false,sea:false,features:[],verify:'none',owner:{name:'صاحب الإعلان',role:'مالك عقار'},
+    title:'',desc:'',status:'active',created:Date.now()-(140-seq)*6*3600e3},o);
+}
+const DEMO=false; /* false = النسخة الحقيقية للمختبرين: بدون إعلانات أو بانرات تجريبية */
+const SEED_DEMO=[
+ mk('sale','apartment','طرابلس','حي الأندلس',520000,{size:160,beds:3,baths:2,floor:4,elevator:true,parking:true,verify:'id',title:'شقة واسعة قرب شارع جرابة',owner:{name:'سالم الورفلي',role:'مالك عقار'},features:['مصعد','موقف سيارة','مطبخ مجهز','بلكونة'],desc:'شقة في عمارة حديثة، تشطيب جديد، واجهتان، قريبة من المدارس والأسواق.'}),
+ mk('sale','apartment','طرابلس','عين زارة',380000,{size:140,beds:3,baths:2,floor:2,parking:true,verify:'phone',title:'شقة عائلية في عمارة هادئة',owner:{name:'خالد التاجوري',role:'مالك عقار'},features:['موقف سيارة','خزان مياه','مطبخ مجهز'],desc:'شقة جاهزة للسكن، ثلاث غرف نوم وصالة كبيرة، في شارع فرعي.'}),
+ mk('sale','apartment','طرابلس','النوفليين',340000,{size:110,beds:2,baths:1,floor:5,elevator:true,verify:'agent',title:'شقة غرفتين بإطلالة على المدينة',owner:{name:'مكتب الريادة العقاري',role:'وسيط عقاري'},features:['مصعد','تكييف مركزي'],desc:'مناسبة لعائلة صغيرة أو للاستثمار، قريبة من الطريق الدائري.'}),
+ mk('sale','apartment','طرابلس','حي الأندلس',610000,{size:180,beds:3,baths:3,floor:6,elevator:true,parking:true,verify:'agent',title:'شقة فاخرة بتشطيب حديث',owner:{name:'مكتب الريادة العقاري',role:'وسيط عقاري'},features:['مصعد','موقف سيارة','غرفة غسيل','تكييف مركزي'],desc:'شقة في الطابق السادس، إضاءة طبيعية ممتازة، مولد كهرباء للعمارة.'}),
+ mk('sale','villa','طرابلس','جنزور',1450000,{size:450,beds:5,baths:4,parking:true,sea:true,verify:'id',title:'فيلا بحديقة قريبة من البحر',owner:{name:'عبدالله القماطي',role:'مالك عقار'},features:['حديقة','موقف لسيارتين','قريب من البحر','غرفة سائق'],desc:'فيلا دورين على أرض واسعة، حديقة أمامية وخلفية، على بعد دقائق من البحر.'}),
+ mk('sale','land','طرابلس','تاجوراء',420000,{size:600,verify:'none',title:'قطعة أرض سكنية على شارعين',owner:{name:'محمد ع.',role:'مالك عقار'},features:['على شارعين','مياه وكهرباء قريبة'],desc:'أرض سكنية مسورة، مناسبة لبناء فيلا أو عمارة صغيرة.'}),
+ mk('sale','house','بنغازي','الفويهات',690000,{size:280,beds:4,baths:3,parking:true,verify:'phone',title:'منزل دورين مع حوش',owner:{name:'فرج البرعصي',role:'مالك عقار'},features:['حوش','موقف سيارة','خزان مياه'],desc:'منزل عائلي في حي هادئ، دور أرضي وأول، مع حوش واسع.'}),
+ mk('sale','apartment','بنغازي','الحدائق',410000,{size:150,beds:3,baths:2,floor:3,elevator:true,verify:'agent',title:'شقة قرب الخدمات',owner:{name:'مكتب البناء الحديث',role:'وسيط عقاري'},features:['مصعد','بلكونة'],desc:'شقة ثلاث غرف في عمارة جديدة، قريبة من المستشفيات والمدارس.'}),
+ mk('sale','apartment','مصراتة','الزروق',360000,{size:170,beds:3,baths:2,floor:1,parking:true,verify:'id',title:'شقة أرضية واسعة',owner:{name:'أسامة الشركسي',role:'مالك عقار'},features:['موقف سيارة','مدخل خاص'],desc:'شقة دور أرضي بمدخل خاص، مناسبة للعائلات.'}),
+ mk('rent','apartment','طرابلس','قرقارش',3500,{size:120,beds:2,baths:2,floor:3,furnished:true,sea:true,verify:'agent',title:'شقة مفروشة قرب الكورنيش',owner:{name:'مكتب الريادة العقاري',role:'وسيط عقاري'},features:['مفروشة','قريب من البحر','إنترنت'],desc:'شقة مفروشة بالكامل، عقد سنوي أو ستة أشهر.'}),
+ mk('rent','apartment','طرابلس','حي الأندلس',4200,{size:165,beds:3,baths:2,floor:2,elevator:true,parking:true,verify:'id',title:'شقة ثلاث غرف للإيجار السنوي',owner:{name:'سالم الورفلي',role:'مالك عقار'},features:['مصعد','موقف سيارة'],desc:'غير مفروشة، مناسبة لعائلة، الإيجار يُدفع كل ثلاثة أشهر.'}),
+ mk('rent','office','طرابلس','بن عاشور',5500,{size:120,baths:1,floor:1,parking:true,verify:'phone',title:'مكتب إداري على شارع رئيسي',owner:{name:'شركة الأفق للعقارات',role:'شركة عقارية'},features:['موقف سيارة','تكييف مركزي','واجهة زجاجية'],desc:'مكتب من أربع غرف واستقبال، مناسب للشركات والعيادات.'}),
+ mk('rent','shop','مصراتة','وسط المدينة',3000,{size:60,verify:'none',title:'محل تجاري في منطقة حيوية',owner:{name:'علي م.',role:'مالك عقار'},features:['واجهة على الشارع','حمام'],desc:'محل بواجهة كبيرة، مناسب لأي نشاط تجاري.'}),
+ mk('daily','chalet','طرابلس','جنزور',650,{size:140,beds:3,baths:2,sea:true,furnished:true,parking:true,verify:'id',title:'شاليه على البحر مباشرة',owner:{name:'عبدالله القماطي',role:'مالك عقار'},features:['على البحر','مسبح','مفروش','شواية'],desc:'شاليه عائلي بخصوصية تامة، دخول مباشر للشاطئ.'}),
+ mk('daily','apartment','طرابلس','سوق الجمعة',280,{size:95,beds:2,baths:1,furnished:true,verify:'phone',title:'شقة مفروشة بالليلة قرب المطار',owner:{name:'نوري الككلي',role:'مالك عقار'},features:['مفروش','إنترنت','مطبخ'],desc:'مناسبة للقادمين من خارج طرابلس للعمل أو العلاج.'}),
+ mk('daily','chalet','الخمس','الشاطئ',550,{size:160,beds:4,baths:2,sea:true,furnished:true,verify:'agent',title:'استراحة بحرية للعائلات',owner:{name:'مكتب الساحل للاستراحات',role:'وسيط عقاري'},features:['قريب من البحر','حديقة','مفروش'],desc:'استراحة واسعة بحديقة، على بعد دقائق من الشاطئ.'}),
+ mk('daily','chalet','الزاوية','وسط المدينة',350,{size:90,beds:2,baths:1,furnished:true,verify:'none',title:'شاليه صغير بسعر مناسب',owner:{name:'صاحب الإعلان',role:'مالك عقار'},features:['مفروش','شواية'],desc:'شاليه بسيط ونظيف لقضاء عطلة نهاية الأسبوع.'}),
+ mk('hotel','hotel','طرابلس','قرقارش',420,{beds:1,baths:1,sea:true,verify:'id',title:'فندق نسمة البحر: غرفة مزدوجة',owner:{name:'فندق نسمة البحر',role:'فندق'},features:['إفطار','إطلالة على البحر','موقف سيارات','واي فاي'],desc:'غرفة لشخصين بإطلالة بحرية، تشمل الإفطار.'}),
+ mk('hotel','hotel','بنغازي','السلماني',380,{beds:1,baths:1,parking:true,verify:'id',title:'فندق الواحة الكبرى: غرفة عائلية',owner:{name:'فندق الواحة الكبرى',role:'فندق'},features:['إفطار','موقف سيارات','واي فاي'],desc:'غرفة عائلية واسعة في وسط المدينة.'}),
+ mk('hotel','hotel','مصراتة','وسط المدينة',300,{beds:1,baths:1,verify:'phone',title:'دار الضيافة: غرفة مفردة',owner:{name:'دار الضيافة',role:'فندق'},features:['واي فاي','خدمة غرف'],desc:'غرفة هادئة ونظيفة مناسبة لرحلات العمل.'})
+];
+
+
+/* ---------- Money: plans, promotions, banner ads (demo prices) ---------- */
+const SEED=DEMO?SEED_DEMO:[];
+if(DEMO){SEED[1].oldPrice=410000;SEED[10].oldPrice=4600;SEED[14].oldPrice=320;
+SEED[0].promo='pinned';SEED[4].promo='featured';SEED[9].promo='featured';SEED[13].promo='featured';}
+const PLANS={
+  free:{n:'مجانية',price:0,max:3,feat:['3 إعلانات نشطة','ظهور عادي في البحث','تنبيهات ومفضلة']},
+  agent:{n:'وسيط',price:150,max:40,feat:['40 إعلاناً نشطاً','شارة وسيط بعد التوثيق','إعلانان مميزان مجاناً كل شهر','إحصائيات المشاهدات والاتصالات']},
+  company:{n:'شركة عقارية',price:500,max:300,feat:['300 إعلان نشط','حتى 10 موظفين بحساب واحد','10 إعلانات مميزة كل شهر','صفحة خاصة للشركة']}
+};
+const PROMO=[
+  {k:'featured',d:7,p:30,t:'مميز لمدة أسبوع',s:'شارة ذهبية، ويظهر قبل الإعلانات العادية'},
+  {k:'featured',d:30,p:90,t:'مميز لمدة شهر',s:'أفضل قيمة للإعلانات التي تحتاج وقتاً'},
+  {k:'pinned',d:3,p:40,t:'مثبت لمدة 3 أيام',s:'أول نتيجة في البحث لمدينته ونوعه'},
+  {k:'pinned',d:7,p:80,t:'مثبت لمدة أسبوع',s:'أقوى ظهور ممكن في التطبيق'}
+];
+const ADS_DEMO=[
+  {id:'AD-01',adv:'معرض البيت للأثاث',ini:'ب',color:'#7C5CBF',title:'أثّث بيتك الجديد بالتقسيط',sub:'غرف نوم وصالونات جاهزة للتسليم',cta:'اعرف أكثر',places:['home','results'],kinds:['sale','rent','all'],price:600},
+  {id:'AD-02',adv:'مطابخ الريم',ini:'ر',color:'#B5522B',title:'مطبخ على مقاس بيتك',sub:'تصميم مجاني وتركيب خلال أسبوعين',cta:'اطلب تصميماً',places:['results','detail'],kinds:['sale','all'],price:450},
+  {id:'AD-03',adv:'تكييف الساحل',ini:'س',color:'#1F8A70',title:'تركيب وصيانة المكيفات',sub:'زيارة فحص مجانية داخل طرابلس',cta:'احجز زيارة',places:['detail','results'],kinds:['rent','daily','hotel','all'],price:350},
+  {id:'AD-04',adv:'نقل العفش السريع',ini:'ن',color:'#2F5D9E',title:'انتقلت؟ ننقل أغراضك بأمان',sub:'فك وتركيب وتغليف لكل المدن',cta:'اطلب نقلاً',places:['detail','home'],kinds:['sale','rent','all'],price:300}
+];
+const ADS=DEMO?ADS_DEMO:[];
+const PURPOSE={promotion:'ترويج إعلان',subscription:'اشتراك شهري',booking_deposit:'عربون حجز'};
+const METHOD={cash:'نقداً',bank:'تحويل مصرفي'};
+const PAY_ST={pending:['بانتظار التأكيد','t-pend'],paid:['مدفوع','t-ok'],rejected:['مرفوض','t-no']};
+const BK_ST={pending:['بانتظار تأكيد المالك','t-pend'],confirmed:['ادفع العربون لتثبيت الحجز','t-info'],awaiting:['بانتظار تأكيد الدفع','t-pend'],deposit_paid:['محجوز ومثبّت','t-ok']};
+
+/* ---------- State ---------- */
+const state={shared:[],pub:[],adminOk:false,pinFails:0,pinLockUntil:0,
+  filters:{kind:'all'},parseNotes:[],sort:'new',view:'home',compare:[],
+  favs:store.get('favs',[]),saved:store.get('saved',[]),notes:store.get('notes',[]),mine:store.get('mine',[]),
+  book:null,addStep:1,draft:{},
+  me:store.get('me',{plan:'free',verify:'phone',idReq:null,planPending:null}),
+  promos:store.get('promos',[]),payments:store.get('payments',[]),bookings:store.get('bookings',[]),
+  chats:store.get('chats',{}),reports:store.get('reports',[]),hidden:store.get('hidden',[]),
+  adStats:store.get('adStats',{}),adTick:0,chatOpen:null,payCtx:null
+};
+const save=(...ks)=>ks.forEach(k=>store.set(k,state[k]));
+const ALL=()=>{const seen=new Set();return [...state.shared,...state.mine.filter(l=>l.status==='active'),...state.pub,...SEED].filter(l=>{if(seen.has(l.id)||state.hidden.includes(l.id))return false;seen.add(l.id);return true})};
+const byId=id=>[...state.shared,...state.mine,...state.pub,...SEED].find(l=>l.id===id);
+const isMine=l=>state.mine.some(m=>m.id===l.id);
+/* ---------- Share links: the listing travels inside the link ---------- */
+const APP_URL='https://claude.ai/artifact/X2D8SZ47xaipqF9jDjMXhJ';
+function baseUrl(){const h=location.hostname;return (/^https?:$/.test(location.protocol)&&h&&!/claude|anthropic|usercontent|localhost/.test(h))?location.origin+location.pathname:APP_URL}
+const SHARE_KEYS=['id','kind','type','city','area','price','size','beds','baths','floor','elevator','parking','furnished','sea','features','title','desc','phone','loc','owner','verify'];
+function b64e(o){return btoa(unescape(encodeURIComponent(JSON.stringify(o)))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'')}
+function b64d(t){t=t.replace(/-/g,'+').replace(/_/g,'/');while(t.length%4)t+='=';return JSON.parse(decodeURIComponent(escape(atob(t))))}
+function shareLink(l){const o={};SHARE_KEYS.forEach(k=>{if(l[k]!==undefined&&l[k]!==null&&l[k]!==false&&l[k]!=='')o[k]=l[k]});return baseUrl()+'#l='+b64e(o)}
+function readShared(){
+  const m=(location.hash||'').match(/[#&]l=([A-Za-z0-9_-]+)/);if(!m)return null;
+  try{const l=cleanListing(b64d(m[1]),false);if(l)l.shared=true;return l}catch(e){return null}}
+function cleanListing(o,trusted){
+  try{if(!o||!o.id||!o.title||!o.price||!TYPES[o.type]||!KINDS[o.kind])return null;
+    const l=Object.assign({size:null,beds:null,baths:null,floor:null,elevator:false,parking:false,furnished:false,sea:false,features:[],verify:'none',owner:{name:'صاحب الإعلان',role:'مالك عقار'},desc:''},o,{status:'active',created:+o.created||Date.now()});
+    if(!/^LY-\d{6}$/.test(l.id)||!CITIES.some(c=>c.n===l.city))return null;
+    const n=x=>x===null||x===undefined||x===''||!isFinite(+x)?null:Math.max(0,Math.round(+x));
+    l.price=n(l.price);if(!l.price)return null;l.size=n(l.size);l.oldPrice=n(l.oldPrice);if(l.oldPrice&&l.oldPrice<=l.price)l.oldPrice=null;l.beds=n(l.beds);l.baths=n(l.baths);l.floor=n(l.floor);
+    ['elevator','parking','furnished','sea'].forEach(k=>l[k]=l[k]===true);
+    l.title=String(l.title).slice(0,60);l.desc=String(l.desc||'').slice(0,400);l.area=String(l.area||'').slice(0,40);
+    l.verify=trusted&&VERIFY[l.verify]?l.verify:'none';
+    if(l.loc){const la=+l.loc.lat,ln=+l.loc.lng;l.loc=(isFinite(la)&&isFinite(ln)&&Math.abs(la)<=90&&Math.abs(ln)<=180)?{lat:la,lng:ln}:undefined}
+    if(l.phone)l.phone=String(l.phone).replace(/\D/g,'').slice(0,12);
+    if(!Array.isArray(l.features))l.features=[];l.features=l.features.map(String).slice(0,12);
+    l.owner={name:String((l.owner&&l.owner.name)||'صاحب الإعلان').slice(0,40),role:String((l.owner&&l.owner.role)||'مالك عقار').slice(0,30)};
+    return l}catch(e){return null}}
+function parseLoc(t){if(!t)return null;t=String(t);
+  let m=t.match(/!3d(-?\d+\.\d+)!4d(-?\d+\.\d+)/)||t.match(/@(-?\d+\.\d+),\s*(-?\d+\.\d+)/)||t.match(/[?&](?:q|query|ll|destination)=(-?\d+\.\d+),\s*(-?\d+\.\d+)/)||t.match(/(-?\d{1,2}\.\d{3,})\s*[,،]\s*(-?\d{1,3}\.\d{3,})/);
+  if(!m)return null;const lat=+m[1],lng=+m[2];if(Math.abs(lat)>90||Math.abs(lng)>180)return null;return {lat:+lat.toFixed(6),lng:+lng.toFixed(6)}}
+const mapUrl=c=>`https://www.google.com/maps/search/?api=1&query=${c.lat},${c.lng}`;
+const intlPhone=p=>{p=String(p||'').replace(/\D/g,'');if(p.startsWith('218'))return p;return '218'+p.replace(/^0/,'')};
+function postText(l){
+  const sp=[l.beds&&l.type!=='hotel'?`🛏️ ${l.beds} غرف نوم`:'',l.baths?`🛁 ${l.baths} حمام`:'',l.size?`📐 ${l.size} م²`:''].filter(Boolean).join('  |  ');
+  return [`🏠 ${l.title}`,'',`📍 ${l.area}، ${l.city}`,`💰 ${fmt(l.price)} د.ل${UNIT[l.kind]}  (${KINDS[l.kind]})`,sp,l.features.length?'✅ '+l.features.join('، '):'',l.desc?'\n'+l.desc:'','',
+    `📌 الموقع بالضبط والصور والتفاصيل${['daily','hotel'].includes(l.kind)?' والحجز':' وطلب المعاينة'}:`,shareLink(l),'',`رقم الإعلان: ${l.id}`].filter((x,i,a)=>!(x===''&&a[i-1]==='')).join('\n').replace(/\n{3,}/g,'\n\n')}
+function openFB(id){const l=byId(id),txt=postText(l),link=shareLink(l);
+  openSheet('انشر على فيسبوك',`<div style="padding:6px 18px 20px">
+    <p class="muted" style="margin:0 0 10px;font-size:14px">انسخ المنشور والصقه في صفحتك مع صور العقار. من يضغط الرابط يفتح هذا الإعلان نفسه، ويرى موقعه بالضبط${l.loc?'':' (أضف الموقع للإعلان حتى يظهر)'}.</p>
+    <textarea class="post" id="postTxt" aria-label="نص المنشور">${esc(txt)}</textarea>
+    <div class="sharebar"><button class="btn" data-act="copy-post">نسخ المنشور</button><button class="btn ghost" data-act="copy-link" data-id="${l.id}">نسخ الرابط فقط</button><a class="btn ghost" href="https://www.facebook.com/" target="_blank" rel="noopener">افتح فيسبوك</a></div>
+    <p class="legal">نصيحة: ضع صور العقار الحقيقية في المنشور، واكتب رقم الإعلان في التعليقات أيضاً ليسهل البحث عنه.</p></div>`);}
+function copyText(t,msg){const done=()=>toast(msg);if(navigator.clipboard)navigator.clipboard.writeText(t).then(done,()=>fallbackCopy(t,msg));else fallbackCopy(t,msg)}
+function fallbackCopy(t,msg){const a=document.createElement('textarea');a.value=t;document.body.appendChild(a);a.select();try{document.execCommand('copy');toast(msg)}catch(e){toast('انسخ النص يدوياً')}a.remove()}
+
+/* ---------- Illustrations (placeholders for real photos) ---------- */
+function hash(s){let h=2166136261;for(const c of String(s)){h^=c.charCodeAt(0);h=Math.imul(h,16777619)}return h>>>0}
+const SKIES=[['#8FCBE0','#E6F3F6'],['#EFAE78','#FADFC4'],['#6D8DB6','#C8D5E6']];
+function art(l,v=0){
+  const h=hash(l.id),sky=SKIES[(h+v)%3],wall=['#F3EEE4','#EADFCB','#F7F4EE'][h%3],door='#1D5E8C',gid='g'+h+'_'+v;
+  let g='',back='';
+  const win=(x,y)=>`<path d="M${x} ${y+16}v-9a7 7 0 0 1 14 0v9z" fill="${door}" opacity=".85"/>`;
+  switch(l.type){
+    case 'apartment':case 'hotel':{
+      const fl=l.type==='hotel'?7:5,w=l.type==='hotel'?150:180,x=(400-w)/2,top=200-fl*24-12,cw=(w-24)/4;
+      g+=`<rect x="${x}" y="${top}" width="${w}" height="${200-top}" fill="${wall}"/>`;
+      for(let f=0;f<fl;f++)for(let c=0;c<4;c++)g+=win(x+12+c*cw+(cw-14)/2,top+10+f*24);
+      if(l.type==='hotel')g+=`<rect x="${x+30}" y="${top-16}" width="${w-60}" height="12" rx="3" fill="#A8761F"/>`;
+      g+=`<path d="M${x+w/2-12} 200v-16a12 12 0 0 1 24 0v16z" fill="${door}"/>`;break;}
+    case 'office':{
+      const x=110,top=86;g+=`<rect x="${x}" y="${top}" width="180" height="${200-top}" fill="${wall}"/>`;
+      for(let f=0;f<4;f++)for(let c=0;c<5;c++)g+=`<rect x="${x+12+c*33}" y="${top+10+f*24}" width="24" height="15" fill="#7FB3C8"/>`;break;}
+    case 'villa':
+      back+=`<rect x="110" y="104" width="180" height="96" fill="${wall}"/><rect x="150" y="72" width="110" height="34" fill="${wall}"/>`;
+      back+=win(130,130)+win(170,130)+win(250,130)+win(172,80)+win(222,80)+`<path d="M200 200v-26a12 12 0 0 1 24 0v26z" fill="${door}" transform="translate(-12)"/>`;
+      g+=`<rect x="30" y="166" width="340" height="34" fill="#D8CBB3"/><path d="M188 200v-30h24v30" fill="${door}"/>`;
+      g+=`<path d="M340 200c2-40 4-70 0-96" stroke="#7A5B3A" stroke-width="6" fill="none"/><path d="M340 104c-20-6-34 2-42 12M340 104c16-10 32-8 40 2M340 104c-6-16-20-22-30-22M340 104c8-14 22-18 32-14" stroke="#3E7D4E" stroke-width="7" fill="none" stroke-linecap="round"/>`;break;
+    case 'house':
+      g+=`<rect x="90" y="118" width="220" height="82" fill="${wall}"/><rect x="86" y="112" width="228" height="8" fill="#D8CBB3"/>`;
+      g+=win(120,142)+win(260,142)+`<path d="M188 200v-28a12 12 0 0 1 24 0v28z" fill="${door}"/>`;break;
+    case 'land':
+      g+=`<rect y="160" width="400" height="40" fill="#CDB891"/>`;
+      for(let i=0;i<14;i++)g+=`<rect x="${20+i*27}" y="146" width="4" height="26" fill="#7A5B3A"/>`;
+      g+=`<rect x="20" y="152" width="355" height="3" fill="#7A5B3A"/><rect x="286" y="98" width="70" height="34" rx="4" fill="${door}"/><rect x="318" y="132" width="5" height="30" fill="#7A5B3A"/>`;break;
+    case 'chalet':
+      back+=`<rect y="140" width="400" height="50" fill="#3F97B6"/><path d="M0 150q25-6 50 0t50 0 50 0 50 0 50 0 50 0 50 0 50 0" stroke="#fff" stroke-opacity=".5" fill="none" stroke-width="2"/>`;
+      g+=`<rect x="140" y="126" width="120" height="74" fill="#FAFAF7"/><rect x="134" y="120" width="132" height="8" fill="#E6DFD2"/>`;
+      g+=`<path d="M188 200v-30a12 12 0 0 1 24 0v30z" fill="${door}"/>`+win(154,146)+win(232,146);
+      g+=`<path d="M320 200v-58" stroke="#555" stroke-width="3"/><path d="M290 146q30-26 60 0z" fill="#D9534F"/>`;break;
+    case 'shop':
+      g+=`<rect x="70" y="90" width="260" height="110" fill="${wall}"/>`;
+      for(let i=0;i<8;i++)g+=`<rect x="${70+i*32.5}" y="108" width="32.5" height="20" fill="${i%2?'#FFFFFF':door}"/>`;
+      g+=`<rect x="92" y="138" width="150" height="54" fill="#7FB3C8"/><rect x="258" y="138" width="50" height="62" fill="${door}"/>`;break;
+  }
+  return `<svg viewBox="0 0 400 250" preserveAspectRatio="xMidYMid slice" role="img" aria-label="صورة توضيحية: ${TYPES[l.type]}"><defs><linearGradient id="${gid}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${sky[0]}"/><stop offset="1" stop-color="${sky[1]}"/></linearGradient></defs><rect width="400" height="250" fill="url(#${gid})"/>${back}<rect y="198" width="400" height="52" fill="#D9CBB0"/>${g}</svg>`;
+}
+
+/* ---------- Smart search (rule-based, searches real data only) ---------- */
+function norm(s){return String(s).replace(/[\u064B-\u0652\u0640]/g,'').replace(/[أإآ]/g,'ا').replace(/ى/g,'ي').replace(/ة/g,'ه').replace(/[٠-٩]/g,d=>'٠١٢٣٤٥٦٧٨٩'.indexOf(d)).toLowerCase()}
+function num(v,mult){let n=parseFloat(String(v).replace(/,/g,''));if(mult==='الف')n*=1000;if(mult==='مليون')n*=1e6;return n}
+function parse(text){
+  const t=norm(text),f={kind:'all'},notes=[];
+  if(/فندق|فنادق/.test(t))f.kind='hotel';
+  else if(/يومي|بالليله|ليله|ليالي|شاليه|استراحه|مصيف/.test(t))f.kind='daily';
+  else if(/ايجار|للايجار|نستاجر|استئجار|كراء/.test(t))f.kind='rent';
+  else if(/للبيع|شراء|نشري|تمليك|بيع/.test(t))f.kind='sale';
+  const tmap=[[/شقه|شقق/,'apartment'],[/فيلا|فيله/,'villa'],[/منزل|حوش|\bبيت\b/,'house'],[/ارض|قطعه/,'land'],[/شاليه|استراحه/,'chalet'],[/محل/,'shop'],[/مكتب/,'office']];
+  for(const [r,v] of tmap)if(r.test(t)){f.type=v;break}
+  for(const c of CITIES){if(t.includes(norm(c.n)))f.city=c.n;for(const a of c.areas)if(a!=='وسط المدينة'&&t.includes(norm(a))){f.city=c.n;f.area=a}}
+  let m=t.match(/(اقل من|تحت|لا يتجاوز|ما يتجاوز|بحدود|في حدود|حد اقصي|اقصي)\s*([\d.,]+)\s*(الف|مليون)?/);
+  if(m)f.maxPrice=num(m[2],m[3]);else{m=t.match(/([\d.,]+)\s*(الف|مليون)/);if(m&&!/(اكثر من|فوق)\s*[\d.,]+\s*(الف|مليون)/.test(t))f.maxPrice=num(m[1],m[2])}
+  m=t.match(/(اكثر من|فوق)\s*([\d.,]+)\s*(الف|مليون)?/);if(m)f.minPrice=num(m[2],m[3]);
+  m=t.match(/(\d+)\s*(غرف|غرفه|حجرات|حجره)/);
+  if(m)f.beds=+m[1];else if(/غرفتين|حجرتين/.test(t))f.beds=2;else if(/(ثلاث|ثلاثه)\s*(غرف|حجرات)/.test(t))f.beds=3;else if(/(اربع|اربعه)\s*(غرف|حجرات)/.test(t))f.beds=4;else if(/(خمس|خمسه)\s*(غرف|حجرات)/.test(t))f.beds=5;else if(/غرفه واحده/.test(t))f.beds=1;
+  if(/غير مفروش/.test(t))f.furnished=false;else if(/مفروش/.test(t))f.furnished=true;
+  if(/موقف|جراج|كراج|باركنج/.test(t))f.parking=true;
+  if(/بحر|شاطئ|الشط/.test(t))f.sea=true;
+  if(/موثق/.test(t))f.verified=true;
+  if(/هاد[ئي]/.test(t))notes.push('طلبت منطقة هادئة، ولا توجد لدينا بيانات موثوقة عن الهدوء، لذلك لم نستخدمه في الفلترة.');
+  if(/قريب من (المدرسه|المدارس|الجامعه|المستشفي)/.test(t))notes.push('القرب من المدارس أو المستشفيات غير مسجل في البيانات بعد، فلم نستخدمه في الفلترة.');
+  return {f,notes};
+}
+function chipsFor(f){
+  const c=[];
+  if(f.kind&&f.kind!=='all')c.push({k:'kind',l:KINDS[f.kind]});
+  if(f.type)c.push({k:'type',l:TYPES[f.type]});
+  if(f.city)c.push({k:'city',l:f.city});
+  if(f.area)c.push({k:'area',l:f.area});
+  if(f.beds)c.push({k:'beds',l:f.beds+' غرف أو أكثر'});
+  if(f.minPrice)c.push({k:'minPrice',l:'أكثر من '+fmt(f.minPrice)+' د.ل'});
+  if(f.maxPrice)c.push({k:'maxPrice',l:'حتى '+fmt(f.maxPrice)+' د.ل'});
+  if(f.furnished===true)c.push({k:'furnished',l:'مفروش'});
+  if(f.furnished===false)c.push({k:'furnished',l:'غير مفروش'});
+  if(f.parking)c.push({k:'parking',l:'موقف سيارة'});
+  if(f.sea)c.push({k:'sea',l:'قريب من البحر'});
+  if(f.verified)c.push({k:'verified',l:'موثق فقط'});
+  if(f.drop)c.push({k:'drop',l:'انخفض سعره'});
+  return c;
+}
+function matches(l,f){
+  if(f.kind&&f.kind!=='all'&&l.kind!==f.kind)return false;
+  if(f.type&&l.type!==f.type)return false;
+  if(f.city&&l.city!==f.city)return false;
+  if(f.area&&l.area!==f.area)return false;
+  if(f.maxPrice&&l.price>f.maxPrice)return false;
+  if(f.minPrice&&l.price<f.minPrice)return false;
+  if(f.beds&&(l.beds||0)<f.beds)return false;
+  if(f.furnished===true&&!l.furnished)return false;
+  if(f.furnished===false&&l.furnished)return false;
+  if(f.parking&&!l.parking)return false;
+  if(f.sea&&!l.sea)return false;
+  if(f.verified&&l.verify==='none')return false;
+  if(f.drop&&!dropPct(l))return false;
+  return true;
+}
+function reasons(l,f){
+  const r=[];
+  if(f.maxPrice)r.push('السعر ضمن ميزانيتك');
+  if(f.beds)r.push(l.beds===f.beds?'عدد الغرف مطابق':'غرف أكثر مما طلبت');
+  if(f.area)r.push('المنطقة مطابقة');else if(f.city)r.push('في '+f.city);
+  if(f.furnished===true)r.push('مفروش');
+  if(f.sea)r.push('قريب من البحر');
+  if(f.parking)r.push('فيه موقف سيارة');
+  return r;
+}
+const searchActive=()=>chipsFor(state.filters).some(c=>c.k!=='kind');
+
+/* ---------- Price insight (computed from listings only) ---------- */
+function insight(l){
+  if(!l.size||!['sale','rent'].includes(l.kind))return null;
+  const comps=ALL().filter(o=>o.id!==l.id&&o.kind===l.kind&&o.type===l.type&&o.city===l.city&&o.size);
+  if(comps.length<2)return null;
+  const ppm=l.price/l.size,avg=comps.reduce((s,o)=>s+o.price/o.size,0)/comps.length,diff=Math.round((ppm-avg)/avg*100);
+  return {ppm:Math.round(ppm),avg:Math.round(avg),diff,n:comps.length};
+}
+
+/* ---------- Icons ---------- */
+const P=d=>`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">${d}</svg>`;
+const I={
+  bed:P('<path d="M3 18v-8M3 14h18v4M21 14v-2a3 3 0 0 0-3-3h-7v5"/><circle cx="7" cy="11.5" r="1.6"/>'),
+  bath:P('<path d="M4 12h16v2a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5zM6 12V6a2 2 0 0 1 4 0"/>'),
+  area:P('<path d="M4 9V4h5M20 15v5h-5M4 4l6 6M20 20l-6-6"/>'),
+  pin:P('<path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.4"/>'),
+  heart:f=>`<svg viewBox="0 0 24 24" fill="${f?'currentColor':'none'}" stroke="currentColor" stroke-width="2"><path d="M12 20s-7.5-4.6-7.5-10.3A4.2 4.2 0 0 1 12 7a4.2 4.2 0 0 1 7.5 2.7C19.5 15.4 12 20 12 20z"/></svg>`,
+  shield:P('<path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6z"/><path d="M9 12l2 2 4-4"/>'),
+  share:P('<path d="M12 15V4M8 8l4-4 4 4M5 13v6h14v-6"/>'),
+  filter:P('<path d="M4 6h16M7 12h10M10 18h4"/>'),
+  bell:P('<path d="M6 16V11a6 6 0 0 1 12 0v5l2 2H4z"/>'),
+  wa:`<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18a8 8 0 0 1-4.1-1.1l-.3-.2-3 .8.8-2.9-.2-.3A8 8 0 1 1 12 20zm4.4-6c-.2-.1-1.4-.7-1.6-.8s-.4-.1-.5.1-.6.8-.7.9-.3.2-.5.1a6.5 6.5 0 0 1-3.2-2.8c-.2-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.7-1.7c-.2-.5-.4-.4-.5-.4h-.5a.9.9 0 0 0-.7.3 2.8 2.8 0 0 0-.9 2.1 5 5 0 0 0 1 2.6 11.3 11.3 0 0 0 4.3 3.8c1.6.7 2.2.7 3 .6a2.6 2.6 0 0 0 1.7-1.2 2.1 2.1 0 0 0 .2-1.2c-.1-.1-.3-.2-.5-.3z"/></svg>`,
+  clock:P('<circle cx="12" cy="12" r="8"/><path d="M12 8v4l3 2"/>'),
+  spark:`<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l1.8 5.2L19 9l-5.2 1.8L12 16l-1.8-5.2L5 9l5.2-1.8z"/></svg>`,
+  trash:P('<path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/>'),
+  info:P('<circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/>'),
+  phone:P('<path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a1 1 0 0 1-1 1A16 16 0 0 1 4 5a1 1 0 0 1 1-1z"/>'),
+  lock:P('<rect x="5" y="10.5" width="14" height="10" rx="2"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/>'),
+  chat:P('<path d="M4 5h16v11H9l-5 4z"/><path d="M8 9.5h8M8 12.5h5"/>'),
+  star:`<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3l2.7 5.6 6.1.8-4.5 4.2 1.1 6.1L12 16.8 6.6 19.7l1.1-6.1L3.2 9.4l6.1-.8z"/></svg>`,
+  pinTop:P('<path d="M9 3h6l-1 6 3 3H7l3-3zM12 12v9"/>'),
+  doc:P('<rect x="4" y="5" width="16" height="14" rx="2"/><circle cx="9" cy="11" r="2"/><path d="M6.5 16a3 3 0 0 1 5 0M14 10h4M14 13h3"/>'),
+  cam:P('<path d="M4 8h3l2-2.5h6L17 8h3v11H4z"/><circle cx="12" cy="13" r="3.5"/>'),
+  receipt:P('<path d="M6 3h12v18l-3-2-3 2-3-2-3 2z"/><path d="M9 8h6M9 12h6"/>'),
+  crown:P('<path d="M4 18h16M4 8l4 4 4-7 4 7 4-4-1.5 10h-13z"/>'),
+  grid:P('<rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/>')
+};
+const CAT_ICONS={
+  apartment:P('<rect x="5" y="3" width="14" height="18" rx="1.5"/><path d="M9 7h1M14 7h1M9 11h1M14 11h1M9 15h1M14 15h1M11 21v-3h2v3"/>'),
+  villa:P('<path d="M3 11l9-7 9 7M5 9.5V20h14V9.5"/><path d="M10 20v-5h4v5"/>'),
+  house:P('<path d="M4 20V9h16v11zM3 9h18"/><path d="M10 20v-5a2 2 0 0 1 4 0v5"/>'),
+  chalet:P('<path d="M3 20c2-1.5 4-1.5 6 0s4 1.5 6 0 4-1.5 6 0M12 4v10M5 10a7 7 0 0 1 14 0z"/>'),
+  hotel:P('<path d="M3 18v-8M3 14h18v4M21 14v-2a3 3 0 0 0-3-3h-7v5"/><circle cx="7" cy="11.5" r="1.6"/>'),
+  land:P('<path d="M3 20h18M5 20v-6M9 20v-6M13 20v-6M4 16h10M17 20v-5M17 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>'),
+  shop:P('<path d="M4 9l1.5-5h13L20 9M4 9h16v2a3 3 0 0 1-6 0 3 3 0 0 1-4 0 3 3 0 0 1-6 0zM5 13v7h14v-7"/><path d="M10 20v-4h4v4"/>'),
+  office:P('<rect x="3" y="7" width="18" height="13" rx="2"/><path d="M9 7V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2M3 13h18"/>')
+};
+const CAT_LABEL={apartment:'شقق',villa:'فلل',house:'منازل',chalet:'شاليهات',hotel:'فنادق',land:'أراضي',shop:'محلات',office:'مكاتب'};
+state.recents=store.get('recents',[]);
+
+/* ---------- Promotions & sponsored ---------- */
+function promoOf(l){if(l.promo)return l.promo;const p=state.promos.find(p=>p.listing===l.id&&p.status==='active'&&p.ends>Date.now());return p?p.type:null}
+const promoTag=t=>t?`<span class="on-img promo promo-${t}">${t==='pinned'?I.pinTop+'مثبت':I.star+'مميز'}</span>`:'';
+function pickAd(place,kind){
+  let c=ADS.filter(a=>a.places.includes(place)&&a.kinds.includes(kind||'all'));if(!c.length)c=ADS.filter(a=>a.places.includes(place));
+  const a=c[state.adTick++%c.length];const st=state.adStats[a.id]||(state.adStats[a.id]={imp:0,clk:0});st.imp++;save('adStats');return a;
+}
+function sponsor(place,kind){if(!ADS.length)return '';const a=pickAd(place,kind);
+  return `<button class="sponsor" data-act="ad" data-ad="${a.id}" aria-label="إعلان من ${esc(a.adv)}: ${esc(a.title)}"><span class="adl">إعلان</span><span class="mark" style="background:${a.color}" aria-hidden="true">${a.ini}</span><span class="tx"><b>${esc(a.title)}</b><small>${esc(a.sub)}</small><span class="who">${esc(a.adv)}</span></span><span class="go">${esc(a.cta)}</span></button>`}
+const stTag=([t,c])=>`<span class="tag ${c}">${t}</span>`;
+const paidFor=id=>state.bookings.some(b=>b.listing===id&&b.status==='deposit_paid');
+
+/* ---------- Pieces ---------- */
+const dropPct=l=>l.oldPrice>l.price?Math.round((l.oldPrice-l.price)/l.oldPrice*100):0;
+const dropHTML=l=>dropPct(l)?`<span class="drop">↓ انخفض السعر ${dropPct(l)}%</span>`:'';
+const priceHTML=l=>`${fmt(l.price)} د.ل<small>${UNIT[l.kind]}</small>`;
+const vHTML=v=>`<span class="vbadge vb-${VERIFY[v].c}">${v==='none'?I.info:I.shield}${VERIFY[v].t}</span>`;
+function specsHTML(l){
+  const s=[];if(l.beds&&l.type!=='hotel')s.push(I.bed+l.beds);if(l.baths)s.push(I.bath+l.baths);if(l.size)s.push(I.area+l.size+' م²');
+  return s.length?`<div class="specs">${s.map(x=>`<span>${x}</span>`).join('')}</div>`:'';
+}
+function card(l,opts={}){
+  const fav=state.favs.includes(l.id),cmp=state.compare.includes(l.id),ins=insight(l);
+  const rs=opts.reasons&&searchActive()?reasons(l,state.filters):[];
+  return `<article class="card">
+    <div class="media">${art(l)}
+      <button class="hit" data-act="open" data-id="${l.id}" aria-label="تفاصيل ${esc(l.title)}"></button>
+      <span class="on-img glass kind-tag">${KINDS[l.kind]}</span>${promoTag(promoOf(l))}
+      <button class="on-img glass heart" data-act="fav" data-id="${l.id}" aria-pressed="${fav}" aria-label="${fav?'إزالة من المفضلة':'أضف للمفضلة'}">${I.heart(fav)}</button>
+      ${l.status==='review'?'<span class="on-img rev">قيد المراجعة</span>':''}
+      <span class="on-img img-price">${priceHTML(l)}</span>
+      <span class="on-img img-id">${l.id}</span>
+    </div>
+    <div class="meta">
+      <button class="ctitle" data-act="open" data-id="${l.id}">${esc(l.title)}</button>
+      <div class="place">${I.pin}${esc(l.area)}، ${esc(l.city)}</div>
+      ${specsHTML(l)}
+      ${dropHTML(l)}
+      ${ins&&ins.diff<=-5?`<span class="insight">سعر المتر أقل من المتوسط بـ ${Math.abs(ins.diff)}%</span>`:''}
+      ${rs.length?`<div class="reasons">${rs.map(x=>`<span>✓ ${x}</span>`).join('')}</div>`:''}
+      <div class="row">${vHTML(l.verify)}${opts.noCmp?'':`<button class="mini" data-act="cmp" data-id="${l.id}" aria-pressed="${cmp}">${cmp?'✓ في المقارنة':'+ قارن'}</button>`}</div>
+    </div></article>`;
+}
+const skeleton=n=>Array.from({length:n},()=>`<div class="card sk" aria-hidden="true"><div class="media"></div><div class="l" style="width:70%"></div><div class="l" style="width:45%"></div></div>`).join('');
+function sortList(list){
+  if(state.sort==='low')return list.sort((a,b)=>a.price-b.price);
+  if(state.sort==='high')return list.sort((a,b)=>b.price-a.price);
+  const rank=l=>({pinned:2,featured:1})[promoOf(l)]||0;
+  return list.sort((a,b)=>rank(b)-rank(a)||b.created-a.created);
+}
+
+/* ---------- Home ---------- */
+function renderHome(loading){
+  const f=state.filters;
+  $('#kindTabs').innerHTML=Object.entries(KINDS).map(([k,v])=>`<button data-act="kind" data-k="${k}" aria-pressed="${(f.kind||'all')===k}">${v}</button>`).join('');
+  $('#cats').innerHTML=Object.keys(CAT_LABEL).map(t=>`<button class="cat" data-act="type" data-t="${t}" aria-pressed="${f.type===t||(t==='hotel'&&f.kind==='hotel'&&!f.type)}"><span>${CAT_ICONS[t]}</span>${CAT_LABEL[t]}</button>`).join('');
+  const chips=chipsFor(f).filter(c=>c.k!=='kind'),p=$('#parsed');
+  if(chips.length||state.parseNotes.length){
+    p.classList.add('show');
+    p.innerHTML=`<div class="parsed-head">${I.spark.replace('<svg','<svg width="15" height="15" style="color:var(--brand)"')}فهمنا طلبك هكذا:</div><div class="chips">${chips.map((c,i)=>`<span class="chip" style="animation-delay:${i*60}ms">${esc(c.l)}<button data-act="rmchip" data-k="${c.k}" aria-label="احذف ${esc(c.l)}">✕</button></span>`).join('')}${chips.length?`<button class="link" data-act="clear">مسح الكل</button>`:''}</div>${state.parseNotes.map(n=>`<div class="pnote">${I.info.replace('<svg','<svg width="16" height="16" style="flex:0 0 auto;margin-top:2px"')}<span>${n}</span></div>`).join('')}`;
+  }else{p.classList.remove('show');p.innerHTML=''}
+
+  const list=sortList(ALL().filter(l=>matches(l,f)));
+  const toolbar=`<div class="toolbar"><span class="count">${loading?'جاري البحث…':list.length+(list.length===1?' عقار':' عقارات')}</span>
+    <select id="sort" aria-label="ترتيب النتائج"><option value="new" ${state.sort==='new'?'selected':''}>الأحدث</option><option value="low" ${state.sort==='low'?'selected':''}>الأقل سعراً</option><option value="high" ${state.sort==='high'?'selected':''}>الأعلى سعراً</option></select>
+    <button class="pill-btn" data-act="filters" aria-label="الفلاتر">${I.filter}</button>
+    <button class="pill-btn" data-act="save-search" aria-label="احفظ البحث وفعّل التنبيه">${I.bell}</button></div>`;
+  let h='';
+  if(!searchActive()&&(f.kind||'all')==='all'){
+    const feat=ALL().filter(l=>['id','agent'].includes(l.verify)&&l.kind==='sale').slice(0,5);
+    const beach=ALL().filter(l=>l.kind==='daily'&&l.sea);
+    if(!ALL().length&&!loading){h+=`<div class="empty" style="margin-top:18px"><p style="font-size:16px;color:var(--ink);font-weight:600;margin-bottom:6px">أهلاً بك في خيارنا عقارنا</p><p>لا توجد إعلانات منشورة بعد. أضف عقارك الآن، وانشره على صفحتك في فيسبوك برابط يفتح إعلانك مباشرة.</p><button class="btn" data-act="nav" data-v="add">+ أضف أول إعلان</button></div>`;$('#homeBody').innerHTML=h;return}
+    if(feat.length)h+=`<div class="sec"><h2>عروض موثقة</h2><button class="link" data-act="quick" data-q='{"kind":"sale","verified":true}'>عرض الكل</button></div><div class="rail">${feat.map(l=>card(l,{noCmp:true})).join('')}</div>`;
+    h+=`<div style="margin-top:18px">${sponsor('home','all')}</div>`;
+    if(beach.length)h+=`<div class="sec"><h2>عطلة على البحر</h2><button class="link" data-act="quick" data-q='{"kind":"daily","sea":true}'>عرض الكل</button></div><div class="rail">${beach.map(l=>card(l,{noCmp:true})).join('')}</div>`;
+    h+=`<div class="sec" style="margin-bottom:0"><h2>كل العقارات</h2></div>`;
+  }
+  h+=toolbar+`<div class="grid" id="results">${loading?skeleton(3):list.length?list.map((l,i)=>card(l,{reasons:true})+(i===3&&list.length>5?sponsor('results',f.kind):'')).join(''):`<div class="empty"><p>لا يوجد عقار يطابق كل الشروط الآن. احذف شرطاً لتوسيع البحث، أو فعّل التنبيه وسنخبرك فور نزول عقار مطابق.</p><button class="btn" data-act="save-search">${I.bell} فعّل التنبيه</button></div>`}</div>`;
+  $('#homeBody').innerHTML=h;
+  $('#sort').onchange=e=>{state.sort=e.target.value;renderHome()};
+}
+function searchWithLoading(){renderHome(true);setTimeout(()=>renderHome(),matchMedia('(prefers-reduced-motion:reduce)').matches?0:450)}
+
+/* ---------- Map ---------- */
+function renderMap(){
+  const f={...state.filters};delete f.city;delete f.area;
+  const counts=Object.fromEntries(CITIES.map(c=>[c.n,ALL().filter(l=>l.city===c.n&&matches(l,f)).length]));
+  $('#mapBox').innerHTML=`<svg viewBox="0 0 380 240" role="img" aria-label="خريطة مبسطة لمدن ليبيا">
+    <rect width="380" height="240" fill="var(--surface)"/>
+    <path d="M0 0H380V70C350 64 322 60 300 72C286 80 272 96 258 104C238 114 214 106 196 90C178 76 160 70 140 66C116 60 90 58 60 62C36 64 16 60 0 58Z" fill="var(--brand)" opacity=".16"/>
+    <text x="190" y="30" text-anchor="middle" font-size="11" fill="var(--muted)" font-family="Readex Pro,sans-serif">البحر المتوسط</text>
+    ${CITIES.map(c=>{const n=counts[c.n];return `<g class="pin" tabindex="0" role="button" data-act="city-map" data-c="${c.n}" aria-label="${c.n}: ${n} عقارات">${n?`<circle cx="${c.x}" cy="${c.y}" r="20" fill="var(--brand)" opacity=".15"/>`:''}<circle cx="${c.x}" cy="${c.y}" r="${n?13:7}" fill="${n?'var(--brand)':'var(--line)'}"/><text x="${c.x}" y="${c.y+4}" text-anchor="middle" font-size="11" font-weight="600" fill="var(--on-brand)" font-family="Readex Pro,sans-serif">${n||''}</text><text x="${c.x}" y="${c.y+(['بنغازي','مصراتة'].includes(c.n)?-24:30)}" text-anchor="middle" font-size="12" fill="var(--ink)" font-family="Readex Pro,sans-serif">${c.n}</text></g>`}).join('')}
+  </svg>`;
+  renderMarket();
+  $('#cityList').innerHTML=CITIES.map(c=>`<button data-act="city-map" data-c="${c.n}"><span>${c.n}</span><b>${counts[c.n]}</b></button>`).join('');
+}
+
+function renderMarket(){
+  const ls=ALL(),now=Date.now(),month=30*864e5;
+  const fresh=ls.filter(l=>now-l.created<month).length,sale=ls.filter(l=>l.kind==='sale').length,rent=ls.filter(l=>l.kind!=='sale').length;
+  const drops=ls.filter(l=>dropPct(l)).length;
+  const rows=CITIES.map(c=>{const cl=ls.filter(l=>l.city===c.n);
+    const res=cl.filter(l=>l.kind==='sale'&&['apartment','house','villa'].includes(l.type)&&l.size);
+    const avg=res.length>=2?Math.round(res.reduce((a,l)=>a+l.price/l.size,0)/res.length):null;
+    const rents=cl.filter(l=>l.kind==='rent'&&l.type==='apartment');
+    const avgR=rents.length?Math.round(rents.reduce((a,l)=>a+l.price,0)/rents.length):null;
+    return {c:c.n,n:cl.length,avg,avgR}}).filter(r=>r.n).sort((a,b)=>b.n-a.n);
+  $('#market').innerHTML=`<div class="sec"><h2>مؤشرات السوق</h2></div>
+  <div class="kpis"><div class="kpi"><b>${ls.length}</b><span>إعلان نشط</span></div><div class="kpi"><b>${fresh}</b><span>جديد خلال 30 يوماً</span></div><div class="kpi"><b>${sale}</b><span>للبيع</span></div><div class="kpi"><b>${rent}</b><span>للإيجار والحجز</span></div></div>
+  ${drops?`<button class="search-pill" style="margin-top:12px" data-act="drops"><span class="spark">↓</span><span class="txt"><b>${drops} عقارات انخفض سعرها</b><small>اعرضها الآن قبل أن تُحجز أو تُباع</small></span></button>`:''}
+  <div class="panel" style="margin-top:12px;overflow-x:auto"><table class="mkt"><thead><tr><th>المدينة</th><th>إعلانات</th><th>متر البيع</th><th>إيجار شقة</th></tr></thead><tbody>
+  ${rows.map(r=>`<tr><td><button data-act="city-map" data-c="${r.c}">${r.c}</button></td><td class="n">${r.n}</td><td class="n">${r.avg?fmt(r.avg)+' د.ل':'<span class="muted">—</span>'}</td><td class="n">${r.avgR?fmt(r.avgR)+' د.ل':'<span class="muted">—</span>'}</td></tr>`).join('')}
+  </tbody></table><p class="legal">«متر البيع» متوسط سعر المتر للشقق والمنازل والفلل المعروضة للبيع، و«إيجار شقة» متوسط الإيجار الشهري. محسوبة من الإعلانات المنشورة في خيارنا عقارنا فقط، وتتحدث تلقائياً. لا نعرض متوسطاً إذا كانت الإعلانات أقل من اثنين.</p></div>`;
+}
+
+/* ---------- Admin PIN (this device only; the real app uses an admin login) ---------- */
+const pinHash=p=>String(hash('aqarna-admin:'+p));
+function openPin(){const has=!!store.get('adminPin',null);
+  openSheet('لوحة المدير',`<div style="padding:8px 18px 20px">
+    <div class="locbox" style="margin-bottom:14px"><span class="lic">${I.lock}</span><div><b>${has?'أدخل رمز المدير':'أنشئ رمز المدير'}</b><div class="muted" style="font-size:13px">${has?'اللوحة مقفلة، ولا يفتحها إلا من يعرف الرمز.':'اختر رمزاً من 4 إلى 8 أرقام، ولا تعطه لأحد.'}</div></div></div>
+    <div class="field"><label for="pin1">${has?'الرمز':'الرمز الجديد'}</label><input id="pin1" type="password" inputmode="numeric" autocomplete="off" maxlength="8" dir="ltr"></div>
+    ${has?'':'<div class="field"><label for="pin2">أعد كتابة الرمز</label><input id="pin2" type="password" inputmode="numeric" autocomplete="off" maxlength="8" dir="ltr"></div>'}
+    <div class="err" id="pinErr"></div>
+    <button class="btn block" data-act="pin-go">${has?'افتح اللوحة':'احفظ الرمز وافتح اللوحة'}</button>
+    <p class="legal">هذا الرمز محفوظ على هذا الهاتف فقط. في النسخة الحقيقية تدخل اللوحة بحساب المدير من قاعدة البيانات، ولا يستطيع غيرك فتحها من أي جهاز.</p></div>`,null,{focus:'#pin1'})}
+function pinGo(){const e=$('#pinErr'),a=$('#pin1').value.trim(),has=store.get('adminPin',null);
+  if(Date.now()<state.pinLockUntil){e.textContent='محاولات كثيرة. انتظر 30 ثانية.';return}
+  if(!/^\d{4,8}$/.test(a)){e.textContent='الرمز من 4 إلى 8 أرقام.';return}
+  if(!has){if(a!==$('#pin2').value.trim()){e.textContent='الرمزان غير متطابقين.';return}store.set('adminPin',pinHash(a))}
+  else if(pinHash(a)!==has){state.pinFails++;if(state.pinFails>=5){state.pinLockUntil=Date.now()+30000;state.pinFails=0}e.textContent='الرمز غير صحيح.';$('#pin1').value='';return}
+  state.adminOk=true;state.pinFails=0;closeSheet(true);go('admin');toast('مرحباً بك في لوحة المدير')}
+
+/* ---------- Onboarding ---------- */
+const OB=[
+  {i:'shield',t:'إعلانات حقيقية وموثقة',p:'نراجع كل إعلان قبل نشره، وتعرف من شارة التوثيق إن كان صاحبه أكّد هاتفه أو هويته.'},
+  {i:'spark',t:'ابحث بكلامك',p:'اكتب «نبي شقة في طرابلس 3 غرف أقل من 400 ألف»، ونعرض لك العقارات المطابقة فعلاً مع سبب المطابقة.'},
+  {i:'lock',t:'احجز بأمان',p:'في الإيجار اليومي والفنادق تدفع العربون عبر خيارنا عقارنا، ويُسترد إذا لم يطابق المكان الإعلان.'}
+];
+let obStep=0;
+function renderOB(){const o=OB[obStep],last=obStep===OB.length-1;
+  $('#ob').innerHTML=`<button class="skip" data-act="ob-skip">تخطي</button>
+  <div class="slide" key="${obStep}"><span class="orb">${I[o.i]}</span><h2>${o.t}</h2><p>${o.p}</p></div>
+  <div class="dotsb" aria-hidden="true">${OB.map((_,i)=>`<i class="${i===obStep?'on':''}"></i>`).join('')}</div>
+  <button class="next" data-act="ob-next">${last?'ابدأ الآن':'التالي'}</button>`;
+  $('#ob .next').focus()}
+function closeOB(){$('#ob').hidden=true;store.set('onboarded',true);document.body.classList.remove('locked')}
+
+/* ---------- Saved / Alerts ---------- */
+function renderSaved(){
+  const favs=ALL().filter(l=>state.favs.includes(l.id));
+  $('#favGrid').innerHTML=favs.length?favs.map(l=>card(l)).join(''):`<div class="empty"><p>اضغط على القلب فوق أي عقار ليُحفظ هنا.</p></div>`;
+  $('#savedList').innerHTML=state.saved.length?state.saved.map((s,i)=>`<div class="srow"><span class="lbl">🔔 ${esc(s.label)}</span><button class="btn ghost small" data-act="run-saved" data-i="${i}">اعرض</button><button class="btn danger small" data-act="del-saved" data-i="${i}">حذف</button></div>`).join(''):`<p class="muted" style="margin:0">ابحث من الرئيسية ثم اضغط زر الجرس لتصلك تنبيهات بالعقارات الجديدة المطابقة.</p>`;
+  $('#mineList').innerHTML=state.mine.length?state.mine.map(l=>{
+    const pr=state.promos.find(p=>p.listing===l.id&&(p.status==='pending'||(p.status==='active'&&p.ends>Date.now())));
+    const st=l.status==='active'?stTag(['منشور','t-ok']):l.status==='review'?stTag(['قيد المراجعة','t-pend']):stTag(['مرفوض','t-no']);
+    const pst=pr?(pr.status==='active'?` ${stTag([(pr.type==='pinned'?'مثبت':'مميز')+' حتى '+new Date(pr.ends).toLocaleDateString('ar-LY',{day:'numeric',month:'short'}),'t-info'])}`:` ${stTag(['الترويج بانتظار الدفع','t-pend'])}`):'';
+    const del=`<button class="round" data-act="del-mine" data-id="${l.id}" aria-label="احذف الإعلان" title="احذف الإعلان" style="width:38px;height:38px;flex:0 0 auto;color:var(--danger)">${I.trash}</button>`;
+    return `<div class="mine"><div class="thumb">${art(l)}</div><div class="info"><b>${esc(l.title)}</b><div class="muted">${l.id}، ${priceHTML(l)}</div><div class="status">${st}${pst}</div>${l.status==='rejected'&&l.reason?`<div class="muted" style="font-size:12.5px">${esc(l.reason)}</div>`:''}</div>
+    ${l.status==='active'?`<button class="round" data-act="fb" data-id="${l.id}" aria-label="انشر على فيسبوك" title="انشر على فيسبوك" style="width:38px;height:38px;flex:0 0 auto;color:#fff;background:#1877F2;border:0;font-weight:700;font-size:19px;font-family:Arial,sans-serif">f</button>`:''}${l.status==='active'&&!pr?`<button class="btn small" data-act="promote" data-id="${l.id}">${I.star.replace('<svg','<svg width="15" height="15"')}روّج</button>`:''}${l.status==='review'?`<button class="btn ghost small" data-act="nav" data-v="admin">راجعه كمدير</button>`:''}${del}</div>`}).join(''):`<p class="muted" style="margin:0">لم تنشر أي إعلان بعد.</p>`;
+}
+function renderAlerts(){
+  const ns=state.notes;
+  $('#alertList').innerHTML=ns.length?ns.map(n=>`<div class="note ${n.read?'':'unread'}"><span class="ic">${n.ic}</span><div><span class="txt">${esc(n.t)}</span><time>${new Date(n.time).toLocaleString('ar-LY',{hour:'2-digit',minute:'2-digit',day:'numeric',month:'short'})}</time></div></div>`).join(''):`<p class="muted" style="margin:0">لا توجد تنبيهات بعد. فعّل التنبيه على أي بحث، وسنخبرك فور نزول عقار جديد يطابقه.</p>`;
+  if(ns.some(n=>!n.read)){ns.forEach(n=>n.read=true);store.set('notes',ns);setTimeout(updateBadge,1500)}
+}
+function updateBadge(){const u=state.notes.filter(n=>!n.read).length,b=$('#badge');b.hidden=!u;b.textContent=u}
+function updateTray(){
+  const n=state.compare.length;$('#tray').classList.toggle('show',n>0);
+  $('#trayText').textContent=n===1?'اختر عقاراً آخر للمقارنة':`${n} عقارات للمقارنة`;
+  $('#tray [data-act="compare-open"]').disabled=n<2;
+}
+function renderAll(){({home:renderHome,map:renderMap,saved:renderSaved,alerts:renderAlerts,add:renderAdd,account:renderAccount,admin:renderAdmin})[state.view]();updateBadge();updateTray()}
+function go(v){
+  if(v==='admin'&&!state.adminOk){openPin();return}
+  state.view=v;
+  document.querySelectorAll('.view').forEach(s=>s.classList.toggle('active',s.id==='v-'+v));
+  document.querySelectorAll('.tabbar button').forEach(b=>{if(b.dataset.v===v)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current')});
+  renderAll();window.scrollTo(0,0);
+}
+
+/* ---------- Sheet ---------- */
+let lastFocus=null;
+function openSheet(title,body,foot,opts={}){
+  lastFocus=document.activeElement;
+  $('#sheetTitle').textContent=title;$('#sheetBody').innerHTML=body;$('#sheetBody').scrollTop=0;
+  $('#sheetHead').classList.toggle('floating',!!opts.floating);
+  $('#sheetHead').querySelector('button').classList.toggle('glass',!!opts.floating);
+  $('#headExtra').innerHTML=opts.extra||'';
+  const ft=$('#sheetFoot');if(foot){ft.innerHTML=foot;ft.hidden=false}else ft.hidden=true;
+  $('#sheet').classList.add('show');document.body.classList.add('locked');
+  setTimeout(()=>{const t=opts.focus?$(opts.focus):$('#sheetHead button');if(t)t.focus()},60);
+}
+function closeSheet(keep){$('#sheet').classList.remove('show');document.body.classList.remove('locked');state.book=null;state.chatOpen=null;if(lastFocus&&lastFocus.isConnected)lastFocus.focus();if(!keep)renderAll()}
+
+/* ---------- AI search ---------- */
+function openAI(){
+  const ex=['نبي شقة للبيع في طرابلس 3 غرف أقل من 600 ألف','شاليه قريب من البحر بالليلة','فندق في بنغازي','شقة مفروشة للإيجار في طرابلس هادئة','فيلا في جنزور فيها موقف'];
+  openSheet('البحث الذكي',`<div class="ai">
+    <form id="aiForm" class="ai-field"><textarea id="aiInput" rows="2" aria-label="اكتب طلبك" placeholder="اكتب طلبك كما تقوله لصديق…"></textarea><button class="btn" type="submit" aria-label="ابحث">${I.spark.replace('<svg','<svg width="18" height="18"')}ابحث</button></form>
+    <small>يحوّل كلامك إلى شروط بحث، ويبحث فقط في الإعلانات الموجودة فعلاً. لا يخترع عقارات ولا أسعاراً.</small>
+    <div id="aiState"></div>
+    ${state.recents.length?`<h3>عمليات بحث سابقة</h3><div class="sugg" style="margin-bottom:18px">${state.recents.map(r=>`<button data-act="ai-ex" data-q="${esc(r)}">${I.clock}${esc(r)}</button>`).join('')}</div>`:''}
+    <h3>جرّب مثلاً</h3><div class="sugg">${ex.map(q=>`<button data-act="ai-ex" data-q="${esc(q)}">${I.spark}${esc(q)}</button>`).join('')}</div>
+  </div>`,null,{focus:'#aiInput'});
+}
+function runAI(q){
+  q=q.trim();if(!q)return;
+  state.recents=[q,...state.recents.filter(r=>r!==q)].slice(0,4);store.set('recents',state.recents);
+  $('#aiState').innerHTML=`<div class="thinking"><i></i><i></i><i></i>نفهم طلبك…</div>`;
+  const {f,notes}=parse(q);
+  setTimeout(()=>{
+    state.filters=f;state.parseNotes=notes;
+    if(!chipsFor(f).length)state.parseNotes=['لم نفهم شروطاً محددة من طلبك. جرّب ذكر المدينة أو نوع العقار أو السعر.'];
+    closeSheet(true);if(state.view!=='home')go('home');searchWithLoading();window.scrollTo(0,0);
+  },matchMedia('(prefers-reduced-motion:reduce)').matches?0:650);
+}
+
+/* ---------- Details ---------- */
+function openDetail(id){
+  const l=byId(id);if(!l)return;const ins=insight(l),v=VERIFY[l.verify],fav=state.favs.includes(id);
+  const specs=[['المساحة',l.size?l.size+' م²':'—'],['غرف النوم',l.beds??'—'],['الحمامات',l.baths??'—'],['الطابق',l.floor??'—'],['مصعد',l.elevator?'نعم':'لا'],['موقف',l.parking?'نعم':'لا']].filter(s=>!(l.type==='land'&&['غرف النوم','الحمامات','الطابق','مصعد'].includes(s[0])));
+  const bookable=['daily','hotel'].includes(l.kind);
+  if(bookable)state.book={id,in:null,out:null};
+  let bar='';
+  if(ins){const lo=Math.min(ins.ppm,ins.avg)*.8,hi=Math.max(ins.ppm,ins.avg)*1.2,pos=x=>((x-lo)/(hi-lo)*100).toFixed(1);
+    bar=`<div class="bar"><i style="right:${pos(ins.avg)}%;background:var(--muted)"></i><i style="right:${pos(ins.ppm)}%;background:${ins.diff<0?'var(--ok)':'var(--gold)'}"></i></div><div class="bar-l"><span>● هذا العقار ${fmt(ins.ppm)} د.ل/م²</span><span>● المتوسط ${fmt(ins.avg)}</span></div>`}
+  const body=`<div class="gwrap"><div class="gallery" id="gal" aria-label="الصور">${art(l,0)}${art(l,1)}${art(l,2)}</div><div class="dots" id="dots"><i class="on"></i><i></i><i></i></div></div>
+  <div class="d-in">
+    <div class="row"><span class="vbadge" style="background:var(--surface2);color:var(--muted)">${TYPES[l.type]}، ${KINDS[l.kind]}${promoOf(l)?(promoOf(l)==='pinned'?'، مثبت':'، مميز'):''}</span><span class="muted" style="direction:ltr;font-size:12.5px">${l.id}</span></div>
+    <h3 class="d-title">${esc(l.title)}</h3>
+    ${l.shared?`<div class="sharedbar">${I.info.replace('<svg','<svg width="16" height="16" style="flex:0 0 auto"')}<span>فتحت هذا الإعلان من رابط شاركه صاحبه. لا تدفع أي مبلغ قبل معاينة العقار.</span></div>`:''}
+    <div class="place">${I.pin}${esc(l.area)}، ${esc(l.city)}</div>
+    ${l.oldPrice>l.price?`<div class="was">${dropHTML(l)} كان<s>${fmt(l.oldPrice)} د.ل</s></div>`:''}
+    <div class="specgrid">${specs.map(s=>`<div><b>${s[1]}</b><span>${s[0]}</span></div>`).join('')}</div>
+    ${ins?`<div class="box"><h3>تحليل السعر</h3><p>سعر المتر ${ins.diff<0?'أقل':'أعلى'} من متوسط ${ins.n} عقارات مشابهة في ${esc(l.city)} بنسبة <b>${Math.abs(ins.diff)}%</b>.</p>${bar}<p class="legal">محسوب من الإعلانات الموجودة في التطبيق فقط، وليس تقييماً رسمياً.</p></div>`:''}
+    ${l.features.length?`<div class="box"><h3>المميزات</h3><div class="feat">${l.features.map(x=>`<span>${esc(x)}</span>`).join('')}</div></div>`:''}
+    <div class="box"><h3>الوصف</h3><p>${esc(l.desc)||'لا يوجد وصف.'}</p></div>
+    ${l.loc?`<div class="box"><div class="locbox"><span class="lic">${I.pin}</span><div style="flex:1"><b>موقع العقار بالضبط</b><div class="muted" style="font-size:12.5px;direction:ltr;text-align:right">${l.loc.lat.toFixed(5)}, ${l.loc.lng.toFixed(5)}</div></div><a class="btn small" href="${mapUrl(l.loc)}" target="_blank" rel="noopener">افتح في الخرائط</a></div><p class="legal">يفتح خرائط Google على مكان العقار، ومنها تبدأ الاتجاهات من مكانك.</p></div>`:''}
+    ${isMine(l)&&l.status==='active'?`<button class="btn block" style="margin:4px 0 12px;background:#1877F2;color:#fff" data-act="fb" data-id="${l.id}">${I.share.replace('<svg','<svg width="18" height="18"')}انشر على صفحتك في فيسبوك</button>`:''}
+    <div class="box"><div class="owner"><span class="avatar">${esc(l.owner.name.trim()[0]||'؟')}</span><div style="flex:1"><b>${esc(l.owner.name)}</b><div class="muted" style="font-size:13px">${esc(l.owner.role)}</div></div>${vHTML(l.verify)}</div><p class="legal">${v.d} التوثيق يخص صاحب الإعلان، ولا يعني مراجعة مستندات العقار القانونية.</p>
+      ${bookable?(paidFor(l.id)?`<div class="lock open">${I.phone}<span>دفعت العربون، فأصبح رقم صاحب العقار متاحاً لك. <button class="link" data-act="call" data-id="${l.id}">اتصل الآن</button></span></div>`:`<div class="lock">${I.lock}<span>رقم صاحب العقار يظهر بعد دفع العربون عبر خيارنا عقارنا. قبل ذلك تواصل معه بالمحادثة داخل التطبيق. حجزك عبر خيارنا عقارنا مضمون، ويُسترد عربونك إذا لم يطابق المكان الإعلان.</span></div>
+      <button class="btn ghost block" style="margin-top:10px" data-act="chat" data-id="${l.id}">${I.chat.replace('<svg','<svg width="18" height="18"')}راسل صاحب العقار</button>`):`<button class="btn ghost block" data-act="call" data-id="${l.id}">${I.phone.replace('<svg','<svg width="18" height="18"')}اعرض رقم الهاتف</button>`}</div>
+    ${sponsor('detail',l.kind)}
+    ${bookable?`<div class="box" id="bookBox"></div>`:`<div class="box" id="viewBox"><h3>طلب معاينة</h3>
+      <div class="row2"><div class="field"><label for="vDate">التاريخ</label><input type="date" id="vDate" min="${new Date().toISOString().slice(0,10)}"></div>
+      <div class="field"><label for="vTime">الوقت</label><select id="vTime">${['10:00','11:00','12:00','13:00','16:00','17:00','18:00','19:00'].map(t=>`<option>${t}</option>`).join('')}</select></div></div>
+      <div class="err" id="vErr"></div><button class="btn block" data-act="view-send" data-id="${l.id}">أرسل طلب المعاينة</button></div>`}
+    <div class="actions3"><button class="btn ghost small" data-act="cmp" data-id="${l.id}">${state.compare.includes(l.id)?'✓ في المقارنة':'+ أضف للمقارنة'}</button><button class="btn danger small" data-act="report" data-id="${l.id}">إبلاغ عن الإعلان</button></div>
+  </div>`;
+  const foot=`<div class="foot-price">${fmt(l.price)} د.ل<small>${UNIT[l.kind]?UNIT[l.kind].replace(' / ','لكل '):'السعر الكامل'}</small></div>
+    ${bookable?`<button class="round" data-act="chat" data-id="${l.id}" aria-label="راسل صاحب العقار">${I.chat.replace('<svg','<svg width="22" height="22"')}</button>`:`<button class="round" data-act="wa" data-id="${l.id}" aria-label="واتساب" style="color:#25A35A">${I.wa.replace('<svg','<svg width="22" height="22"')}</button>`}
+    <button class="btn" data-act="cta">${bookable?'احجز الآن':'اطلب معاينة'}</button>`;
+  const extra=`<button class="round glass" data-act="share" data-id="${l.id}" aria-label="مشاركة">${I.share}</button><button class="round glass" data-act="fav" data-id="${l.id}" aria-pressed="${fav}" style="color:${fav?'var(--heart)':'inherit'}" aria-label="المفضلة">${I.heart(fav)}</button>`;
+  openSheet(TYPES[l.type],body,foot,{floating:true,extra});
+  if(bookable)renderBook();
+  const gal=$('#gal');gal.addEventListener('scroll',()=>{const i=Math.round(Math.abs(gal.scrollLeft)/gal.clientWidth);document.querySelectorAll('#dots i').forEach((d,k)=>d.classList.toggle('on',k===i))},{passive:true});
+}
+function bookedSet(id){const s=new Set();for(let d=1;d<28;d++)if(hash(id+':'+d)%5===0)s.add(d);return s}
+function renderBook(){
+  const b=state.book,l=byId(b.id),booked=bookedSet(l.id),today=new Date();today.setHours(0,0,0,0);
+  const first=(today.getDay()+1)%7;
+  let cells=['س','ح','ن','ث','ر','خ','ج'].map(d=>`<span class="wd">${d}</span>`).join('')+'<span></span>'.repeat(first);
+  for(let d=0;d<28;d++){const dt=new Date(today);dt.setDate(today.getDate()+d);
+    const cls=(d===b.in||d===b.out)?'sel':(b.in!==null&&b.out!==null&&d>b.in&&d<b.out?'mid':'');
+    cells+=`<button class="${cls}" data-act="book-day" data-d="${d}" ${booked.has(d)?'disabled aria-label="محجوز"':''}>${dt.getDate()}</button>`}
+  const nights=b.in!==null&&b.out!==null?b.out-b.in:0,total=nights*l.price,dep=Math.round(total*.2);
+  const ds=d=>{const x=new Date(today);x.setDate(today.getDate()+d);return x.toLocaleDateString('ar-LY',{day:'numeric',month:'long'})};
+  $('#bookBox').innerHTML=`<h3>اختر أيام إقامتك</h3><p class="muted" style="font-size:13.5px">${b.in===null?'اضغط على يوم الوصول.':b.out===null?'الوصول '+ds(b.in)+'. اضغط على يوم المغادرة.':'من '+ds(b.in)+' إلى '+ds(b.out)}</p>
+  <div class="cal">${cells}</div>
+  ${nights?`<div class="sum"><span>${nights} ${nights===1?'ليلة':'ليالٍ'} × ${fmt(l.price)} د.ل</span><span>${fmt(total)} د.ل</span></div><div class="sum total"><span>العربون الآن (20%)</span><span>${fmt(dep)} د.ل</span></div><p class="legal">الباقي عند الوصول. العربون يُسترد عند الإلغاء قبل 48 ساعة.</p>`:''}
+  <button class="btn block" style="margin-top:12px" data-act="book-send" ${nights?'':'disabled'}>أرسل طلب الحجز</button>`;
+}
+
+/* ---------- Add listing ---------- */
+function renderAdd(){
+  const d=state.draft,s=state.addStep,city=CITIES.find(c=>c.n===(d.city||'طرابلس'));
+  const opt=(o,v)=>Object.entries(o).map(([k,t])=>`<option value="${k}" ${v===k?'selected':''}>${t}</option>`).join('');
+  const tg=(id,label,on)=>`<label><input type="checkbox" id="${id}" ${on?'checked':''}><span>${label}</span></label>`;
+  const used=usedListings(),lim=PLANS[state.me.plan].max,full=used>=lim;
+  let h=`<div style="margin-bottom:14px"><div class="row" style="justify-content:space-between;font-size:13.5px"><span class="muted">خطتك ${PLANS[state.me.plan].n}: ${used} من ${lim} إعلانات</span>${state.me.plan==='free'?`<button class="link" data-act="plans">رقِّ الخطة</button>`:''}</div><div class="meter ${full?'full':''}"><i style="width:${Math.min(100,used/lim*100)}%"></i></div></div>`;
+  h+=`<div class="steps"><span class="${s>=1?'on':''}"></span><span class="${s>=2?'on':''}"></span><span class="${s>=3?'on':''}"></span></div>`;
+  if(s===1)h+=`<h3 class="step-h">ما نوع إعلانك؟</h3>
+    <div class="field"><label for="aKind">نوع العرض</label><select id="aKind">${opt({sale:'للبيع',rent:'للإيجار',daily:'إيجار يومي'},d.kind)}</select></div>
+    <div class="field"><label for="aType">نوع العقار</label><select id="aType">${opt({apartment:'شقة',villa:'فيلا',house:'منزل',land:'أرض',chalet:'شاليه',shop:'محل',office:'مكتب'},d.type)}</select></div>
+    <div class="row2"><div class="field"><label for="aCity">المدينة</label><select id="aCity">${CITIES.map(c=>`<option ${d.city===c.n?'selected':''}>${c.n}</option>`).join('')}</select></div>
+    <div class="field"><label for="aArea">المنطقة</label><select id="aArea">${city.areas.map(a=>`<option ${d.area===a?'selected':''}>${a}</option>`).join('')}</select></div></div>
+    <div class="form-actions"><button class="btn block" data-act="add-next">التالي</button></div>`;
+  if(s===2)h+=`<h3 class="step-h">تفاصيل العقار</h3>
+    <div class="row2"><div class="field"><label for="aPrice">السعر (د.ل)</label><input id="aPrice" type="number" inputmode="numeric" min="1" value="${d.price||''}"></div>
+    <div class="field"><label for="aSize">المساحة (م²)</label><input id="aSize" type="number" inputmode="numeric" min="1" value="${d.size||''}"></div></div>
+    <div class="row2"><div class="field"><label for="aBeds">غرف النوم</label><input id="aBeds" type="number" inputmode="numeric" min="0" value="${d.beds??''}"></div>
+    <div class="field"><label for="aBaths">الحمامات</label><input id="aBaths" type="number" inputmode="numeric" min="0" value="${d.baths??''}"></div></div>
+    <div class="toggles">${tg('aFurn','مفروش',d.furnished)}${tg('aPark','موقف سيارة',d.parking)}${tg('aElev','مصعد',d.elevator)}${tg('aSea','قريب من البحر',d.sea)}</div>
+    <div class="err" id="aErr"></div>
+    <div class="form-actions" style="display:flex;gap:8px"><button class="btn ghost" data-act="add-back">رجوع</button><button class="btn" style="flex:1" data-act="add-next">التالي</button></div>`;
+  if(s===3)h+=`<h3 class="step-h">العنوان والتواصل</h3>
+    <div class="field"><label for="aTitle">عنوان الإعلان</label><input id="aTitle" maxlength="60" value="${esc(d.title||'')}" placeholder="مثال: شقة ثلاث غرف قرب البحر"></div>
+    <div class="field"><label for="aDesc">الوصف</label><textarea id="aDesc" rows="3" maxlength="400">${esc(d.desc||'')}</textarea></div>
+    <div class="field"><label for="aName">اسمك كما سيظهر</label><input id="aName" maxlength="40" value="${esc(d.name||'')}"></div>
+    <div class="field"><label for="aPhone">رقم الهاتف</label><input id="aPhone" type="tel" inputmode="tel" dir="ltr" value="${esc(d.phone||'')}" placeholder="09XXXXXXXX"></div>
+    <div class="field"><label for="aLoc">موقع العقار بالضبط (اختياري)</label><input id="aLoc" dir="ltr" value="${esc(d.loc||'')}" placeholder="32.8872, 13.1913 أو رابط خرائط Google"></div>
+    <button type="button" class="inline-btn" data-act="geo">${I.pin}استخدم موقعي الحالي</button>
+    <p class="legal" style="margin:0 0 10px">في خرائط Google اضغط مطولاً على مكان العقار، وانسخ الأرقام التي تظهر في الأعلى والصقها هنا. الصور والفيديو تُضاف في النسخة الكاملة.</p>
+    <div class="err" id="aErr"></div>
+    <div class="form-actions" style="display:flex;gap:8px"><button class="btn ghost" data-act="add-back">رجوع</button><button class="btn" style="flex:1" data-act="add-submit">أرسل للمراجعة</button></div>`;
+  $('#addPanel').innerHTML=h;
+}
+function collectAdd(){
+  const d=state.draft,v=id=>{const e=$('#'+id);return e?e.value.trim():undefined},c=id=>{const e=$('#'+id);return e?e.checked:undefined};
+  if(state.addStep===1)Object.assign(d,{kind:v('aKind'),type:v('aType'),city:v('aCity'),area:v('aArea')});
+  if(state.addStep===2)Object.assign(d,{price:+v('aPrice')||0,size:+v('aSize')||null,beds:v('aBeds')===''?null:+v('aBeds'),baths:v('aBaths')===''?null:+v('aBaths'),furnished:c('aFurn'),parking:c('aPark'),elevator:c('aElev'),sea:c('aSea')});
+  if(state.addStep===3)Object.assign(d,{title:v('aTitle'),desc:v('aDesc'),name:v('aName'),phone:v('aPhone'),loc:v('aLoc')});
+}
+
+
+/* ---------- Account ---------- */
+const usedListings=()=>state.mine.filter(l=>['review','active'].includes(l.status)).length;
+const dshort=t=>new Date(t).toLocaleDateString('ar-LY',{day:'numeric',month:'short'});
+function renderAccount(){
+  const me=state.me,plan=PLANS[me.plan],used=usedListings(),verified=['id','agent'].includes(me.verify);
+  const rq=me.idReq;
+  let h=`<div class="panel"><div class="acc-head"><span class="avatar">م</span><div style="flex:1"><b style="font-size:17px">حسابك في خيارنا عقارنا</b><div style="margin-top:4px">${vHTML(me.verify)}</div></div></div>`;
+  if(!verified){
+    h+= rq&&rq.status==='pending'?`<div class="lock" style="margin-top:14px">${I.doc}<span>أرسلت وثيقتك للمراجعة ${dshort(rq.created)}. سنخبرك بالنتيجة خلال 24 ساعة.</span></div>`
+      :`<div class="lock" style="margin-top:14px">${I.shield}<span>${rq&&rq.status==='rejected'?`لم نقبل الوثيقة السابقة: ${esc(rq.reason)}. `:''}وثّق هويتك بجواز السفر أو البطاقة الشخصية لتحصل على شارة «هوية موثقة» ويثق بك المشترون والمستأجرون أكثر.</span></div>
+      <button class="btn block" style="margin-top:10px" data-act="verify">${I.doc.replace('<svg','<svg width="18" height="18"')}وثّق هويتك</button>`;
+  }
+  h+=`</div>`;
+  h+=`<div class="sec"><h2>خطتك</h2><button class="link" data-act="plans">كل الخطط</button></div><div class="panel">
+    <div class="row" style="justify-content:space-between"><b style="font-size:17px">${plan.n}${plan.price?` <span class="muted" style="font-weight:400;font-size:14px">${plan.price} د.ل شهرياً</span>`:''}</b>${me.planEnds?`<span class="muted" style="font-size:13px">تتجدد ${dshort(me.planEnds)}</span>`:''}</div>
+    <div class="meter ${used>=plan.max?'full':''}"><i style="width:${Math.min(100,used/plan.max*100)}%"></i></div>
+    <div class="muted" style="font-size:13.5px">${used} من ${plan.max} إعلانات نشطة أو قيد المراجعة</div>
+    ${me.planPending?`<div style="margin-top:10px">${stTag(['طلب ترقية إلى «'+PLANS[me.planPending].n+'» بانتظار تأكيد الدفع','t-pend'])}</div>`:me.plan==='free'?`<button class="btn block" style="margin-top:12px" data-act="plans">${I.crown.replace('<svg','<svg width="18" height="18"')}رقِّ خطتك</button>`:''}
+  </div>`;
+  const bks=state.bookings;
+  h+=`<div class="sec"><h2>حجوزاتي</h2></div><div class="panel">${bks.length?bks.map(b=>`<div class="lrow"><div class="li"><b>${esc(b.title)}</b><span>${b.nights} ${b.nights===1?'ليلة':'ليالٍ'} من ${esc(b.from)}، العربون ${fmt(b.deposit)} د.ل</span><div style="margin-top:4px">${stTag(BK_ST[b.status])}</div></div><div class="acts">${b.status==='confirmed'?`<button class="btn small" data-act="pay-deposit" data-id="${b.id}">ادفع العربون</button>`:''}${b.status==='deposit_paid'?`<button class="btn ghost small" data-act="call" data-id="${b.listing}">${I.phone.replace('<svg','<svg width="15" height="15"')}اتصل</button>`:`<button class="btn ghost small" data-act="chat" data-id="${b.listing}">محادثة</button>`}</div></div>`).join(''):`<p class="muted" style="margin:0">لا توجد حجوزات. احجز شاليهاً أو غرفة فندقية من الرئيسية.</p>`}</div>`;
+  const cids=Object.keys(state.chats).filter(k=>state.chats[k].length);
+  h+=`<div class="sec"><h2>المحادثات</h2></div><div class="panel">${cids.length?cids.map(id=>{const l=byId(id),m=state.chats[id].filter(x=>!x.sys).slice(-1)[0];return l?`<button class="menu-row" data-act="chat" data-id="${id}"><span class="mi">${I.chat}</span><span class="ml">${esc(l.owner.name)}<small>${esc(m?m.t:'')}</small></span></button>`:''}).join(''):`<p class="muted" style="margin:0">راسل صاحب أي شاليه أو فندق من صفحة العقار، وتظهر محادثاتك هنا.</p>`}</div>`;
+  const ps=state.payments;
+  h+=`<div class="sec"><h2>مدفوعاتي</h2></div><div class="panel">${ps.length?ps.map(x=>`<div class="lrow"><div class="li"><b>${esc(x.label)}</b><span>${fmt(x.amount)} د.ل، ${METHOD[x.method]}، ${dshort(x.created)}</span></div>${stTag(PAY_ST[x.status])}</div>`).join(''):`<p class="muted" style="margin:0">لم تدفع شيئاً بعد.</p>`}</div>`;
+  h+=`<div class="panel"><button class="menu-row" data-act="nav" data-v="admin"><span class="mi">${I.grid}</span><span class="ml">لوحة المدير (تجربة)<small>راجع الإعلانات وأكّد المدفوعات وشاهد الدخل</small></span>${adminCount()?`<span class="cnt">${adminCount()}</span>`:''}</button></div>`;
+  $('#accBody').innerHTML=h;
+}
+
+/* ---------- Plans, promotion, payment ---------- */
+function openPlans(){
+  const me=state.me;
+  openSheet('خطط الاشتراك',`<div style="padding:8px 18px 22px"><p class="muted" style="margin-top:0">الخطة المجانية تكفي للأفراد. الوسطاء والشركات يحتاجون عدداً أكبر من الإعلانات وأدوات أكثر.</p><div class="plans">${Object.entries(PLANS).map(([k,pl])=>`<div class="plan ${me.plan===k?'cur':''}"><h3>${pl.n}</h3><div class="pp">${pl.price?fmt(pl.price)+' <small>د.ل شهرياً</small>':'مجاناً'}</div><ul>${pl.feat.map(f=>`<li>${f}</li>`).join('')}</ul>${me.plan===k?`<button class="btn ghost block" disabled>خطتك الحالية</button>`:k==='free'?'':me.planPending===k?`<button class="btn ghost block" disabled>بانتظار تأكيد الدفع</button>`:`<button class="btn block" data-act="subscribe" data-k="${k}">اشترك في «${pl.n}»</button>`}</div>`).join('')}</div>
+  <p class="legal">الدفع شهري ويمكنك الإلغاء في أي وقت. الأسعار هنا أمثلة وتُحدد عند الإطلاق.</p></div>`);
+}
+function openPromote(id){
+  const l=byId(id);
+  openSheet('روّج إعلانك',`<div style="padding:8px 18px 20px"><p class="muted" style="margin-top:0">«${esc(l.title)}» سيظهر أمام عدد أكبر من الباحثين. يظهر عليه وسم «مميز» أو «مثبت» ليعرف الناس أنه إعلان مروّج.</p>
+  <div class="opts" role="radiogroup" aria-label="نوع الترويج">${PROMO.map((o,i)=>`<label class="opt"><input type="radio" name="pr" value="${i}" ${i===0?'checked':''}><span class="rd"></span><span class="ot"><b>${o.t}</b><small>${o.s}</small></span><span class="price">${o.p} د.ل</span></label>`).join('')}</div></div>`,
+  `<button class="btn block" data-act="promo-send" data-id="${id}">تابع للدفع</button>`);
+}
+function openPay(ctx){
+  state.payCtx=ctx;
+  openSheet('الدفع',`<div style="padding:8px 18px 20px">
+    <div class="paysum"><span>${esc(ctx.label)}</span><b>${fmt(ctx.amount)} د.ل</b></div>
+    <div class="opts" role="radiogroup" aria-label="طريقة الدفع">
+      <label class="opt"><input type="radio" name="pm" value="cash" checked><span class="rd"></span><span class="ot"><b>نقداً</b><small>في مكتب خيارنا عقارنا أو لمندوبنا، ونؤكد الدفع فور الاستلام.</small></span></label>
+      <label class="opt"><input type="radio" name="pm" value="bank"><span class="rd"></span><span class="ot"><b>تحويل مصرفي</b><small>حوّل إلى حساب خيارنا عقارنا، ثم ارفع صورة الإيصال. تظهر بيانات الحساب هنا عند الإطلاق.</small></span></label>
+      <label class="opt"><input type="radio" name="pm" value="card" disabled><span class="rd"></span><span class="ot"><b>بطاقة مصرفية محلية</b><small>قريباً، بعد الربط مع بوابة دفع ليبية.</small></span></label>
+    </div>
+    <div class="filebox" id="rcptBox" hidden><span class="fi">${I.receipt}</span><span><b style="display:block;font-size:14.5px">صورة إيصال التحويل</b><small class="muted fname">اضغط لاختيار صورة</small></span><input type="file" accept="image/*" id="rcpt" aria-label="صورة إيصال التحويل"></div>
+    <div class="err" id="payErr"></div>
+    <p class="legal">لا يتفعّل الطلب إلا بعد أن يؤكد فريق خيارنا عقارنا استلام المبلغ.</p></div>`,
+    `<button class="btn block" data-act="pay-send">أرسل طلب الدفع</button>`);
+}
+function activateFor(pay,ok){
+  if(pay.purpose==='promotion'){const pr=state.promos.find(x=>x.id===pay.ref);if(!pr)return;
+    if(ok){pr.status='active';pr.ends=Date.now()+pr.days*864e5;pushNote(`تفعّل ترويج إعلانك «${byId(pr.listing).title}» حتى ${dshort(pr.ends)}.`,'⭐')}
+    else{pr.status='cancelled';pushNote('لم نتمكن من تأكيد دفع الترويج. تواصل معنا أو أعد المحاولة.','⚠️')}save('promos')}
+  if(pay.purpose==='subscription'){const k=state.me.planPending;state.me.planPending=null;
+    if(ok&&k){state.me.plan=k;state.me.planEnds=Date.now()+30*864e5;pushNote(`تفعّل اشتراك «${PLANS[k].n}». يمكنك الآن نشر حتى ${PLANS[k].max} إعلان.`,'👑')}
+    else pushNote('لم نتمكن من تأكيد دفع الاشتراك.','⚠️');save('me')}
+  if(pay.purpose==='booking_deposit'){const b=state.bookings.find(x=>x.id===pay.ref);if(!b)return;
+    if(ok){b.status='deposit_paid';pushNote(`ثبّتنا حجزك في «${b.title}». رقم صاحب العقار متاح لك الآن.`,'✅')}
+    else{b.status='confirmed';pushNote('لم نتمكن من تأكيد دفع العربون. أعد الدفع لتثبيت الحجز.','⚠️')}save('bookings')}
+}
+
+/* ---------- ID verification ---------- */
+function openVerify(){
+  const fb=(id,icon,t,hint)=>`<div class="filebox"><span class="fi">${icon}</span><span><b style="display:block;font-size:14.5px">${t}</b><small class="muted fname">${hint}</small></span><input type="file" accept="image/*" id="${id}" aria-label="${t}"></div>`;
+  openSheet('وثّق هويتك',`<div style="padding:8px 18px 20px">
+    <p class="muted" style="margin-top:0">نطابق صورتك مع الوثيقة للتأكد أنك صاحب الحساب. لا نعرض وثيقتك لأي مستخدم.</p>
+    <div class="opts" role="radiogroup" aria-label="نوع الوثيقة">
+      <label class="opt"><input type="radio" name="doc" value="passport" checked><span class="rd"></span><span class="ot"><b>جواز السفر</b><small>صفحة الصورة والبيانات</small></span></label>
+      <label class="opt"><input type="radio" name="doc" value="national_id"><span class="rd"></span><span class="ot"><b>البطاقة الشخصية</b><small>الوجهان</small></span></label>
+    </div>
+    ${fb('idFront',I.doc,'صورة الوثيقة','صفحة الصورة أو الوجه الأمامي')}
+    ${fb('idBack',I.doc,'الوجه الخلفي','للبطاقة الشخصية فقط')}
+    ${fb('idSelfie',I.cam,'صورة شخصية مع الوثيقة','امسك الوثيقة بجانب وجهك')}
+    <label class="check"><input type="checkbox" id="idConsent"><span>أوافق على استخدام هذه الصور للتحقق من هويتي فقط، وأعلم أنها تُحذف بعد انتهاء المراجعة.</span></label>
+    <div class="err" id="idErr"></div>
+    <p class="legal">التوثيق يثبت هويتك أنت، ولا يعني أن مستندات العقار راجعتها جهة قانونية.</p></div>`,
+    `<button class="btn block" data-act="verify-send">أرسل للمراجعة</button>`);
+}
+
+/* ---------- Chat with contact protection ---------- */
+function maskContacts(t){
+  const a=t.replace(/[٠-٩]/g,d=>'٠١٢٣٤٥٦٧٨٩'.indexOf(d));
+  const out=a.replace(/(?:\+?218|00218)?[\s-]*0?9[1-5](?:[\s-]*\d){7}|(?:\d[\s.-]*){8,}\d|وا?تس\S*|whats\s*app|واتساب|تيليجرام|telegram|فايبر|viber|[\w.+-]+@[\w-]+\.[\w.]+/gi,'••••');
+  return {t:out,masked:out!==a};
+}
+function chatHTML(id){
+  const l=byId(id),msgs=state.chats[id]||[];
+  return `<div class="chat" id="chatList"><div class="sysmsg">${I.shield.replace('<svg','<svg width="14" height="14" style="vertical-align:-2px"')} المحادثة داخل خيارنا عقارنا تحفظ حقك. ${paidFor(id)?'حجزك مثبّت، ويمكنكما تبادل الأرقام.':'أرقام الهواتف تظهر بعد دفع العربون.'}</div>
+    ${msgs.map(m=>m.sys?`<div class="sysmsg">${esc(m.t)}</div>`:`<div class="msg ${m.me?'me':'them'}">${esc(m.t)}<time>${new Date(m.time).toLocaleTimeString('ar-LY',{hour:'2-digit',minute:'2-digit'})}</time></div>`).join('')}</div>`;
+}
+function openChat(id){
+  const l=byId(id);if(!l)return;state.chats[id]=state.chats[id]||[];
+  openSheet(l.owner.name,chatHTML(id),`<form id="chatForm" class="chat-in"><input id="chatInput" aria-label="اكتب رسالتك" placeholder="اكتب رسالتك…" autocomplete="off" maxlength="500"><button class="btn" type="submit">أرسل</button></form>`,{focus:'#chatInput'});
+  state.chatOpen=id;scrollChat();
+}
+function scrollChat(){const b=$('#sheetBody');if(b)b.scrollTop=b.scrollHeight}
+function sendChat(){
+  const id=state.chatOpen,inp=$('#chatInput');if(!id||!inp)return;const raw=inp.value.trim();if(!raw)return;
+  const conv=state.chats[id],r=paidFor(id)?{t:raw,masked:false}:maskContacts(raw);
+  conv.push({me:true,t:r.t,time:Date.now()});
+  if(r.masked)conv.push({sys:true,t:'أخفينا بيانات التواصل من رسالتك. تظهر الأرقام للطرفين بعد تأكيد الحجز ودفع العربون، وهذا يحمي عربونك وحقك في الاسترجاع.',time:Date.now()});
+  save('chats');inp.value='';$('#sheetBody').innerHTML=chatHTML(id);scrollChat();
+  const mine=conv.filter(m=>m.me).length;
+  setTimeout(()=>{
+    const reply=mine===1?'أهلاً وسهلاً، المكان متاح. اختر الأيام من صفحة العقار وأرسل طلب الحجز، وأؤكده لك بسرعة.':r.masked?'تمام، بعد ما يتثبت الحجز نتواصل على الهاتف مباشرة.':'تمام، أي سؤال ثاني أنا موجود.';
+    conv.push({me:false,t:reply,time:Date.now()});save('chats');
+    if(state.chatOpen===id){$('#sheetBody').innerHTML=chatHTML(id);scrollChat()}
+  },1300);
+}
+
+/* ---------- Admin ---------- */
+const adminCount=()=>state.mine.filter(l=>l.status==='review').length+state.payments.filter(p=>p.status==='pending').length+(state.me.idReq&&state.me.idReq.status==='pending'?1:0)+state.reports.filter(r=>r.status==='open').length;
+function renderAdmin(){
+  const L=state.mine.filter(l=>l.status==='review'),P=state.payments.filter(p=>p.status==='pending'),V=state.me.idReq&&state.me.idReq.status==='pending'?[state.me.idReq]:[],R=state.reports.filter(r=>r.status==='open');
+  const paid=state.payments.filter(p=>p.status==='paid');
+  const sum=pp=>paid.filter(p=>p.purpose===pp).reduce((a,p)=>a+p.amount,0);
+  const commission=Math.round(state.bookings.filter(b=>b.status==='deposit_paid').reduce((a,b)=>a+b.total,0)*.1);
+  const src=[['بانرات الشركات',ADS.reduce((a,x)=>a+x.price,0),'#7C5CBF'],['اشتراكات الوسطاء والشركات',sum('subscription'),'var(--brand)'],['الإعلانات المميزة والمثبتة',sum('promotion'),'#D9A21B'],['عمولة الحجوزات (10%)',commission,'var(--ok)']];
+  const total=src.reduce((a,x)=>a+x[1],0),mx=Math.max(...src.map(x=>x[1]),1);
+  const empty='<p class="muted" style="margin:0">لا يوجد شيء بانتظارك هنا.</p>';
+  let h=`<div class="kpis">${[[L.length,'إعلانات للمراجعة'],[P.length,'مدفوعات للتأكيد'],[V.length,'طلبات توثيق'],[R.length,'بلاغات مفتوحة']].map(([n,t])=>`<div class="kpi ${n?'hot':''}"><b>${n}</b><span>${t}</span></div>`).join('')}</div>`;
+  h+=`<div class="panel"><div class="muted" style="font-size:13.5px">دخل هذا الشهر</div><div class="rev-total">${fmt(total)} <small>د.ل</small></div>${src.map(([n,v,c])=>`<div class="hbar"><div class="hl"><span>${n}</span><b>${fmt(v)} د.ل</b></div><div class="ht"><i style="width:${v/mx*100}%;background:${c}"></i></div></div>`).join('')}<p class="legal">البانرات هنا أمثلة لحملات مدفوعة مسبقاً. باقي الأرقام تتغير عندما تؤكد المدفوعات بالأسفل.</p></div>`;
+  const act=state.mine.filter(l=>l.status==='active'),pubIds=new Set(state.pub.map(l=>l.id)),fresh=act.filter(l=>!pubIds.has(l.id)).length,gone=state.pub.filter(l=>!act.some(m=>m.id===l.id)).length;
+  h+=`<div class="sec"><h2>انشر إعلاناتك للجميع</h2></div><div class="panel"><p style="margin:0 0 6px">إعلاناتك محفوظة على هاتفك. ليراها كل من يفتح التطبيق، صدّرها في ملف <b dir="ltr">listings.json</b> وارفعه على GitHub بجانب <b dir="ltr">index.html</b>.</p>
+    <p class="muted" style="margin:0 0 12px;font-size:13.5px">منشور الآن للجميع: ${state.pub.length} إعلان${fresh?` · جديد لم يُرفع: <b style="color:var(--gold)">${fresh}</b>`:''}${gone?` · محذوف من هاتفك وما زال منشوراً: ${gone}`:''}</p>
+    <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn" data-act="export-pub" ${act.length?'':'disabled'}>نزّل ملف الإعلانات (${act.length})</button>${state.pub.length?`<button class="btn ghost" data-act="restore-pub">استرجع المنشور إلى هاتفي</button>`:''}</div>
+    <p class="legal">بعد رفع الملف تظهر الإعلانات للجميع خلال دقيقة أو دقيقتين. كرر التصدير والرفع بعد كل إضافة أو حذف.</p></div>`;
+  h+=`<div class="sec"><h2>إعلانات بانتظار المراجعة</h2></div><div class="panel">${L.length?L.map(l=>`<div class="lrow"><div class="li"><b>${esc(l.title)}</b><span>${l.id}، ${esc(l.owner.name)}، ${priceHTML(l)}</span></div><div class="acts"><button class="btn small" data-act="approve" data-id="${l.id}">انشر</button><button class="btn danger small" data-act="reject" data-id="${l.id}">ارفض</button></div></div>`).join(''):empty}</div>`;
+  h+=`<div class="sec"><h2>مدفوعات بانتظار التأكيد</h2></div><div class="panel">${P.length?P.map(x=>`<div class="lrow"><div class="li"><b>${esc(x.label)}</b><span>${fmt(x.amount)} د.ل، ${METHOD[x.method]}${x.method==='bank'?'، الإيصال مرفق':''}</span></div><div class="acts"><button class="btn small" data-act="pay-confirm" data-id="${x.id}">تم الاستلام</button><button class="btn danger small" data-act="pay-reject" data-id="${x.id}">ارفض</button></div></div>`).join(''):empty}</div>`;
+  h+=`<div class="sec"><h2>طلبات توثيق الهوية</h2></div><div class="panel">${V.length?V.map(v=>`<div class="lrow"><div class="li"><b>${v.doc==='passport'?'جواز سفر':'بطاقة شخصية'} مع صورة شخصية</b><span>أُرسل ${dshort(v.created)}. قارن الوجه بالوثيقة، ثم احذف الصور بعد القرار.</span></div><div class="acts"><button class="btn small" data-act="id-approve">وثّق</button><button class="btn danger small" data-act="id-reject">ارفض</button></div></div>`).join(''):empty}</div>`;
+  h+=`<div class="sec"><h2>البلاغات</h2></div><div class="panel">${R.length?R.map(r=>{const l=[...state.mine,...SEED].find(x=>x.id===r.listing);return `<div class="lrow"><div class="li"><b>${esc(r.reason)}</b><span>${r.listing}${l?'، '+esc(l.title):''}</span></div><div class="acts"><button class="btn small" data-act="rep-hide" data-id="${r.id}">أخفِ الإعلان</button><button class="btn ghost small" data-act="rep-dismiss" data-id="${r.id}">تجاهل</button></div></div>`}).join(''):empty}</div>`;
+  if(ADS.length)h+=`<div class="sec"><h2>حملات الشركات</h2></div><div class="panel tbl-wrap"><table><thead><tr><th>المعلن</th><th>المشاهدات</th><th>النقرات</th><th>نسبة النقر</th><th>السعر</th></tr></thead><tbody>${ADS.map(a=>{const st=state.adStats[a.id]||{imp:0,clk:0};return `<tr><th>${esc(a.adv)}</th><td>${fmt(st.imp)}</td><td>${fmt(st.clk)}</td><td>${st.imp?(st.clk/st.imp*100).toFixed(1)+'%':'—'}</td><td>${fmt(a.price)} د.ل</td></tr>`}).join('')}</tbody></table><p class="legal">أرسل هذا التقرير للمعلن كل شهر ليرى نتيجة إعلانه ويجدده.</p></div>`;
+  h+=`<button class="btn ghost block" style="margin-top:6px" data-act="admin-lock">${I.lock.replace('<svg','<svg width="18" height="18"')}اقفل لوحة المدير</button>`;
+  $('#adminBody').innerHTML=h;
+}
+
+/* ---------- Misc ---------- */
+function pushNote(t,ic='🔔'){state.notes.unshift({t,ic,time:Date.now(),read:false});state.notes=state.notes.slice(0,40);store.set('notes',state.notes);updateBadge()}
+let tt;function toast(m){const e=$('#toast');e.textContent=m;e.classList.add('show');clearTimeout(tt);tt=setTimeout(()=>e.classList.remove('show'),2800)}
+function openFilters(){
+  const f=state.filters,tg=(id,label,on)=>`<label><input type="checkbox" id="${id}" ${on?'checked':''}><span>${label}</span></label>`;
+  openSheet('الفلاتر',`<div style="padding:8px 18px 20px">
+    <div class="field"><label for="fCity">المدينة</label><select id="fCity"><option value="">كل المدن</option>${CITIES.map(c=>`<option ${f.city===c.n?'selected':''}>${c.n}</option>`).join('')}</select></div>
+    <div class="field"><label for="fType">نوع العقار</label><select id="fType"><option value="">كل الأنواع</option>${Object.entries(TYPES).map(([k,t])=>`<option value="${k}" ${f.type===k?'selected':''}>${t}</option>`).join('')}</select></div>
+    <div class="row2"><div class="field"><label for="fMin">السعر من</label><input id="fMin" type="number" inputmode="numeric" value="${f.minPrice||''}"></div><div class="field"><label for="fMax">السعر إلى</label><input id="fMax" type="number" inputmode="numeric" value="${f.maxPrice||''}"></div></div>
+    <div class="field"><label for="fBeds">غرف النوم على الأقل</label><select id="fBeds"><option value="">أي عدد</option>${[1,2,3,4,5].map(n=>`<option ${f.beds===n?'selected':''}>${n}</option>`).join('')}</select></div>
+    <div class="toggles">${tg('fFurn','مفروش',f.furnished===true)}${tg('fPark','موقف سيارة',f.parking)}${tg('fSea','قريب من البحر',f.sea)}${tg('fVer','موثق فقط',f.verified)}</div>
+  </div>`,`<button class="btn ghost" data-act="filters-clear">مسح</button><button class="btn" style="flex:1" data-act="filters-apply">اعرض النتائج</button>`);
+}
+function openCompare(){
+  const ls=state.compare.map(byId).filter(Boolean);if(ls.length<2)return;
+  const ppm=l=>l.size&&['sale','rent'].includes(l.kind)?Math.round(l.price/l.size):null;
+  const minP=Math.min(...ls.map(l=>l.price)),ppms=ls.map(ppm).filter(Boolean),minM=ppms.length?Math.min(...ppms):null;
+  const rows=[['السعر',l=>`<span class="${l.price===minP?'best':''}">${fmt(l.price)} د.ل${UNIT[l.kind]}</span>`],['النوع',l=>TYPES[l.type]+'، '+KINDS[l.kind]],['الموقع',l=>esc(l.area)+'، '+esc(l.city)],['المساحة',l=>l.size?l.size+' م²':'—'],['سعر المتر',l=>{const p=ppm(l);return p?`<span class="${p===minM?'best':''}">${fmt(p)} د.ل</span>`:'—'}],['غرف النوم',l=>l.beds??'—'],['الحمامات',l=>l.baths??'—'],['مفروش',l=>l.furnished?'نعم':'لا'],['موقف سيارة',l=>l.parking?'نعم':'لا'],['التوثيق',l=>vHTML(l.verify)]];
+  openSheet('مقارنة العقارات',`<div class="tbl-wrap"><table><thead><tr><th></th>${ls.map(l=>`<th><button class="ctitle" data-act="open" data-id="${l.id}">${esc(l.title)}</button></th>`).join('')}</tr></thead><tbody>${rows.map(([n,fn])=>`<tr><th>${n}</th>${ls.map(l=>`<td>${fn(l)}</td>`).join('')}</tr>`).join('')}</tbody></table><p class="legal">الأخضر يوضح الأقل سعراً.</p></div>`);
+}
+
+/* ---------- Events ---------- */
+const isField=t=>t&&t.matches&&t.matches('input:not([type=checkbox]):not([type=radio]):not([type=file]),textarea,select');
+document.addEventListener('focusin',e=>{if(isField(e.target))document.body.classList.add('typing')});
+document.addEventListener('focusout',e=>{if(isField(e.target))setTimeout(()=>{if(!isField(document.activeElement))document.body.classList.remove('typing')},120)});
+document.addEventListener('keydown',e=>{if(e.key==='Enter'&&(e.target.id==='pin1'||e.target.id==='pin2')){e.preventDefault();pinGo()}});
+document.addEventListener('submit',e=>{if(e.target.id==='aiForm'){e.preventDefault();runAI($('#aiInput').value)}if(e.target.id==='chatForm'){e.preventDefault();sendChat()}});
+document.addEventListener('keydown',e=>{
+  if(e.target.id==='aiInput'&&e.key==='Enter'&&!e.shiftKey){e.preventDefault();runAI(e.target.value)}
+  if(e.key==='Escape'&&$('#sheet').classList.contains('show'))closeSheet();
+  if((e.key==='Enter'||e.key===' ')&&e.target.classList&&e.target.classList.contains('pin')){e.preventDefault();e.target.dispatchEvent(new MouseEvent('click',{bubbles:true}))}
+});
+document.addEventListener('change',e=>{
+  if(e.target.id==='aCity'){state.draft.city=e.target.value;state.draft.area=null;collectAdd();renderAdd()}
+  if(e.target.type==='file'){const box=e.target.closest('.filebox');if(box&&e.target.files.length){box.classList.add('done');box.querySelector('.fname').textContent='تم اختيار الصورة ✓'}}
+  if(e.target.name==='pm'){$('#rcptBox').hidden=e.target.value!=='bank';$('#payErr').textContent=''}
+});
+document.addEventListener('click',e=>{
+  const el=e.target.closest('[data-act]');if(!el)return;const a=el.dataset.act,id=el.dataset.id,inSheet=$('#sheet').classList.contains('show');
+  switch(a){
+    case 'nav':go(el.dataset.v);break;
+    case 'ob-next':if(obStep<OB.length-1){obStep++;renderOB()}else closeOB();break;
+    case 'ob-skip':closeOB();break;
+    case 'pin-go':pinGo();break;
+    case 'del-mine':{const l=state.mine.find(x=>x.id===id);if(!l||!confirm(`حذف الإعلان «${l.title}» نهائياً من هاتفك؟`))break;
+      state.mine=state.mine.filter(x=>x.id!==id);store.set('mine',state.mine);state.favs=state.favs.filter(x=>x!==id);store.set('favs',state.favs);
+      toast(state.pub.some(x=>x.id===id)?'حُذف من هاتفك. صدّر ملف الإعلانات وارفعه ليُحذف عند الجميع':'حُذف الإعلان');renderAll();break}
+    case 'export-pub':{const act=state.mine.filter(l=>l.status==='active').map(l=>{const o={};SHARE_KEYS.concat(['created','oldPrice']).forEach(k=>{if(l[k]!==undefined&&l[k]!==null&&l[k]!==false&&l[k]!=='')o[k]=l[k]});return o});
+      const blob=new Blob([JSON.stringify({app:'aqarna',version:1,updated:new Date().toISOString(),listings:act},null,1)],{type:'application/json'});
+      const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='listings.json';document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},1500);
+      toast(`نُزّل ملف فيه ${act.length} إعلان. ارفعه على GitHub الآن`);break}
+    case 'restore-pub':{let n=0;state.pub.forEach(l=>{if(!state.mine.some(m=>m.id===l.id)){state.mine.push(Object.assign({},l,{status:'active'}));n++}});store.set('mine',state.mine);toast(n?`استُرجع ${n} إعلان إلى هاتفك`:'كل الإعلانات المنشورة موجودة على هاتفك');renderAll();break}
+    case 'admin-lock':state.adminOk=false;go('home');toast('قُفلت لوحة المدير');break;
+    case 'drops':state.filters={kind:'all',drop:true};state.parseNotes=[];go('home');break;
+    case 'theme':{const cur=document.documentElement.dataset.theme||(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light'),nx=cur==='dark'?'light':'dark';document.documentElement.dataset.theme=nx;store.set('theme',nx);break}
+    case 'ai-open':openAI();break;
+    case 'ai-ex':$('#aiInput').value=el.dataset.q;runAI(el.dataset.q);break;
+    case 'kind':state.filters.kind=el.dataset.k;if(el.dataset.k!=='hotel'&&state.filters.type==='hotel')delete state.filters.type;searchWithLoading();break;
+    case 'type':{const t=el.dataset.t;if(t==='hotel'){state.filters.kind=state.filters.kind==='hotel'?'all':'hotel';delete state.filters.type}else{state.filters.type=state.filters.type===t?undefined:t;if(state.filters.kind==='hotel')state.filters.kind='all'}searchWithLoading();break}
+    case 'quick':state.filters=JSON.parse(el.dataset.q);state.parseNotes=[];searchWithLoading();break;
+    case 'city-map':state.filters.city=el.dataset.c;delete state.filters.area;go('home');break;
+    case 'rmchip':delete state.filters[el.dataset.k];if(el.dataset.k==='city')delete state.filters.area;state.parseNotes=[];renderHome();break;
+    case 'clear':state.filters={kind:'all'};state.parseNotes=[];renderHome();break;
+    case 'open':if(inSheet){$('#sheet').classList.remove('show')}openDetail(id);break;
+    case 'fav':{const i=state.favs.indexOf(id);if(i>-1){state.favs.splice(i,1);toast('أُزيل من المفضلة')}else{state.favs.push(id);toast('أُضيف إلى المفضلة ❤️')}store.set('favs',state.favs);
+      const on=state.favs.includes(id);
+      if(inSheet){el.innerHTML=I.heart(on);el.style.color=on?'var(--heart)':'inherit';el.setAttribute('aria-pressed',on)}else renderAll();break}
+    case 'cmp':{const i=state.compare.indexOf(id);if(i>-1)state.compare.splice(i,1);else if(state.compare.length>=3){toast('يمكنك مقارنة 3 عقارات كحد أقصى');break}else state.compare.push(id);
+      if(inSheet){el.textContent=state.compare.includes(id)?'✓ في المقارنة':'+ أضف للمقارنة';updateTray()}else renderAll();break}
+    case 'compare-clear':state.compare=[];renderAll();break;
+    case 'compare-open':openCompare();break;
+    case 'filters':openFilters();break;
+    case 'filters-apply':{const f=state.filters,g=x=>$('#'+x);
+      f.city=g('fCity').value||undefined;if(!f.city)delete f.area;f.type=g('fType').value||undefined;f.minPrice=+g('fMin').value||undefined;f.maxPrice=+g('fMax').value||undefined;f.beds=+g('fBeds').value||undefined;
+      f.furnished=g('fFurn').checked?true:undefined;f.parking=g('fPark').checked||undefined;f.sea=g('fSea').checked||undefined;f.verified=g('fVer').checked||undefined;
+      state.parseNotes=[];closeSheet(true);searchWithLoading();break}
+    case 'filters-clear':state.filters={kind:state.filters.kind||'all'};state.parseNotes=[];closeSheet();break;
+    case 'save-search':{const f={...state.filters},label=chipsFor(f).map(c=>c.l).join('، ')||'كل العقارات';
+      if(state.saved.some(s=>s.label===label)){toast('التنبيه مفعّل لهذا البحث مسبقاً');break}
+      state.saved.unshift({label,f});store.set('saved',state.saved);toast('🔔 فعّلنا التنبيه. سنخبرك فور نزول عقار مطابق');break}
+    case 'run-saved':state.filters={...state.saved[+el.dataset.i].f};state.parseNotes=[];go('home');break;
+    case 'del-saved':state.saved.splice(+el.dataset.i,1);store.set('saved',state.saved);renderSaved();break;
+    case 'close':closeSheet();break;
+    case 'cta':{const t=$('#bookBox')||$('#viewBox');if(t)t.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion:reduce)').matches?'auto':'smooth',block:'center'});break}
+    case 'wa':{const l=byId(id);if(l&&l.phone){window.open(`https://wa.me/${intlPhone(l.phone)}?text=${encodeURIComponent(`السلام عليكم، بخصوص الإعلان ${l.id}: ${l.title}`)}`,'_blank','noopener')}else toast('في النسخة الحقيقية تُفتح محادثة واتساب مع رسالة فيها رقم العقار');break}
+    case 'fb':if(inSheet)closeSheet(true);openFB(id);break;
+    case 'copy-post':copyText($('#postTxt').value,'نُسخ المنشور. الصقه في صفحتك على فيسبوك');break;
+    case 'copy-link':copyText(shareLink(byId(id)),'نُسخ رابط الإعلان');break;
+    case 'geo':{if(!navigator.geolocation){toast('المتصفح لا يدعم تحديد الموقع');break}toast('نحدد موقعك…');
+      navigator.geolocation.getCurrentPosition(p=>{const v=p.coords.latitude.toFixed(6)+', '+p.coords.longitude.toFixed(6);$('#aLoc').value=v;state.draft.loc=v;toast('أُضيف موقعك الحالي. تأكد أنك داخل العقار')},()=>toast('لم نستطع تحديد موقعك. الصق الإحداثيات من خرائط Google'),{enableHighAccuracy:true,timeout:10000});break}
+    case 'share':{const l=byId(id);if(isMine(l)&&l.status==='active'){closeSheet(true);openFB(id);break}if(l.shared){copyText(shareLink(l),'نُسخ رابط الإعلان');break}const txt=`${l.title} (${l.id}) على تطبيق خيارنا عقارنا`;
+      if(navigator.share)navigator.share({title:l.title,text:txt}).catch(()=>{});
+      else if(navigator.clipboard)navigator.clipboard.writeText(txt).then(()=>toast('نُسخ رابط الإعلان'),()=>toast(txt));else toast(txt);break}
+    case 'report':{const rs=['إعلان وهمي','سعر غير صحيح','صور مزيفة','عقار غير موجود','إعلان مكرر','محاولة احتيال'];
+      openSheet('إبلاغ عن الإعلان',`<div class="ai"><p class="muted">ما المشكلة في الإعلان ${id}؟</p><div class="sugg">${rs.map(r=>`<button data-act="report-send" data-id="${id}" data-r="${r}">${I.info}${r}</button>`).join('')}</div></div>`);break}
+    case 'report-send':state.reports.unshift({id:'RP-'+Date.now(),listing:id,reason:el.dataset.r,status:'open',created:Date.now()});save('reports');closeSheet();toast('أُرسل البلاغ. سيراجعه فريقنا خلال 24 ساعة');pushNote(`استلمنا بلاغك عن الإعلان ${id} (${el.dataset.r}) وسنراجعه.`,'🚨');break;
+    case 'view-send':{const d=$('#vDate').value,t=$('#vTime').value;if(!d){$('#vErr').textContent='اختر تاريخ المعاينة أولاً.';break}
+      const l=byId(id);closeSheet();toast('أُرسل طلب المعاينة. سيصلك تنبيه عند رد المالك');
+      pushNote(`أُرسل طلب معاينة لـ «${l.title}» يوم ${d} الساعة ${t}.`,'📅');
+      setTimeout(()=>pushNote(`وافق ${l.owner.name} على موعد المعاينة يوم ${d} الساعة ${t}.`,'✅'),5000);break}
+    case 'book-day':{const d=+el.dataset.d,b=state.book,booked=bookedSet(b.id);
+      if(b.in===null||b.out!==null||d<=b.in){b.in=d;b.out=null}
+      else{let ok=true;for(let i=b.in+1;i<d;i++)if(booked.has(i))ok=false;if(ok)b.out=d;else{toast('يوجد يوم محجوز بين التاريخين');b.in=d;b.out=null}}
+      renderBook();break}
+    case 'book-send':{const b=state.book,l=byId(b.id),n=b.out-b.in,d0=new Date();d0.setDate(d0.getDate()+b.in);
+      const bk={id:'BK-'+Date.now(),listing:l.id,title:l.title,from:d0.toLocaleDateString('ar-LY',{day:'numeric',month:'long'}),nights:n,total:n*l.price,deposit:Math.round(n*l.price*.2),status:'pending',created:Date.now()};
+      state.bookings.unshift(bk);save('bookings');closeSheet();toast('أُرسل طلب الحجز. تابعه من «حسابي»');
+      pushNote(`طلب حجز ${n} ${n===1?'ليلة':'ليالٍ'} في «${l.title}». بانتظار تأكيد صاحب العقار.`,'🛏️');
+      setTimeout(()=>{bk.status='confirmed';save('bookings');pushNote(`أكّد صاحب العقار حجزك في «${l.title}». ادفع العربون ${fmt(bk.deposit)} د.ل خلال 24 ساعة من «حسابي» لتثبيته.`,'✅');if(['account'].includes(state.view))renderAll()},3500);break}
+    case 'add-next':{collectAdd();const d=state.draft;if(state.addStep===2&&(!d.price||d.price<1)){$('#aErr').textContent='اكتب السعر بالأرقام.';break}state.addStep++;renderAdd();break}
+    case 'add-back':collectAdd();state.addStep--;renderAdd();break;
+    case 'add-submit':{collectAdd();const d=state.draft;
+      if(!d.title||d.title.length<5){$('#aErr').textContent='اكتب عنواناً للإعلان من 5 أحرف على الأقل.';break}
+      if(!/^0?9[1-5]\d{7}$/.test((d.phone||'').replace(/\D/g,''))){$('#aErr').textContent='اكتب رقم هاتف ليبي صحيح يبدأ بـ 09.';break}
+      const loc=parseLoc(d.loc);if(d.loc&&!loc){$('#aErr').textContent='لم نجد الإحداثيات في الموقع. الصق أرقاماً مثل 32.8872, 13.1913، أو اترك الحقل فارغاً.';break}
+      if(usedListings()>=PLANS[state.me.plan].max){$('#aErr').innerHTML=`وصلت للحد الأقصى في خطتك (${PLANS[state.me.plan].max} إعلانات). <button class="link" data-act="plans">رقِّ خطتك</button> لتنشر المزيد.`;break}
+      const cty=d.city||'طرابلس';let num;do{num=100000+Math.floor(Math.random()*900000)}while(byId('LY-'+num));
+      const l={id:'LY-'+num,kind:d.kind||'sale',type:d.type||'apartment',city:cty,area:d.area||CITIES.find(c=>c.n===cty).areas[0],
+        price:d.price,size:d.size,beds:d.beds,baths:d.baths,floor:null,elevator:!!d.elevator,parking:!!d.parking,furnished:!!d.furnished,sea:!!d.sea,
+        features:[d.furnished&&'مفروش',d.parking&&'موقف سيارة',d.elevator&&'مصعد',d.sea&&'قريب من البحر'].filter(Boolean),
+        verify:state.me.verify,owner:{name:d.name||'صاحب الإعلان',role:state.me.plan==='agent'?'وسيط عقاري':state.me.plan==='company'?'شركة عقارية':'مالك عقار'},title:d.title,desc:d.desc||'',phone:(d.phone||'').replace(/\D/g,''),loc,status:'review',created:Date.now()};
+      state.mine.unshift(l);store.set('mine',state.mine);state.draft={};state.addStep=1;
+      pushNote(`استلمنا إعلانك ${l.id} وهو قيد المراجعة.`,'📝');toast('أُرسل الإعلان للمراجعة');go('saved');break}
+    case 'approve':{const l=state.mine.find(x=>x.id===id);l.status='active';l.created=Date.now();store.set('mine',state.mine);
+      pushNote(`تمت الموافقة على إعلانك ${l.id} وأصبح منشوراً.`,'✅');
+      const hit=state.saved.filter(s=>matches(l,s.f));hit.forEach(s=>pushNote(`عقار جديد يطابق بحثك «${s.label}»: ${l.title}`,'🏠'));
+      toast(hit.length?`نُشر الإعلان، وأُرسل تنبيه لـ ${hit.length} بحث محفوظ`:'نُشر الإعلان');renderAll();break}
+    case 'reject':{const l=state.mine.find(x=>x.id===id);l.status='rejected';l.reason='الصور أو البيانات غير كافية. عدّل الإعلان وأرسله مرة أخرى.';store.set('mine',state.mine);pushNote(`لم ننشر إعلانك ${l.id}: ${l.reason}`,'✋');toast('رُفض الإعلان وأُبلغ صاحبه');renderAll();break}
+    case 'account':go('account');break;
+    case 'plans':if(inSheet)closeSheet(true);openPlans();break;
+    case 'subscribe':{const k=el.dataset.k;state.me.planPending=k;save('me');closeSheet(true);openPay({purpose:'subscription',ref:'SUB-'+Date.now(),amount:PLANS[k].price,label:'اشتراك «'+PLANS[k].n+'» لمدة شهر'});break}
+    case 'promote':openPromote(id);break;
+    case 'promo-send':{const o=PROMO[+document.querySelector('input[name=pr]:checked').value],l=byId(id);
+      const pr={id:'PR-'+Date.now(),listing:id,type:o.k,days:o.d,price:o.p,status:'pending'};state.promos.push(pr);save('promos');closeSheet(true);
+      openPay({purpose:'promotion',ref:pr.id,amount:o.p,label:o.t+': '+l.title});break}
+    case 'pay-deposit':{const b=state.bookings.find(x=>x.id===id);openPay({purpose:'booking_deposit',ref:b.id,amount:b.deposit,label:'عربون حجز: '+b.title});break}
+    case 'pay-send':{const c=state.payCtx,m=document.querySelector('input[name=pm]:checked').value;
+      if(m==='bank'&&!($('#rcpt').files||[]).length){$('#payErr').textContent='ارفع صورة إيصال التحويل أولاً.';break}
+      state.payments.unshift({id:'PAY-'+Date.now(),purpose:c.purpose,ref:c.ref,amount:c.amount,label:c.label,method:m,status:'pending',created:Date.now()});save('payments');
+      if(c.purpose==='booking_deposit'){const b=state.bookings.find(x=>x.id===c.ref);if(b){b.status='awaiting';save('bookings')}}
+      state.payCtx=null;closeSheet();toast(m==='cash'?'سجّلنا طلبك. ادفع نقداً وسنفعّله فور الاستلام':'استلمنا الإيصال. سنؤكد الدفع قريباً');
+      pushNote(`أرسلت طلب دفع ${fmt(c.amount)} د.ل (${c.label}). بانتظار تأكيد فريق خيارنا عقارنا.`,'💳');break}
+    case 'pay-confirm':case 'pay-reject':{const x=state.payments.find(p=>p.id===id),ok=a==='pay-confirm';x.status=ok?'paid':'rejected';x.confirmed=Date.now();save('payments');activateFor(x,ok);toast(ok?'تم تأكيد الدفع وتفعيل الطلب':'رُفض الدفع وأُبلغ صاحبه');renderAll();break}
+    case 'verify':openVerify();break;
+    case 'verify-send':{const f=x=>($('#'+x).files||[]).length,doc=document.querySelector('input[name=doc]:checked').value;
+      if(!f('idFront')){$('#idErr').textContent='أضف صورة الوثيقة.';break}
+      if(doc==='national_id'&&!f('idBack')){$('#idErr').textContent='أضف صورة الوجه الخلفي للبطاقة.';break}
+      if(!f('idSelfie')){$('#idErr').textContent='أضف صورة شخصية وأنت تمسك الوثيقة.';break}
+      if(!$('#idConsent').checked){$('#idErr').textContent='وافق على استخدام الصور للتحقق حتى نكمل.';break}
+      state.me.idReq={status:'pending',doc,created:Date.now()};save('me');closeSheet();toast('أُرسلت وثيقتك للمراجعة');pushNote('استلمنا وثيقتك، وسنراجعها خلال 24 ساعة.','🪪');break}
+    case 'id-approve':{state.me.idReq.status='approved';if(state.me.verify!=='agent')state.me.verify='id';save('me');pushNote('تم توثيق هويتك ✅ تظهر الآن شارة «هوية موثقة» على إعلاناتك الجديدة.','🪪');toast('تم التوثيق. احذف صور الوثيقة من المخزن');renderAll();break}
+    case 'id-reject':{Object.assign(state.me.idReq,{status:'rejected',reason:'الصورة غير واضحة أو لا تطابق الوثيقة'});save('me');pushNote('لم نقبل وثيقتك: الصورة غير واضحة أو لا تطابق الوثيقة. أعد المحاولة بصورة أوضح.','🪪');toast('رُفض الطلب وأُبلغ صاحبه');renderAll();break}
+    case 'rep-hide':case 'rep-dismiss':{const r=state.reports.find(x=>x.id===id);r.status=a==='rep-hide'?'resolved':'dismissed';
+      if(a==='rep-hide'&&!state.hidden.includes(r.listing)){state.hidden.push(r.listing);save('hidden')}save('reports');
+      pushNote(a==='rep-hide'?`راجعنا بلاغك عن ${r.listing} وأخفينا الإعلان. شكراً لك.`:`راجعنا بلاغك عن ${r.listing} ولم نجد مخالفة.`,'🚨');toast(a==='rep-hide'?'أُخفي الإعلان':'أُغلق البلاغ');renderAll();break}
+    case 'chat':if(inSheet)closeSheet(true);openChat(id);break;
+    case 'call':{const l=byId(id),bk=l&&['daily','hotel'].includes(l.kind);if(l&&l.phone&&(!bk||paidFor(id))){location.href='tel:+'+intlPhone(l.phone);break}}toast(paidFor(id)?'في النسخة الحقيقية يتصل التطبيق بصاحب العقار مباشرة':'في النسخة الحقيقية يظهر الرقم هنا، ويُحسب اتصالاً في إحصائيات صاحب الإعلان');break;
+    case 'ad':{const st=state.adStats[el.dataset.ad]||(state.adStats[el.dataset.ad]={imp:0,clk:0});st.clk++;save('adStats');toast('في النسخة الحقيقية تُفتح صفحة المعلن. سُجلت النقرة في تقريره');break}
+  }
+});
+
+/* ---------- Init ---------- */
+const th=store.get('theme',null);if(th)document.documentElement.dataset.theme=th;
+if(!DEMO){const t=$('#demoTag');if(t)t.textContent='نسخة تجريبية للمختبرين'}
+if(/^https?:$/.test(location.protocol))fetch('listings.json',{cache:'no-cache'}).then(r=>r.ok?r.json():null).then(j=>{if(!j||!Array.isArray(j.listings))return;
+  state.pub=j.listings.slice(0,500).map(o=>cleanListing(o,true)).filter(Boolean).map(l=>Object.assign(l,{pub:true}));
+  if(state.pub.length&&!$('#sheet').classList.contains('show'))renderAll()}).catch(()=>{});
+const sh=readShared();
+if(sh){state.shared=[sh];store.set('onboarded',true)}
+if('serviceWorker' in navigator&&location.protocol==='https:'&&!/claude|anthropic|usercontent/.test(location.hostname))navigator.serviceWorker.register('sw.js').catch(()=>{});
+renderAll();
+if(sh){openDetail(sh.id);setTimeout(()=>toast('هذا الإعلان وصلك عبر رابط من صاحبه'),400)}
+else if(!store.get('onboarded',false)){$('#ob').hidden=false;document.body.classList.add('locked');renderOB()}
+addEventListener('hashchange',()=>{const x=readShared();if(!x)return;state.shared=[x,...state.shared.filter(o=>o.id!==x.id)];if($('#sheet').classList.contains('show'))closeSheet(true);openDetail(x.id);toast('هذا الإعلان وصلك عبر رابط من صاحبه')});
+</script>
+</body>
+</html>
