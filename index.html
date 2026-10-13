@@ -1053,9 +1053,31 @@ let leafletP=null;
 function loadLeaflet(){if(window.L&&window.L.map)return Promise.resolve(window.L);if(leafletP)return leafletP;
   leafletP=new Promise((res,rej)=>{const css=document.createElement('link');css.rel='stylesheet';css.href='https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css';document.head.appendChild(css);
     const sc=document.createElement('script');sc.src='https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js';
-    sc.onload=()=>window.L?res(window.L):(leafletP=null,rej());sc.onerror=()=>{leafletP=null;sc.remove();rej()};document.head.appendChild(sc)});return leafletP}
-function baseLayer(L,mode){if(mode==='sat')return L.layerGroup([L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{maxZoom:19,attribution:'صور: Esri'}),L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}',{maxZoom:19})]);
-  return L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'© OpenStreetMap'})}
+    sc.onload=()=>{if(!window.L){leafletP=null;rej();return}
+      L.Map.addInitHook(function(){const pn=this.createPane('lbl');pn.style.zIndex=450;pn.style.pointerEvents='none'});
+      const t=new Promise(r=>setTimeout(r,9000));Promise.race([loadVector().catch(()=>{}),t]).then(()=>res(window.L))};
+    sc.onerror=()=>{leafletP=null;sc.remove();rej()};document.head.appendChild(sc)});return leafletP}
+/* Modern vector map (MapLibre + OpenFreeMap) with Arabic + English names; falls back to raster tiles */
+const ML_CDN='https://cdn.jsdelivr.net/npm/';let VEC=null;
+const webglOK=()=>{try{const c=document.createElement('canvas');return !!(c.getContext('webgl2')||c.getContext('webgl'))}catch(e){return false}};
+const addScript=src=>new Promise((res,rej)=>{const e=document.createElement('script');e.src=src;e.onload=res;e.onerror=()=>{e.remove();rej()};document.head.appendChild(e)});
+async function loadVector(){if(VEC||!webglOK())return;
+  const css=document.createElement('link');css.rel='stylesheet';css.href=ML_CDN+'maplibre-gl@4.7.1/dist/maplibre-gl.css';document.head.appendChild(css);
+  const [st]=await Promise.all([fetch('https://tiles.openfreemap.org/styles/liberty').then(r=>r.ok?r.json():Promise.reject()),addScript(ML_CDN+'maplibre-gl@4.7.1/dist/maplibre-gl.js')]);
+  await addScript(ML_CDN+'@maplibre/maplibre-gl-leaflet@0.1.3/leaflet-maplibre-gl.js');
+  if(!window.maplibregl||!L.maplibreGL)return;
+  try{maplibregl.setRTLTextPlugin(ML_CDN+'@mapbox/mapbox-gl-rtl-text@0.3.0/dist/mapbox-gl-rtl-text.js',true)}catch(e){}
+  const nm=['coalesce',['get','name:ar'],['get','name:en'],['get','name_en'],['get','name']];
+  const txt=['case',['all',['has','name:ar'],['has','name:en'],['!=',['get','name:ar'],['get','name:en']]],['format',['get','name:ar'],{},'\n',{},['get','name:en'],{'font-scale':0.8}],nm];
+  st.layers.forEach(l=>{const tf=l.layout&&l.layout['text-field'];if(l.type==='symbol'&&tf&&/name/.test(JSON.stringify(tf)))l.layout['text-field']=txt});
+  const sat=JSON.parse(JSON.stringify(st));sat.layers=sat.layers.filter(l=>l.type==='symbol'&&!/^poi/.test(l.id||''));
+  sat.layers.forEach(l=>{l.paint=Object.assign({},l.paint,{'text-color':'#ffffff','text-halo-color':'rgba(0,0,0,.85)','text-halo-width':1.6})});
+  VEC={street:st,sat}}
+function vecLayer(style){return L.maplibreGL({style,attribution:'<a href="https://openfreemap.org" target="_blank" rel="noopener">OpenFreeMap</a> © OpenStreetMap',pane:'lbl'})}
+function baseLayer(L,mode){const img=()=>L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{maxZoom:19,maxNativeZoom:18,attribution:'صور: Esri, Maxar'});
+  if(VEC){try{return mode==='sat'?L.layerGroup([img(),vecLayer(VEC.sat)]):vecLayer(VEC.street)}catch(e){VEC=null}}
+  if(mode==='sat')return L.layerGroup([img(),L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}',{maxZoom:19,pane:'lbl'})]);
+  return L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',{maxZoom:19,subdomains:'abcd',attribution:'© OpenStreetMap © CARTO'})}
 const MAP={m:null,base:null,group:null,me:null,mode:store.get('mapMode','street')};
 function initBigMap(L){if(MAP.m)return;
   MAP.m=L.map('lmap',{zoomControl:false,worldCopyJump:true}).setView([30.6,16.5],5);L.control.zoom({position:'bottomleft',zoomInTitle:'تكبير',zoomOutTitle:'تصغير'}).addTo(MAP.m);MAP.base=baseLayer(L,MAP.mode).addTo(MAP.m);MAP.group=L.layerGroup().addTo(MAP.m);
@@ -1080,8 +1102,13 @@ function openPicker(){collectAdd();const d=state.draft,cur=parseLoc(d.loc||($('#
   $('#sheetBody').style.overflow='hidden';
   loadLeaflet().then(L=>{const m=L.map('pmap',{zoomControl:false}).setView(c,cur?17:13);L.control.zoom({position:'topleft',zoomInTitle:'تكبير',zoomOutTitle:'تصغير'}).addTo(m);let base=baseLayer(L,'sat').addTo(m);PICK={m,setMode:md=>{m.removeLayer(base);base=baseLayer(L,md).addTo(m);document.querySelectorAll('[data-act="pick-mode"]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.m===md))}};setTimeout(()=>m.invalidateSize(),350)})
     .catch(()=>{$('#pmap').innerHTML='<p dir="rtl" style="padding:20px;text-align:center">لم نستطع تحميل الخريطة. تأكد من الإنترنت، أو استخدم «موقعي الحالي».</p>'})}
-function locateMe(cb){if(!navigator.geolocation){toast('هاتفك لا يدعم تحديد الموقع');return}toast('جارٍ تحديد موقعك…');
-  navigator.geolocation.getCurrentPosition(p=>cb([p.coords.latitude,p.coords.longitude]),()=>toast('لم نستطع تحديد موقعك. فعّل الموقع (GPS) واسمح للمتصفح'),{enableHighAccuracy:true,timeout:12000})}
+function locateMe(cb){if(!navigator.geolocation){toast('هاتفك لا يدعم تحديد الموقع');return}
+  if(!window.isSecureContext){toast('تحديد الموقع يعمل فقط من رابط التطبيق الرسمي https');return}
+  toast('جارٍ تحديد موقعك…');const ok=p=>cb([p.coords.latitude,p.coords.longitude]);
+  const fail=e=>{if(e&&e.code===1){openSheet('السماح بالموقع',`<div style="padding:8px 18px 22px;line-height:1.9"><p style="margin:0 0 10px">المتصفح منع التطبيق من معرفة موقعك. فعّله هكذا:</p>
+      <ol style="margin:0;padding-inline-start:20px"><li>اضغط على رمز <b>القفل 🔒</b> أو <b>⚙</b> بجانب الرابط في الأعلى.</li><li>اختر <b>الأذونات</b> ثم <b>الموقع</b>، واجعله <b>سماح</b>.</li><li>تأكد أن <b>الموقع (GPS)</b> مفعّل في الهاتف، وأن Chrome مسموح له بالموقع من إعدادات الهاتف ← التطبيقات ← Chrome ← الأذونات.</li><li>إذا ظهرت لك رسالة عن «الفقاعات»، أغلق فقاعات المحادثة العائمة ثم حاول.</li></ol></div>`,`<button class="btn" style="flex:1" data-act="close">حسناً</button>`)}
+    else toast(e&&e.code===3?'استغرق تحديد الموقع وقتاً طويلاً. اقترب من نافذة أو اخرج للهواء الطلق وحاول مرة أخرى':'لم نستطع تحديد موقعك. فعّل الموقع (GPS) في الهاتف ثم حاول')};
+  navigator.geolocation.getCurrentPosition(ok,e=>{if(e.code===1)return fail(e);navigator.geolocation.getCurrentPosition(ok,fail,{enableHighAccuracy:false,timeout:15000,maximumAge:120000})},{enableHighAccuracy:true,timeout:10000,maximumAge:30000})}
 
 /* ---------- Map ---------- */
 function renderMap(){
