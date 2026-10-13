@@ -789,7 +789,10 @@ function baseUrl(){const h=location.hostname;return (/^https?:$/.test(location.p
 const SHARE_KEYS=['id','kind','type','city','area','price','size','beds','baths','floor','elevator','parking','furnished','sea','features','title','desc','phone','loc','owner','verify','yt','vlink','video'];
 function b64e(o){return btoa(unescape(encodeURIComponent(JSON.stringify(o)))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'')}
 function b64d(t){t=t.replace(/-/g,'+').replace(/_/g,'/');while(t.length%4)t+='=';return JSON.parse(decodeURIComponent(escape(atob(t))))}
-function shareLink(l){const o={};SHARE_KEYS.forEach(k=>{if(l[k]!==undefined&&l[k]!==null&&l[k]!==false&&l[k]!=='')o[k]=l[k]});return baseUrl()+'#l='+b64e(o)}
+const isPublic=l=>!!l&&state.pub.some(p=>p.id===l.id);
+function shortLink(id){return baseUrl()+'#id='+id}
+function shareLink(l){if(isPublic(l))return shortLink(l.id);return longLink(l)}
+function longLink(l){const o={};SHARE_KEYS.forEach(k=>{if(l[k]!==undefined&&l[k]!==null&&l[k]!==false&&l[k]!=='')o[k]=l[k]});return baseUrl()+'#l='+b64e(o)}
 function readShared(){
   const m=(location.hash||'').match(/[#&]l=([A-Za-z0-9_-]+)/);if(!m)return null;
   try{const l=cleanListing(b64d(m[1]),false);if(l)l.shared=true;return l}catch(e){return null}}
@@ -820,6 +823,8 @@ function postText(l){
     `📌 الموقع بالضبط والصور والتفاصيل${['daily','hotel'].includes(l.kind)?' والحجز':' وطلب المعاينة'}:`,shareLink(l),'',`رقم الإعلان: ${l.id}`].filter((x,i,a)=>!(x===''&&a[i-1]==='')).join('\n').replace(/\n{3,}/g,'\n\n')}
 function openFB(id){const l=byId(id),txt=postText(l),link=shareLink(l);
   openSheet('انشر على فيسبوك',`<div style="padding:6px 18px 20px">
+    ${isPublic(l)?`<div class="sharedbar" style="margin:0 0 10px;background:color-mix(in srgb,var(--ok) 12%,transparent);color:var(--ok)">✓ رابط قصير جاهز: <b dir="ltr" style="font-size:12.5px">${esc(link.replace(/^https?:\/\//,''))}</b></div>`
+     :`<div class="box" style="margin:0 0 12px;border-color:var(--gold)"><b style="color:var(--gold)">الرابط طويل لأن الإعلان على هاتفك فقط</b><p class="muted" style="font-size:13px;margin:6px 0 8px!important">الرابط الآن يحمل كل بيانات الإعلان بداخله. ${cloud.on?'ارفع الإعلان إلى قاعدة البيانات من لوحة المدير':'صدّر «ملف الإعلانات» من لوحة المدير وارفعه على GitHub'}، فيصبح الرابط قصيراً مثل <span dir="ltr">…/aqarna/#id=${l.id}</span> وتظهر الصور للجميع.</p><button class="btn small" data-act="nav-admin-close">اذهب للوحة المدير</button></div>`}
     <p class="muted" style="margin:0 0 10px;font-size:14px">انسخ المنشور والصقه في صفحتك مع صور العقار. من يضغط الرابط يفتح هذا الإعلان نفسه، ويرى موقعه بالضبط${l.loc?'':' (أضف الموقع للإعلان حتى يظهر)'}.</p>
     <textarea class="post" id="postTxt" aria-label="نص المنشور">${esc(txt)}</textarea>
     ${photosOf(l).some(x=>String(x).startsWith('data:'))||state.videoBlobs[l.id]?`<button class="btn block" style="margin:0 0 8px;background:#1877F2;color:#fff" data-act="fb-photos" data-id="${l.id}">📷 شارك ${photosOf(l).length?'الصور ('+photosOf(l).length+')':''}${state.videoBlobs[l.id]?(photosOf(l).length?' والفيديو':'الفيديو'):''} مع المنشور</button>`:''}<div class="sharebar"><button class="btn" data-act="copy-post">نسخ المنشور</button><button class="btn ghost" data-act="copy-link" data-id="${l.id}">نسخ الرابط فقط</button><a class="btn ghost" href="https://www.facebook.com/" target="_blank" rel="noopener">افتح فيسبوك</a></div>
@@ -1603,7 +1608,7 @@ const rowToListing=r=>cleanListing(Object.assign({},r.data,{id:r.id,created:Date
 function slim(l){const o={};SHARE_KEYS.concat(['oldPrice','photos']).forEach(k=>{if(k!=='id'&&l[k]!==undefined&&l[k]!==null&&l[k]!==false&&l[k]!=='')o[k]=l[k]});return o}
 async function loadCloud(){try{const rows=await sb('/rest/v1/listings?select=id,status,data,created_at&status=eq.active&order=created_at.desc&limit=1000');
     const ls=rows.map(rowToListing).filter(Boolean).map(l=>Object.assign(l,{pub:true,cloud:true}));cloud.live=ls;
-    const ids=new Set(ls.map(l=>l.id));state.pub=[...ls,...state.pub.filter(p=>!p.cloud&&!ids.has(p.id))];
+    const ids=new Set(ls.map(l=>l.id));state.pub=[...ls,...state.pub.filter(p=>!p.cloud&&!ids.has(p.id))];setTimeout(()=>tryPending(false),0);
     let ch=0;state.mine.forEach(m=>{if(m.status==='review'&&m.cloud&&ids.has(m.id)){m.status='active';m.created=Date.now();ch++;pushNote(`تمت الموافقة على إعلانك ${m.id} وأصبح منشوراً للجميع.`,'✅')}});if(ch)store.set('mine',state.mine);
     cloud.err='';if(!$('#sheet').classList.contains('show'))renderAll()}catch(e){cloud.err='تعذّر الاتصال بقاعدة البيانات'}}
 async function uploadPhotos(id,photos){const out=[];for(let i=0;i<photos.length;i++){const x=photos[i];if(isCloudPhoto(x)){out.push(x);continue}if(!String(x).startsWith('data:'))continue;
@@ -1730,6 +1735,7 @@ document.addEventListener('click',e=>{
     case 'pick-ok':{if(!PICK){closeSheet(true);break}const c=PICK.m.getCenter(),v=c.lat.toFixed(6)+', '+c.lng.toFixed(6);state.draft.loc=v;PICK.m.remove();PICK=null;closeSheet(true);const inp=$('#aLoc');if(inp)inp.value=v;toast('ثُبّت موقع العقار ✓');break}
     case 'notif-on':enableNotifs();break;
     case 'go-video':{const v=document.querySelector('#gal .vslide');if(v){v.scrollIntoView({behavior:'smooth',inline:'center',block:'nearest'});const vid=v.querySelector('video');if(vid)setTimeout(()=>vid.play().catch(()=>{}),450)}break}
+    case 'nav-admin-close':closeSheet(true);go('admin');break;
     case 'v-del':{const d=state.draft;if(d._vurl)URL.revokeObjectURL(d._vurl);d._vurl=null;d.videoFile=null;renderVideoBox();break}
     case 'ph-del':{const i=+el.dataset.i;(state.draft.photos||[]).splice(i,1);renderPhotos();break}
     case 'fb-photos':sharePhotos(id);break;
@@ -1861,16 +1867,23 @@ const th=store.get('theme',null);if(th)document.documentElement.dataset.theme=th
 if(!DEMO){const t=$('#demoTag');if(t)t.textContent='نسخة تجريبية للمختبرين'}
 if(/^https?:$/.test(location.protocol))fetch('listings.json',{cache:'no-cache'}).then(r=>r.ok?r.json():null).then(j=>{if(!j||!Array.isArray(j.listings))return;
   state.pub=j.listings.slice(0,500).map(o=>cleanListing(o,true)).filter(Boolean).map(l=>Object.assign(l,{pub:true}));
-  if(state.pub.length&&!$('#sheet').classList.contains('show'))renderAll()}).catch(()=>{});
+  if(state.pub.length&&!$('#sheet').classList.contains('show'))renderAll();tryPending(false)}).catch(()=>{});
 cfgLoad().then(()=>{if(cloud.on){loadCloud();setInterval(()=>{if(!document.hidden)loadCloud()},120000)}});
 photoDB.all().then(o=>{o=o||{};Object.keys(o).forEach(k=>{if(k.startsWith('v:')){state.videoBlobs[k.slice(2)]=o[k];delete o[k]}});state.photos=Object.assign(o,state.photos);if(Object.keys(o||{}).length&&!$('#sheet').classList.contains('show'))renderAll()}).catch(()=>{});
 const sh=readShared();
 if(sh){state.shared=[sh];store.set('onboarded',true)}
+let pendingId=(()=>{const m=(location.hash||'').match(/[#&]id=(LY-\d{6})(?![\d])/);return m?m[1]:null})();
+if(pendingId)store.set('onboarded',true);
+function tryPending(final){if(!pendingId)return;const l=byId(pendingId);
+  if(l){const id=pendingId;pendingId=null;$('#ob').hidden=true;document.body.classList.remove('locked');if($('#sheet').classList.contains('show'))closeSheet(true);openDetail(id)}
+  else if(final){pendingId=null;toast('هذا الإعلان غير متوفر الآن. ربما بيع أو حُذف')}}
+setTimeout(()=>tryPending(true),9000);
 if('serviceWorker' in navigator&&location.protocol==='https:'&&!/claude|anthropic|usercontent/.test(location.hostname))navigator.serviceWorker.register('sw.js').catch(()=>{});
 renderAll();
 if(sh){openDetail(sh.id);setTimeout(()=>toast('هذا الإعلان وصلك عبر رابط من صاحبه'),400)}
+else if(pendingId){tryPending(false);if(pendingId)toast('جارٍ فتح الإعلان…')}
 else if(!store.get('onboarded',false)){$('#ob').hidden=false;document.body.classList.add('locked');renderOB()}
-addEventListener('hashchange',()=>{const x=readShared();if(!x)return;state.shared=[x,...state.shared.filter(o=>o.id!==x.id)];if($('#sheet').classList.contains('show'))closeSheet(true);openDetail(x.id);toast('هذا الإعلان وصلك عبر رابط من صاحبه')});
+addEventListener('hashchange',()=>{const m=(location.hash||'').match(/[#&]id=(LY-\d{6})(?![\d])/);if(m){pendingId=m[1];tryPending(false);if(pendingId)setTimeout(()=>tryPending(true),6000);return}const x=readShared();if(!x)return;state.shared=[x,...state.shared.filter(o=>o.id!==x.id)];if($('#sheet').classList.contains('show'))closeSheet(true);openDetail(x.id);toast('هذا الإعلان وصلك عبر رابط من صاحبه')});
 </script>
 </body>
 </html>
