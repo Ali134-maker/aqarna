@@ -791,10 +791,27 @@ function b64e(o){return btoa(unescape(encodeURIComponent(JSON.stringify(o)))).re
 function b64d(t){t=t.replace(/-/g,'+').replace(/_/g,'/');while(t.length%4)t+='=';return JSON.parse(decodeURIComponent(escape(atob(t))))}
 const isPublic=l=>!!l&&state.pub.some(p=>p.id===l.id);
 function shortLink(id){return baseUrl()+'#id='+id}
-function shareLink(l){if(isPublic(l))return shortLink(l.id);return longLink(l)}
+function shareLink(l){if(isPublic(l))return shortLink(l.id);return compactLink(l)}
+/* Compact link for listings not yet public: only the essentials, ~2-3 lines. Full details stay in the Facebook post text. */
+const KCODE={sale:'s',rent:'r',daily:'d',hotel:'h'},TKEYS=()=>Object.keys(TYPES);
+const b36=n=>n===null||n===undefined||n===''?'':Math.round(+n).toString(36);
+function compactLink(l){const ci=CITIES.findIndex(c=>c.n===l.city),fl=(l.elevator?1:0)|(l.parking?2:0)|(l.furnished?4:0)|(l.sea?8:0);
+  const area=l.area&&CITIES[ci]&&CITIES[ci].areas[0]===l.area?'':String(l.area||'').slice(0,30).replace(/~/g,'');
+  const f=['1',(+l.id.slice(3)).toString(36),KCODE[l.kind]||'s',TKEYS().indexOf(l.type).toString(36),Math.max(ci,0).toString(36),area,b36(l.price),b36(l.size),b36(l.beds),b36(l.baths),
+    l.loc?Math.round(l.loc.lat*1e5).toString(36):'',l.loc?Math.round(l.loc.lng*1e5).toString(36):'',l.phone?(+String(l.phone).replace(/\D/g,'').replace(/^218/,'').replace(/^0/,'')).toString(36):'',fl?fl.toString(36):'',l.yt||''];
+  while(f.length&&f[f.length-1]==='')f.pop();
+  return baseUrl()+'#c='+btoa(unescape(encodeURIComponent(f.join('~')))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'')}
+function readCompact(t){t=t.replace(/-/g,'+').replace(/_/g,'/');while(t.length%4)t+='=';const f=decodeURIComponent(escape(atob(t))).split('~');if(f[0]!=='1')return null;
+  const n=i=>f[i]?parseInt(f[i],36):null,kind=Object.keys(KCODE).find(k=>KCODE[k]===f[2])||'sale',type=TKEYS()[parseInt(f[3],36)]||'apartment',city=CITIES[parseInt(f[4],36)]||CITIES[0];
+  const area=f[5]||city.areas[0],fl=n(13)||0,num=String(n(1)||0).padStart(6,'0'),ph=n(12);
+  const o={id:'LY-'+num,kind,type,city:city.n,area,price:n(6),size:n(7),beds:n(8),baths:n(9),elevator:!!(fl&1),parking:!!(fl&2),furnished:!!(fl&4),sea:!!(fl&8),
+    features:[fl&4&&'مفروش',fl&2&&'موقف سيارة',fl&1&&'مصعد',fl&8&&'قريب من البحر'].filter(Boolean),title:`${TYPES[type]} ${KINDS[kind]} في ${area}`,desc:'',phone:ph?'0'+ph:'',yt:f[14]||undefined};
+  if(f[10]&&f[11])o.loc={lat:parseInt(f[10],36)/1e5,lng:parseInt(f[11],36)/1e5};return o}
 function longLink(l){const o={};SHARE_KEYS.forEach(k=>{if(l[k]!==undefined&&l[k]!==null&&l[k]!==false&&l[k]!=='')o[k]=l[k]});return baseUrl()+'#l='+b64e(o)}
 function readShared(){
-  const m=(location.hash||'').match(/[#&]l=([A-Za-z0-9_-]+)/);if(!m)return null;
+  const h=location.hash||'',c=h.match(/[#&]c=([A-Za-z0-9_-]+)/);
+  if(c){try{const l=cleanListing(readCompact(c[1]),false);if(l)l.shared=true;return l}catch(e){return null}}
+  const m=h.match(/[#&]l=([A-Za-z0-9_-]+)/);if(!m)return null;
   try{const l=cleanListing(b64d(m[1]),false);if(l)l.shared=true;return l}catch(e){return null}}
 function cleanListing(o,trusted){
   try{if(!o||!o.id||!o.title||!o.price||!TYPES[o.type]||!KINDS[o.kind])return null;
@@ -824,7 +841,7 @@ function postText(l){
 function openFB(id){const l=byId(id),txt=postText(l),link=shareLink(l);
   openSheet('انشر على فيسبوك',`<div style="padding:6px 18px 20px">
     ${isPublic(l)?`<div class="sharedbar" style="margin:0 0 10px;background:color-mix(in srgb,var(--ok) 12%,transparent);color:var(--ok)">✓ رابط قصير جاهز: <b dir="ltr" style="font-size:12.5px">${esc(link.replace(/^https?:\/\//,''))}</b></div>`
-     :`<div class="box" style="margin:0 0 12px;border-color:var(--gold)"><b style="color:var(--gold)">الرابط طويل لأن الإعلان على هاتفك فقط</b><p class="muted" style="font-size:13px;margin:6px 0 8px!important">الرابط الآن يحمل كل بيانات الإعلان بداخله. ${cloud.on?'ارفع الإعلان إلى قاعدة البيانات من لوحة المدير':'صدّر «ملف الإعلانات» من لوحة المدير وارفعه على GitHub'}، فيصبح الرابط قصيراً مثل <span dir="ltr">…/aqarna/#id=${l.id}</span> وتظهر الصور للجميع.</p><button class="btn small" data-act="nav-admin-close">اذهب للوحة المدير</button></div>`}
+     :`<div class="box" style="margin:0 0 12px;border-color:var(--gold)"><b style="color:var(--gold)">الإعلان على هاتفك فقط</b><p class="muted" style="font-size:13px;margin:6px 0 8px!important">الرابط الآن يحمل البيانات الأساسية والموقع فقط، بدون الصور والوصف. ${cloud.on?'ارفع الإعلان إلى قاعدة البيانات من لوحة المدير':'صدّر «ملف الإعلانات» من لوحة المدير وارفعه على GitHub'}، فيصبح الرابط قصيراً مثل <span dir="ltr">…/aqarna/#id=${l.id}</span> وتظهر الصور للجميع.</p><button class="btn small" data-act="nav-admin-close">اذهب للوحة المدير</button></div>`}
     <p class="muted" style="margin:0 0 10px;font-size:14px">انسخ المنشور والصقه في صفحتك مع صور العقار. من يضغط الرابط يفتح هذا الإعلان نفسه، ويرى موقعه بالضبط${l.loc?'':' (أضف الموقع للإعلان حتى يظهر)'}.</p>
     <textarea class="post" id="postTxt" aria-label="نص المنشور">${esc(txt)}</textarea>
     ${photosOf(l).some(x=>String(x).startsWith('data:'))||state.videoBlobs[l.id]?`<button class="btn block" style="margin:0 0 8px;background:#1877F2;color:#fff" data-act="fb-photos" data-id="${l.id}">📷 شارك ${photosOf(l).length?'الصور ('+photosOf(l).length+')':''}${state.videoBlobs[l.id]?(photosOf(l).length?' والفيديو':'الفيديو'):''} مع المنشور</button>`:''}<div class="sharebar"><button class="btn" data-act="copy-post">نسخ المنشور</button><button class="btn ghost" data-act="copy-link" data-id="${l.id}">نسخ الرابط فقط</button><a class="btn ghost" href="https://www.facebook.com/" target="_blank" rel="noopener">افتح فيسبوك</a></div>
