@@ -237,6 +237,23 @@ main{padding-bottom:120px}
 .gallery{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;position:relative}
 .gallery::-webkit-scrollbar{display:none}
 .gallery svg{flex:0 0 100%;scroll-snap-align:center;aspect-ratio:4/3;height:auto;display:block}
+.gallery img.ph{flex:0 0 100%;width:100%;scroll-snap-align:center;aspect-ratio:4/3;object-fit:cover;display:block;background:var(--surface2)}
+.media img.ph{width:100%;height:100%;object-fit:cover;display:block}
+.mine .thumb img.ph{display:block;width:84px;aspect-ratio:4/3;object-fit:cover}
+.phcount{position:absolute;bottom:12px;left:12px;z-index:2;background:rgba(5,15,22,.62);color:#fff;font-size:12px;font-weight:600;padding:3px 9px;border-radius:99px;display:flex;gap:4px;align-items:center}
+.photos-f{margin:4px 0 14px}
+.photos-f .ph-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px}
+.photos-f .ph-head b{font-size:14.5px}
+.ph-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.ph-item{position:relative;aspect-ratio:1;border-radius:14px;overflow:hidden;background:var(--surface2)}
+.ph-item img{width:100%;height:100%;object-fit:cover;display:block}
+.ph-item .ph-x{position:absolute;top:5px;left:5px;width:30px;height:30px;border-radius:50%;border:0;background:rgba(5,15,22,.7);color:#fff;font-size:18px;line-height:1;display:grid;place-items:center;cursor:pointer}
+.ph-item .ph-cover{position:absolute;bottom:5px;right:5px;background:var(--brand);color:#fff;font-size:11px;font-weight:600;padding:2px 8px;border-radius:99px}
+.ph-add{aspect-ratio:1;border-radius:14px;border:2px dashed var(--line);display:flex;flex-direction:column;gap:4px;align-items:center;justify-content:center;color:var(--brand);font-weight:600;font-size:13px;cursor:pointer;background:transparent;text-align:center;padding:6px}
+.ph-add span{font-size:26px;line-height:1}
+.ph-add input{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+.ph-add:focus-within{outline:2px solid var(--brand);outline-offset:2px}
+.ph-busy{grid-column:1/-1;font-size:13px;color:var(--muted)}
 .gwrap{position:relative}
 .dots{position:absolute;bottom:34px;left:50%;transform:translateX(-50%);display:flex;gap:5px}
 .dots i{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.5);transition:width .2s}
@@ -647,6 +664,22 @@ const state={shared:[],pub:[],adminOk:false,pinFails:0,pinLockUntil:0,
   adStats:store.get('adStats',{}),adTick:0,chatOpen:null,payCtx:null
 };
 const save=(...ks)=>ks.forEach(k=>store.set(k,state[k]));
+/* ---------- Photos: kept in IndexedDB (large), keyed by listing id ---------- */
+const MAX_PHOTOS=5;
+state.photos={};
+const photoDB=(()=>{let dbp=null;const open=()=>dbp||(dbp=new Promise((res,rej)=>{try{const r=indexedDB.open('aqarna-photos',1);r.onupgradeneeded=()=>r.result.createObjectStore('p');r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)}catch(e){rej(e)}}));
+  const tx=(mode,fn)=>open().then(db=>new Promise((res,rej)=>{const t=db.transaction('p',mode),st=t.objectStore('p');const out=fn(st);t.oncomplete=()=>res(out&&out.result);t.onerror=()=>rej(t.error);t.onabort=()=>rej(t.error)}));
+  return {set:(id,arr)=>tx('readwrite',st=>st.put(arr,id)),del:id=>tx('readwrite',st=>st.delete(id)),
+    all:()=>open().then(db=>new Promise((res,rej)=>{const o={},t=db.transaction('p','readonly'),c=t.objectStore('p').openCursor();c.onsuccess=()=>{const k=c.result;if(k){o[k.key]=k.value;k.continue()}else res(o)};c.onerror=()=>rej(c.error)}))}})();
+const okPhoto=x=>typeof x==='string'&&(/^data:image\/(jpeg|png|webp);base64,[A-Za-z0-9+/=]+$/.test(x)&&x.length<1500000||/^photos\/[A-Za-z0-9_.-]+\.(jpe?g|png|webp)$/i.test(x));
+function photosOf(l){if(!l)return [];if(state.photos[l.id]&&state.photos[l.id].length)return state.photos[l.id];if(Array.isArray(l.photos)&&l.photos.length)return l.photos;
+  const p=state.pub.find(x=>x.id===l.id);return p&&Array.isArray(p.photos)?p.photos:[]}
+function pic(l,v=0){const ph=photosOf(l);return ph[v]?`<img class="ph" src="${esc(ph[v])}" alt="صورة ${v+1} من عقار ${esc(l.title)}" loading="lazy" decoding="async">`:art(l,v)}
+function compressImage(file,max=1000,q=.62){return new Promise((res,rej)=>{const u=URL.createObjectURL(file),im=new Image();
+  im.onload=()=>{try{let w=im.naturalWidth,h=im.naturalHeight;const k=Math.min(1,max/Math.max(w,h));w=Math.round(w*k);h=Math.round(h*k);
+    const c=document.createElement('canvas');c.width=w;c.height=h;const x=c.getContext('2d');x.fillStyle='#fff';x.fillRect(0,0,w,h);x.drawImage(im,0,0,w,h);URL.revokeObjectURL(u);res(c.toDataURL('image/jpeg',q))}catch(e){rej(e)}};
+  im.onerror=()=>{URL.revokeObjectURL(u);rej(new Error('bad image'))};im.src=u})}
+function dataUrlToFile(d,name){const [h,b]=d.split(',');const bin=atob(b),u=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)u[i]=bin.charCodeAt(i);return new File([u],name,{type:(h.match(/data:([^;]+)/)||[])[1]||'image/jpeg'})}
 const ALL=()=>{const seen=new Set();return [...state.shared,...state.mine.filter(l=>l.status==='active'),...state.pub,...SEED].filter(l=>{if(seen.has(l.id)||state.hidden.includes(l.id))return false;seen.add(l.id);return true})};
 const byId=id=>[...state.shared,...state.mine,...state.pub,...SEED].find(l=>l.id===id);
 const isMine=l=>state.mine.some(m=>m.id===l.id);
@@ -671,6 +704,7 @@ function cleanListing(o,trusted){
     l.verify=trusted&&VERIFY[l.verify]?l.verify:'none';
     if(l.loc){const la=+l.loc.lat,ln=+l.loc.lng;l.loc=(isFinite(la)&&isFinite(ln)&&Math.abs(la)<=90&&Math.abs(ln)<=180)?{lat:la,lng:ln}:undefined}
     if(l.phone)l.phone=String(l.phone).replace(/\D/g,'').slice(0,12);
+    l.photos=trusted&&Array.isArray(l.photos)?l.photos.filter(okPhoto).slice(0,MAX_PHOTOS):[];
     if(!Array.isArray(l.features))l.features=[];l.features=l.features.map(String).slice(0,12);
     l.owner={name:String((l.owner&&l.owner.name)||'صاحب الإعلان').slice(0,40),role:String((l.owner&&l.owner.role)||'مالك عقار').slice(0,30)};
     return l}catch(e){return null}}
@@ -687,8 +721,14 @@ function openFB(id){const l=byId(id),txt=postText(l),link=shareLink(l);
   openSheet('انشر على فيسبوك',`<div style="padding:6px 18px 20px">
     <p class="muted" style="margin:0 0 10px;font-size:14px">انسخ المنشور والصقه في صفحتك مع صور العقار. من يضغط الرابط يفتح هذا الإعلان نفسه، ويرى موقعه بالضبط${l.loc?'':' (أضف الموقع للإعلان حتى يظهر)'}.</p>
     <textarea class="post" id="postTxt" aria-label="نص المنشور">${esc(txt)}</textarea>
-    <div class="sharebar"><button class="btn" data-act="copy-post">نسخ المنشور</button><button class="btn ghost" data-act="copy-link" data-id="${l.id}">نسخ الرابط فقط</button><a class="btn ghost" href="https://www.facebook.com/" target="_blank" rel="noopener">افتح فيسبوك</a></div>
+    ${photosOf(l).length?`<button class="btn block" style="margin:0 0 8px;background:#1877F2;color:#fff" data-act="fb-photos" data-id="${l.id}">📷 شارك الصور (${photosOf(l).length}) مع المنشور</button>`:''}<div class="sharebar"><button class="btn" data-act="copy-post">نسخ المنشور</button><button class="btn ghost" data-act="copy-link" data-id="${l.id}">نسخ الرابط فقط</button><a class="btn ghost" href="https://www.facebook.com/" target="_blank" rel="noopener">افتح فيسبوك</a></div>
     <p class="legal">نصيحة: ضع صور العقار الحقيقية في المنشور، واكتب رقم الإعلان في التعليقات أيضاً ليسهل البحث عنه.</p></div>`);}
+async function sharePhotos(id){const l=byId(id),ph=photosOf(l).filter(x=>x.startsWith('data:'));if(!ph.length)return;const txt=postText(l);
+  copyText(txt,'نُسخ نص المنشور');
+  const files=ph.map((d,i)=>dataUrlToFile(d,`${l.id}-${i+1}.jpg`));
+  if(navigator.canShare&&navigator.canShare({files})){try{await navigator.share({files,text:txt});toast('اختر فيسبوك، ثم الصق النص إذا لم يظهر');}catch(e){}return}
+  files.forEach((f,i)=>setTimeout(()=>{const a=document.createElement('a');a.href=URL.createObjectURL(f);a.download=f.name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},1500)},i*400));
+  toast('نُزّلت الصور إلى هاتفك. أرفقها في منشور فيسبوك')}
 function copyText(t,msg){const done=()=>toast(msg);if(navigator.clipboard)navigator.clipboard.writeText(t).then(done,()=>fallbackCopy(t,msg));else fallbackCopy(t,msg)}
 function fallbackCopy(t,msg){const a=document.createElement('textarea');a.value=t;document.body.appendChild(a);a.select();try{document.execCommand('copy');toast(msg)}catch(e){toast('انسخ النص يدوياً')}a.remove()}
 
@@ -879,7 +919,7 @@ function card(l,opts={}){
   const fav=state.favs.includes(l.id),cmp=state.compare.includes(l.id),ins=insight(l);
   const rs=opts.reasons&&searchActive()?reasons(l,state.filters):[];
   return `<article class="card">
-    <div class="media">${art(l)}
+    <div class="media">${pic(l)}${photosOf(l).length>1?`<span class="phcount" aria-label="${photosOf(l).length} صور">📷 ${photosOf(l).length}</span>`:''}
       <button class="hit" data-act="open" data-id="${l.id}" aria-label="تفاصيل ${esc(l.title)}"></button>
       <span class="on-img glass kind-tag">${KINDS[l.kind]}</span>${promoTag(promoOf(l))}
       <button class="on-img glass heart" data-act="fav" data-id="${l.id}" aria-pressed="${fav}" aria-label="${fav?'إزالة من المفضلة':'أضف للمفضلة'}">${I.heart(fav)}</button>
@@ -1011,7 +1051,7 @@ function renderSaved(){
     const st=l.status==='active'?stTag(['منشور','t-ok']):l.status==='review'?stTag(['قيد المراجعة','t-pend']):stTag(['مرفوض','t-no']);
     const pst=pr?(pr.status==='active'?` ${stTag([(pr.type==='pinned'?'مثبت':'مميز')+' حتى '+new Date(pr.ends).toLocaleDateString('ar-LY',{day:'numeric',month:'short'}),'t-info'])}`:` ${stTag(['الترويج بانتظار الدفع','t-pend'])}`):'';
     const del=`<button class="round" data-act="del-mine" data-id="${l.id}" aria-label="احذف الإعلان" title="احذف الإعلان" style="width:38px;height:38px;flex:0 0 auto;color:var(--danger)">${I.trash}</button>`;
-    return `<div class="mine"><div class="thumb">${art(l)}</div><div class="info"><b>${esc(l.title)}</b><div class="muted">${l.id}، ${priceHTML(l)}</div><div class="status">${st}${pst}</div>${l.status==='rejected'&&l.reason?`<div class="muted" style="font-size:12.5px">${esc(l.reason)}</div>`:''}</div>
+    return `<div class="mine"><div class="thumb">${pic(l)}</div><div class="info"><b>${esc(l.title)}</b><div class="muted">${l.id}، ${priceHTML(l)}</div><div class="status">${st}${pst}</div>${l.status==='rejected'&&l.reason?`<div class="muted" style="font-size:12.5px">${esc(l.reason)}</div>`:''}</div>
     ${l.status==='active'?`<button class="round" data-act="fb" data-id="${l.id}" aria-label="انشر على فيسبوك" title="انشر على فيسبوك" style="width:38px;height:38px;flex:0 0 auto;color:#fff;background:#1877F2;border:0;font-weight:700;font-size:19px;font-family:Arial,sans-serif">f</button>`:''}${l.status==='active'&&!pr?`<button class="btn small" data-act="promote" data-id="${l.id}">${I.star.replace('<svg','<svg width="15" height="15"')}روّج</button>`:''}${l.status==='review'?`<button class="btn ghost small" data-act="nav" data-v="admin">راجعه كمدير</button>`:''}${del}</div>`}).join(''):`<p class="muted" style="margin:0">لم تنشر أي إعلان بعد.</p>`;
 }
 function renderAlerts(){
@@ -1080,7 +1120,8 @@ function openDetail(id){
   let bar='';
   if(ins){const lo=Math.min(ins.ppm,ins.avg)*.8,hi=Math.max(ins.ppm,ins.avg)*1.2,pos=x=>((x-lo)/(hi-lo)*100).toFixed(1);
     bar=`<div class="bar"><i style="right:${pos(ins.avg)}%;background:var(--muted)"></i><i style="right:${pos(ins.ppm)}%;background:${ins.diff<0?'var(--ok)':'var(--gold)'}"></i></div><div class="bar-l"><span>● هذا العقار ${fmt(ins.ppm)} د.ل/م²</span><span>● المتوسط ${fmt(ins.avg)}</span></div>`}
-  const body=`<div class="gwrap"><div class="gallery" id="gal" aria-label="الصور">${art(l,0)}${art(l,1)}${art(l,2)}</div><div class="dots" id="dots"><i class="on"></i><i></i><i></i></div></div>
+  const gal=photosOf(l).length?photosOf(l):[0,1,2];
+  const body=`<div class="gwrap"><div class="gallery" id="gal" aria-label="الصور">${gal.map((_,i)=>pic(l,i)).join('')}</div>${gal.length>1?`<div class="dots" id="dots">${gal.map((_,i)=>`<i class="${i?'':'on'}"></i>`).join('')}</div>`:''}</div>
   <div class="d-in">
     <div class="row"><span class="vbadge" style="background:var(--surface2);color:var(--muted)">${TYPES[l.type]}، ${KINDS[l.kind]}${promoOf(l)?(promoOf(l)==='pinned'?'، مثبت':'، مميز'):''}</span><span class="muted" style="direction:ltr;font-size:12.5px">${l.id}</span></div>
     <h3 class="d-title">${esc(l.title)}</h3>
@@ -1109,7 +1150,7 @@ function openDetail(id){
   const extra=`<button class="round glass" data-act="share" data-id="${l.id}" aria-label="مشاركة">${I.share}</button><button class="round glass" data-act="fav" data-id="${l.id}" aria-pressed="${fav}" style="color:${fav?'var(--heart)':'inherit'}" aria-label="المفضلة">${I.heart(fav)}</button>`;
   openSheet(TYPES[l.type],body,foot,{floating:true,extra});
   if(bookable)renderBook();
-  const gal=$('#gal');gal.addEventListener('scroll',()=>{const i=Math.round(Math.abs(gal.scrollLeft)/gal.clientWidth);document.querySelectorAll('#dots i').forEach((d,k)=>d.classList.toggle('on',k===i))},{passive:true});
+  const galEl=$('#gal');galEl.addEventListener('scroll',()=>{const i=Math.round(Math.abs(galEl.scrollLeft)/galEl.clientWidth);document.querySelectorAll('#dots i').forEach((d,k)=>d.classList.toggle('on',k===i))},{passive:true});
 }
 function bookedSet(id){const s=new Set();for(let d=1;d<28;d++)if(hash(id+':'+d)%5===0)s.add(d);return s}
 function renderBook(){
@@ -1147,6 +1188,7 @@ function renderAdd(){
     <div class="row2"><div class="field"><label for="aBeds">غرف النوم</label><input id="aBeds" type="number" inputmode="numeric" min="0" value="${d.beds??''}"></div>
     <div class="field"><label for="aBaths">الحمامات</label><input id="aBaths" type="number" inputmode="numeric" min="0" value="${d.baths??''}"></div></div>
     <div class="toggles">${tg('aFurn','مفروش',d.furnished)}${tg('aPark','موقف سيارة',d.parking)}${tg('aElev','مصعد',d.elevator)}${tg('aSea','قريب من البحر',d.sea)}</div>
+    <div class="photos-f" id="phBox">${photosField()}</div>
     <div class="err" id="aErr"></div>
     <div class="form-actions" style="display:flex;gap:8px"><button class="btn ghost" data-act="add-back">رجوع</button><button class="btn" style="flex:1" data-act="add-next">التالي</button></div>`;
   if(s===3)h+=`<h3 class="step-h">العنوان والتواصل</h3>
@@ -1156,11 +1198,24 @@ function renderAdd(){
     <div class="field"><label for="aPhone">رقم الهاتف</label><input id="aPhone" type="tel" inputmode="tel" dir="ltr" value="${esc(d.phone||'')}" placeholder="09XXXXXXXX"></div>
     <div class="field"><label for="aLoc">موقع العقار بالضبط (اختياري)</label><input id="aLoc" dir="ltr" value="${esc(d.loc||'')}" placeholder="32.8872, 13.1913 أو رابط خرائط Google"></div>
     <button type="button" class="inline-btn" data-act="geo">${I.pin}استخدم موقعي الحالي</button>
-    <p class="legal" style="margin:0 0 10px">في خرائط Google اضغط مطولاً على مكان العقار، وانسخ الأرقام التي تظهر في الأعلى والصقها هنا. الصور والفيديو تُضاف في النسخة الكاملة.</p>
+    <p class="legal" style="margin:0 0 10px">في خرائط Google اضغط مطولاً على مكان العقار، وانسخ الأرقام التي تظهر في الأعلى والصقها هنا. </p>
     <div class="err" id="aErr"></div>
     <div class="form-actions" style="display:flex;gap:8px"><button class="btn ghost" data-act="add-back">رجوع</button><button class="btn" style="flex:1" data-act="add-submit">أرسل للمراجعة</button></div>`;
   $('#addPanel').innerHTML=h;
 }
+function photosField(){const ph=state.draft.photos||[];
+  return `<div class="ph-head"><b>صور العقار</b><span class="muted" style="font-size:12.5px">${ph.length} من ${MAX_PHOTOS}</span></div>
+  <div class="ph-grid">${ph.map((u,i)=>`<div class="ph-item"><img src="${u}" alt="الصورة ${i+1}">${i===0?'<span class="ph-cover">الغلاف</span>':''}<button type="button" class="ph-x" data-act="ph-del" data-i="${i}" aria-label="احذف الصورة ${i+1}">×</button></div>`).join('')}
+  ${ph.length<MAX_PHOTOS?`<label class="ph-add"><span>📷</span>${ph.length?'أضف المزيد':'أضف صور'}<input type="file" id="aPhotos" accept="image/*" multiple></label>`:''}
+  ${state.phBusy?'<div class="ph-busy">جارٍ تجهيز الصور…</div>':''}</div>
+  <p class="legal" style="margin:8px 0 0">الصورة الأولى تظهر غلافاً للإعلان. صوّر العقار في ضوء النهار، وصوّر الغرف كلها والواجهة. التطبيق يصغّر حجم الصور تلقائياً.</p>`}
+function renderPhotos(){const b=$('#phBox');if(b)b.innerHTML=photosField()}
+async function addPhotos(files){const d=state.draft;d.photos=d.photos||[];const room=MAX_PHOTOS-d.photos.length;
+  const list=[...files].filter(f=>/^image\//.test(f.type)||/\.(jpe?g|png|webp|heic)$/i.test(f.name)).slice(0,room);
+  if(files.length>room)toast(`يمكنك إضافة ${MAX_PHOTOS} صور كحد أقصى`);
+  state.phBusy=true;renderPhotos();let bad=0;
+  for(const f of list){try{d.photos.push(await compressImage(f))}catch(e){bad++}}
+  state.phBusy=false;renderPhotos();if(bad)toast('لم نستطع قراءة بعض الصور. جرّب صور JPG من المعرض')}
 function collectAdd(){
   const d=state.draft,v=id=>{const e=$('#'+id);return e?e.value.trim():undefined},c=id=>{const e=$('#'+id);return e?e.checked:undefined};
   if(state.addStep===1)Object.assign(d,{kind:v('aKind'),type:v('aType'),city:v('aCity'),area:v('aArea')});
@@ -1345,6 +1400,7 @@ document.addEventListener('keydown',e=>{
 });
 document.addEventListener('change',e=>{
   if(e.target.id==='aCity'){state.draft.city=e.target.value;state.draft.area=null;collectAdd();renderAdd()}
+  if(e.target.id==='aPhotos'){const fs=e.target.files;if(fs&&fs.length)addPhotos(fs);return}
   if(e.target.type==='file'){const box=e.target.closest('.filebox');if(box&&e.target.files.length){box.classList.add('done');box.querySelector('.fname').textContent='تم اختيار الصورة ✓'}}
   if(e.target.name==='pm'){$('#rcptBox').hidden=e.target.value!=='bank';$('#payErr').textContent=''}
 });
@@ -1355,14 +1411,16 @@ document.addEventListener('click',e=>{
     case 'ob-next':if(obStep<OB.length-1){obStep++;renderOB()}else closeOB();break;
     case 'ob-skip':closeOB();break;
     case 'pin-go':pinGo();break;
+    case 'ph-del':{const i=+el.dataset.i;(state.draft.photos||[]).splice(i,1);renderPhotos();break}
+    case 'fb-photos':sharePhotos(id);break;
     case 'del-mine':{const l=state.mine.find(x=>x.id===id);if(!l||!confirm(`حذف الإعلان «${l.title}» نهائياً من هاتفك؟`))break;
-      state.mine=state.mine.filter(x=>x.id!==id);store.set('mine',state.mine);state.favs=state.favs.filter(x=>x!==id);store.set('favs',state.favs);
+      state.mine=state.mine.filter(x=>x.id!==id);store.set('mine',state.mine);delete state.photos[id];photoDB.del(id).catch(()=>{});state.favs=state.favs.filter(x=>x!==id);store.set('favs',state.favs);
       toast(state.pub.some(x=>x.id===id)?'حُذف من هاتفك. صدّر ملف الإعلانات وارفعه ليُحذف عند الجميع':'حُذف الإعلان');renderAll();break}
-    case 'export-pub':{const act=state.mine.filter(l=>l.status==='active').map(l=>{const o={};SHARE_KEYS.concat(['created','oldPrice']).forEach(k=>{if(l[k]!==undefined&&l[k]!==null&&l[k]!==false&&l[k]!=='')o[k]=l[k]});return o});
+    case 'export-pub':{const act=state.mine.filter(l=>l.status==='active').map(l=>{const o={};SHARE_KEYS.concat(['created','oldPrice']).forEach(k=>{if(l[k]!==undefined&&l[k]!==null&&l[k]!==false&&l[k]!=='')o[k]=l[k]});const ph=photosOf(l);if(ph.length)o.photos=ph;return o});
       const blob=new Blob([JSON.stringify({app:'aqarna',version:1,updated:new Date().toISOString(),listings:act},null,1)],{type:'application/json'});
       const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='listings.json';document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},1500);
       toast(`نُزّل ملف فيه ${act.length} إعلان. ارفعه على GitHub الآن`);break}
-    case 'restore-pub':{let n=0;state.pub.forEach(l=>{if(!state.mine.some(m=>m.id===l.id)){state.mine.push(Object.assign({},l,{status:'active'}));n++}});store.set('mine',state.mine);toast(n?`استُرجع ${n} إعلان إلى هاتفك`:'كل الإعلانات المنشورة موجودة على هاتفك');renderAll();break}
+    case 'restore-pub':{let n=0;state.pub.forEach(l=>{if(!state.mine.some(m=>m.id===l.id)){const c=Object.assign({},l,{status:'active'});if(c.photos&&c.photos.length&&!state.photos[c.id]){state.photos[c.id]=c.photos;photoDB.set(c.id,c.photos).catch(()=>{})}delete c.photos;delete c.pub;state.mine.push(c);n++}});store.set('mine',state.mine);toast(n?`استُرجع ${n} إعلان إلى هاتفك`:'كل الإعلانات المنشورة موجودة على هاتفك');renderAll();break}
     case 'admin-lock':state.adminOk=false;go('home');toast('قُفلت لوحة المدير');break;
     case 'drops':state.filters={kind:'all',drop:true};state.parseNotes=[];go('home');break;
     case 'theme':{const cur=document.documentElement.dataset.theme||(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light'),nx=cur==='dark'?'light':'dark';document.documentElement.dataset.theme=nx;store.set('theme',nx);break}
@@ -1432,6 +1490,7 @@ document.addEventListener('click',e=>{
         price:d.price,size:d.size,beds:d.beds,baths:d.baths,floor:null,elevator:!!d.elevator,parking:!!d.parking,furnished:!!d.furnished,sea:!!d.sea,
         features:[d.furnished&&'مفروش',d.parking&&'موقف سيارة',d.elevator&&'مصعد',d.sea&&'قريب من البحر'].filter(Boolean),
         verify:state.me.verify,owner:{name:d.name||'صاحب الإعلان',role:state.me.plan==='agent'?'وسيط عقاري':state.me.plan==='company'?'شركة عقارية':'مالك عقار'},title:d.title,desc:d.desc||'',phone:(d.phone||'').replace(/\D/g,''),loc,status:'review',created:Date.now()};
+      const phs=(d.photos||[]).slice(0,MAX_PHOTOS);if(phs.length){state.photos[l.id]=phs;photoDB.set(l.id,phs).catch(()=>toast('لم نستطع حفظ الصور على هاتفك. المساحة ممتلئة؟'))}
       state.mine.unshift(l);store.set('mine',state.mine);state.draft={};state.addStep=1;
       pushNote(`استلمنا إعلانك ${l.id} وهو قيد المراجعة.`,'📝');toast('أُرسل الإعلان للمراجعة');go('saved');break}
     case 'approve':{const l=state.mine.find(x=>x.id===id);l.status='active';l.created=Date.now();store.set('mine',state.mine);
@@ -1478,6 +1537,7 @@ if(!DEMO){const t=$('#demoTag');if(t)t.textContent='نسخة تجريبية لل
 if(/^https?:$/.test(location.protocol))fetch('listings.json',{cache:'no-cache'}).then(r=>r.ok?r.json():null).then(j=>{if(!j||!Array.isArray(j.listings))return;
   state.pub=j.listings.slice(0,500).map(o=>cleanListing(o,true)).filter(Boolean).map(l=>Object.assign(l,{pub:true}));
   if(state.pub.length&&!$('#sheet').classList.contains('show'))renderAll()}).catch(()=>{});
+photoDB.all().then(o=>{state.photos=Object.assign(o||{},state.photos);if(Object.keys(o||{}).length&&!$('#sheet').classList.contains('show'))renderAll()}).catch(()=>{});
 const sh=readShared();
 if(sh){state.shared=[sh];store.set('onboarded',true)}
 if('serviceWorker' in navigator&&location.protocol==='https:'&&!/claude|anthropic|usercontent/.test(location.hostname))navigator.serviceWorker.register('sw.js').catch(()=>{});
