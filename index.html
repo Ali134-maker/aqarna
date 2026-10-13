@@ -237,6 +237,16 @@ main{padding-bottom:120px}
 .gallery{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;position:relative}
 .gallery::-webkit-scrollbar{display:none}
 .gallery svg{flex:0 0 100%;scroll-snap-align:center;aspect-ratio:4/3;height:auto;display:block}
+.gallery .vslide{flex:0 0 100%;scroll-snap-align:center;aspect-ratio:4/3;background:#000;position:relative;display:block}
+.gallery .vslide video,.gallery .vslide iframe{position:absolute;inset:0 0 26px 0;height:calc(100% - 26px)!important;width:100%;height:100%;border:0;object-fit:contain;background:#000}
+.vbox{margin:0 0 14px}
+.vprev{position:relative;border-radius:16px;overflow:hidden;background:#000;aspect-ratio:16/9;margin-bottom:8px}
+.vprev video,.vprev iframe{width:100%;height:100%;display:block;border:0;object-fit:contain}
+.vprev .ph-x{position:absolute;top:8px;left:8px;width:32px;height:32px;border-radius:50%;border:0;background:rgba(5,15,22,.75);color:#fff;font-size:19px;display:grid;place-items:center;cursor:pointer;z-index:2}
+.v-add{display:flex;align-items:center;justify-content:center;gap:8px;border:2px dashed var(--line);border-radius:14px;padding:14px;color:var(--brand);font-weight:600;font-size:14px;cursor:pointer;position:relative;margin-bottom:8px}
+.v-add input{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+.v-add:focus-within{outline:2px solid var(--brand);outline-offset:2px}
+.vlinkbtn{display:flex;align-items:center;gap:10px;text-decoration:none;color:inherit}
 .gallery img.ph{flex:0 0 100%;width:100%;scroll-snap-align:center;aspect-ratio:4/3;object-fit:cover;display:block;background:var(--surface2)}
 .media img.ph{width:100%;height:100%;object-fit:cover;display:block}
 .lrow .thumb img.ph,.lrow .thumb svg{display:block;width:64px;height:48px;object-fit:cover}
@@ -736,6 +746,34 @@ const photoDB=(()=>{let dbp=null;const open=()=>dbp||(dbp=new Promise((res,rej)=
 const okPhoto=x=>isCloudPhoto(x)||typeof x==='string'&&(/^data:image\/(jpeg|png|webp);base64,[A-Za-z0-9+/=]+$/.test(x)&&x.length<1500000||/^photos\/[A-Za-z0-9_.-]+\.(jpe?g|png|webp)$/i.test(x));
 function photosOf(l){if(!l)return [];if(state.photos[l.id]&&state.photos[l.id].length)return state.photos[l.id];if(Array.isArray(l.photos)&&l.photos.length)return l.photos;
   const p=state.pub.find(x=>x.id===l.id);return p&&Array.isArray(p.photos)?p.photos:[]}
+/* ---------- Video: one per listing. File kept in IndexedDB ('v:'+id), or a YouTube / social link ---------- */
+const MAX_VIDEO_MB=50,MAX_VIDEO_SEC=180;state.videoBlobs={};const vURLs={};
+function parseYT(t){t=String(t||'').trim();const m=t.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?(?:.*&)?v=|shorts\/|embed\/|live\/))([A-Za-z0-9_-]{11})/);return m?m[1]:null}
+function okVLink(u){try{const x=new URL(u);return x.protocol==='https:'&&/(^|\.)(facebook\.com|fb\.watch|tiktok\.com|instagram\.com)$/.test(x.hostname)&&u.length<300}catch(e){return false}}
+const isCloudVideo=x=>typeof cloud!=='undefined'&&cloud.on&&typeof x==='string'&&x.startsWith(cloud.url+'/storage/v1/object/public/videos/')&&/^[A-Za-z0-9:\/._-]+$/.test(x);
+function videoSrc(l){if(!l)return null;const b=state.videoBlobs[l.id];if(b){return vURLs[l.id]||(vURLs[l.id]=URL.createObjectURL(b))}return l.video||null}
+const hasVideo=l=>!!(l&&(videoSrc(l)||l.yt||l.vlink));
+function videoSlide(l){const src=videoSrc(l);
+  if(src)return `<div class="vslide"><video src="${esc(src)}" controls playsinline preload="metadata" aria-label="فيديو العقار"></video></div>`;
+  if(l.yt)return `<div class="vslide"><iframe src="https://www.youtube-nocookie.com/embed/${l.yt}?rel=0&playsinline=1" title="فيديو العقار" loading="lazy" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture; fullscreen" allowfullscreen></iframe></div>`;return ''}
+function videoMeta(file){return new Promise(res=>{const v=document.createElement('video'),u=URL.createObjectURL(file);v.preload='metadata';v.onloadedmetadata=()=>{const d=v.duration;URL.revokeObjectURL(u);res(isFinite(d)?d:0)};v.onerror=()=>{URL.revokeObjectURL(u);res(-1)};v.src=u;setTimeout(()=>res(0),6000)})}
+function videoField(){const d=state.draft,src=d.videoFile?(d._vurl||(d._vurl=URL.createObjectURL(d.videoFile))):null,yt=parseYT(d.vtext);
+  return `<div class="ph-head"><b>🎬 فيديو العقار (اختياري)</b><span class="muted" style="font-size:12.5px">حتى ${MAX_VIDEO_SEC/60} دقائق</span></div>
+  ${src?`<div class="vprev"><video src="${src}" controls playsinline preload="metadata"></video><button type="button" class="ph-x" data-act="v-del" aria-label="احذف الفيديو">×</button></div><p class="legal" style="margin:0 0 8px">${(d.videoFile.size/1048576).toFixed(1)} ميغا</p>`
+   :`<label class="v-add"><span style="font-size:22px">🎥</span>أضف فيديو من المعرض أو صوّر الآن<input type="file" id="aVideo" accept="video/*"></label>`}
+  ${state.vBusy?'<div class="ph-busy">جارٍ فحص الفيديو…</div>':''}
+  <div class="field" style="margin:4px 0 0"><label for="aVlink">أو الصق رابط فيديو (يوتيوب، فيسبوك، تيك توك)</label><input id="aVlink" dir="ltr" value="${esc(d.vtext||'')}" placeholder="https://youtu.be/..."></div>
+  ${yt&&!src?`<div class="vprev" style="margin-top:8px"><iframe src="https://www.youtube-nocookie.com/embed/${yt}?rel=0" title="معاينة الفيديو" allowfullscreen></iframe></div>`:''}
+  <p class="legal" style="margin:6px 0 0">صوّر جولة هادئة بالهاتف بالعرض: المدخل، الصالة، الغرف، المطبخ، الحمامات، والإطلالة. الإعلان بالفيديو يجذب زبائن أكثر بكثير.</p>`}
+function renderVideoBox(){const b=$('#vBox');if(b)b.innerHTML=videoField()}
+async function addVideo(file){if(!file)return;if(!/^video\//.test(file.type)&&!/\.(mp4|mov|webm|3gp|m4v)$/i.test(file.name)){toast('هذا ليس ملف فيديو');return}
+  if(file.size>MAX_VIDEO_MB*1048576){toast(`الفيديو كبير (${(file.size/1048576).toFixed(0)} ميغا). الحد ${MAX_VIDEO_MB} ميغا. صوّره بجودة 720p أو قصّه`);return}
+  state.vBusy=true;renderVideoBox();const dur=await videoMeta(file);state.vBusy=false;
+  if(dur>MAX_VIDEO_SEC+2){renderVideoBox();toast(`الفيديو أطول من ${MAX_VIDEO_SEC/60} دقائق. قصّه من المعرض ثم أضفه`);return}
+  const d=state.draft;if(d._vurl){URL.revokeObjectURL(d._vurl);d._vurl=null}d.videoFile=file;renderVideoBox()}
+async function uploadVideo(l){const b=state.videoBlobs[l.id];if(!b)return isCloudVideo(l.video)?l.video:null;
+  const ext=(/quicktime/.test(b.type)?'mov':/webm/.test(b.type)?'webm':/3gpp/.test(b.type)?'3gp':'mp4'),path=`${l.id}/${Date.now().toString(36)}.${ext}`;
+  await sb('/storage/v1/object/videos/'+path,{method:'POST',raw:true,body:b,headers:{'Content-Type':b.type||'video/mp4','x-upsert':'false'},auth:true});return cloud.url+'/storage/v1/object/public/videos/'+path}
 function pic(l,v=0){const ph=photosOf(l);return ph[v]?`<img class="ph" src="${esc(ph[v])}" alt="صورة ${v+1} من عقار ${esc(l.title)}" loading="lazy" decoding="async">`:art(l,v)}
 function compressImage(file,max=1000,q=.62){return new Promise((res,rej)=>{const u=URL.createObjectURL(file),im=new Image();
   im.onload=()=>{try{let w=im.naturalWidth,h=im.naturalHeight;const k=Math.min(1,max/Math.max(w,h));w=Math.round(w*k);h=Math.round(h*k);
@@ -748,7 +786,7 @@ const isMine=l=>state.mine.some(m=>m.id===l.id);
 /* ---------- Share links: the listing travels inside the link ---------- */
 const APP_URL='https://claude.ai/artifact/X2D8SZ47xaipqF9jDjMXhJ';
 function baseUrl(){const h=location.hostname;return (/^https?:$/.test(location.protocol)&&h&&!/claude|anthropic|usercontent|localhost/.test(h))?location.origin+location.pathname:APP_URL}
-const SHARE_KEYS=['id','kind','type','city','area','price','size','beds','baths','floor','elevator','parking','furnished','sea','features','title','desc','phone','loc','owner','verify'];
+const SHARE_KEYS=['id','kind','type','city','area','price','size','beds','baths','floor','elevator','parking','furnished','sea','features','title','desc','phone','loc','owner','verify','yt','vlink','video'];
 function b64e(o){return btoa(unescape(encodeURIComponent(JSON.stringify(o)))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'')}
 function b64d(t){t=t.replace(/-/g,'+').replace(/_/g,'/');while(t.length%4)t+='=';return JSON.parse(decodeURIComponent(escape(atob(t))))}
 function shareLink(l){const o={};SHARE_KEYS.forEach(k=>{if(l[k]!==undefined&&l[k]!==null&&l[k]!==false&&l[k]!=='')o[k]=l[k]});return baseUrl()+'#l='+b64e(o)}
@@ -767,6 +805,7 @@ function cleanListing(o,trusted){
     if(l.loc){const la=+l.loc.lat,ln=+l.loc.lng;l.loc=(isFinite(la)&&isFinite(ln)&&Math.abs(la)<=90&&Math.abs(ln)<=180)?{lat:la,lng:ln}:undefined}
     if(l.phone)l.phone=String(l.phone).replace(/\D/g,'').slice(0,12);
     l.photos=trusted&&Array.isArray(l.photos)?l.photos.filter(okPhoto).slice(0,MAX_PHOTOS):[];
+    l.yt=/^[A-Za-z0-9_-]{11}$/.test(l.yt||'')?l.yt:undefined;l.vlink=okVLink(l.vlink)?l.vlink:undefined;l.video=trusted&&isCloudVideo(l.video)?l.video:undefined;
     if(!Array.isArray(l.features))l.features=[];l.features=l.features.map(String).slice(0,12);
     l.owner={name:String((l.owner&&l.owner.name)||'صاحب الإعلان').slice(0,40),role:String((l.owner&&l.owner.role)||'مالك عقار').slice(0,30)};
     return l}catch(e){return null}}
@@ -783,14 +822,14 @@ function openFB(id){const l=byId(id),txt=postText(l),link=shareLink(l);
   openSheet('انشر على فيسبوك',`<div style="padding:6px 18px 20px">
     <p class="muted" style="margin:0 0 10px;font-size:14px">انسخ المنشور والصقه في صفحتك مع صور العقار. من يضغط الرابط يفتح هذا الإعلان نفسه، ويرى موقعه بالضبط${l.loc?'':' (أضف الموقع للإعلان حتى يظهر)'}.</p>
     <textarea class="post" id="postTxt" aria-label="نص المنشور">${esc(txt)}</textarea>
-    ${photosOf(l).length?`<button class="btn block" style="margin:0 0 8px;background:#1877F2;color:#fff" data-act="fb-photos" data-id="${l.id}">📷 شارك الصور (${photosOf(l).length}) مع المنشور</button>`:''}<div class="sharebar"><button class="btn" data-act="copy-post">نسخ المنشور</button><button class="btn ghost" data-act="copy-link" data-id="${l.id}">نسخ الرابط فقط</button><a class="btn ghost" href="https://www.facebook.com/" target="_blank" rel="noopener">افتح فيسبوك</a></div>
+    ${photosOf(l).some(x=>String(x).startsWith('data:'))||state.videoBlobs[l.id]?`<button class="btn block" style="margin:0 0 8px;background:#1877F2;color:#fff" data-act="fb-photos" data-id="${l.id}">📷 شارك ${photosOf(l).length?'الصور ('+photosOf(l).length+')':''}${state.videoBlobs[l.id]?(photosOf(l).length?' والفيديو':'الفيديو'):''} مع المنشور</button>`:''}<div class="sharebar"><button class="btn" data-act="copy-post">نسخ المنشور</button><button class="btn ghost" data-act="copy-link" data-id="${l.id}">نسخ الرابط فقط</button><a class="btn ghost" href="https://www.facebook.com/" target="_blank" rel="noopener">افتح فيسبوك</a></div>
     <p class="legal">نصيحة: ضع صور العقار الحقيقية في المنشور، واكتب رقم الإعلان في التعليقات أيضاً ليسهل البحث عنه.</p></div>`);}
-async function sharePhotos(id){const l=byId(id),ph=photosOf(l).filter(x=>x.startsWith('data:'));if(!ph.length)return;const txt=postText(l);
+async function sharePhotos(id){const l=byId(id),ph=photosOf(l).filter(x=>x.startsWith('data:')),vb=state.videoBlobs[l.id];if(!ph.length&&!vb)return;const txt=postText(l);
   copyText(txt,'نُسخ نص المنشور');
-  const files=ph.map((d,i)=>dataUrlToFile(d,`${l.id}-${i+1}.jpg`));
+  const files=ph.map((d,i)=>dataUrlToFile(d,`${l.id}-${i+1}.jpg`));if(vb)files.push(new File([vb],`${l.id}-video.${/quicktime/.test(vb.type)?'mov':'mp4'}`,{type:vb.type||'video/mp4'}));
   if(navigator.canShare&&navigator.canShare({files})){try{await navigator.share({files,text:txt});toast('اختر فيسبوك، ثم الصق النص إذا لم يظهر');}catch(e){}return}
   files.forEach((f,i)=>setTimeout(()=>{const a=document.createElement('a');a.href=URL.createObjectURL(f);a.download=f.name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},1500)},i*400));
-  toast('نُزّلت الصور إلى هاتفك. أرفقها في منشور فيسبوك')}
+  toast(vb?'نُزّلت الصور والفيديو إلى هاتفك. أرفقها في منشور فيسبوك':'نُزّلت الصور إلى هاتفك. أرفقها في منشور فيسبوك')}
 function copyText(t,msg){const done=()=>toast(msg);if(navigator.clipboard)navigator.clipboard.writeText(t).then(done,()=>fallbackCopy(t,msg));else fallbackCopy(t,msg)}
 function fallbackCopy(t,msg){const a=document.createElement('textarea');a.value=t;document.body.appendChild(a);a.select();try{document.execCommand('copy');toast(msg)}catch(e){toast('انسخ النص يدوياً')}a.remove()}
 
@@ -986,7 +1025,7 @@ function card(l,opts={}){
   const fav=state.favs.includes(l.id),cmp=state.compare.includes(l.id),ins=insight(l);
   const rs=opts.reasons&&searchActive()?reasons(l,state.filters):[];
   return `<article class="card">
-    <div class="media">${pic(l)}${photosOf(l).length>1?`<span class="phcount" aria-label="${photosOf(l).length} صور">📷 ${photosOf(l).length}</span>`:''}
+    <div class="media">${pic(l)}${photosOf(l).length>1||hasVideo(l)?`<span class="phcount" aria-label="${photosOf(l).length} صور${hasVideo(l)?' وفيديو':''}">${photosOf(l).length>1?'📷 '+photosOf(l).length:''}${hasVideo(l)?' 🎬':''}</span>`:''}
       <button class="hit" data-act="open" data-id="${l.id}" aria-label="تفاصيل ${esc(l.title)}"></button>
       <span class="on-img glass kind-tag">${KINDS[l.kind]}</span>${promoTag(promoOf(l))}
       <button class="on-img glass heart" data-act="fav" data-id="${l.id}" aria-pressed="${fav}" aria-label="${fav?'إزالة من المفضلة':'أضف للمفضلة'}">${I.heart(fav)}</button>
@@ -1258,8 +1297,8 @@ function openDetail(id){
   let bar='';
   if(ins){const lo=Math.min(ins.ppm,ins.avg)*.8,hi=Math.max(ins.ppm,ins.avg)*1.2,pos=x=>((x-lo)/(hi-lo)*100).toFixed(1);
     bar=`<div class="bar"><i style="right:${pos(ins.avg)}%;background:var(--muted)"></i><i style="right:${pos(ins.ppm)}%;background:${ins.diff<0?'var(--ok)':'var(--gold)'}"></i></div><div class="bar-l"><span>● هذا العقار ${fmt(ins.ppm)} د.ل/م²</span><span>● المتوسط ${fmt(ins.avg)}</span></div>`}
-  const gal=photosOf(l).length?photosOf(l):[0,1,2];
-  const body=`<div class="gwrap"><div class="gallery" id="gal" aria-label="الصور">${gal.map((_,i)=>pic(l,i)).join('')}</div>${gal.length>1?`<div class="dots" id="dots">${gal.map((_,i)=>`<i class="${i?'':'on'}"></i>`).join('')}</div>`:''}</div>
+  const vs=videoSlide(l),gal0=photosOf(l).length?photosOf(l):[0,1,2],slides=gal0.map((_,i)=>pic(l,i));if(vs)slides.splice(1,0,vs);
+  const body=`<div class="gwrap"><div class="gallery" id="gal" aria-label="الصور والفيديو">${slides.join('')}</div>${vs?`<button class="glass" data-act="go-video" style="position:absolute;top:calc(64px + env(safe-area-inset-top,0px));right:14px;z-index:3;border-radius:999px;padding:6px 12px;font-size:13px;font-weight:600">▶ شاهد الفيديو</button>`:''}${slides.length>1?`<div class="dots" id="dots">${slides.map((_,i)=>`<i class="${i?'':'on'}"></i>`).join('')}</div>`:''}</div>${l.vlink&&!vs?`<div class="box" style="margin:10px 18px 0"><a class="vlinkbtn" href="${esc(l.vlink)}" target="_blank" rel="noopener"><span style="font-size:26px">🎬</span><span style="flex:1"><b>شاهد فيديو العقار</b><br><span class="muted" style="font-size:12.5px">يفتح في ${/tiktok/.test(l.vlink)?'تيك توك':/instagram/.test(l.vlink)?'إنستغرام':'فيسبوك'}</span></span><span class="btn small">شاهد</span></a></div>`:''}
   <div class="d-in">
     <div class="row"><span class="vbadge" style="background:var(--surface2);color:var(--muted)">${TYPES[l.type]}، ${KINDS[l.kind]}${promoOf(l)?(promoOf(l)==='pinned'?'، مثبت':'، مميز'):''}</span><span class="muted" style="direction:ltr;font-size:12.5px">${l.id}</span></div>
     <h3 class="d-title">${esc(l.title)}</h3>
@@ -1289,7 +1328,7 @@ function openDetail(id){
   openSheet(TYPES[l.type],body,foot,{floating:true,extra});
   if(bookable)renderBook();
   if(l.loc)miniMap(l);
-  const galEl=$('#gal');galEl.addEventListener('scroll',()=>{const i=Math.round(Math.abs(galEl.scrollLeft)/galEl.clientWidth);document.querySelectorAll('#dots i').forEach((d,k)=>d.classList.toggle('on',k===i))},{passive:true});
+  const galEl=$('#gal');galEl.addEventListener('scroll',()=>{galEl.querySelectorAll('video').forEach(v=>{const r=v.getBoundingClientRect(),g=galEl.getBoundingClientRect();if(Math.abs(r.left-g.left)>g.width/2&&!v.paused)v.pause()});const i=Math.round(Math.abs(galEl.scrollLeft)/galEl.clientWidth);document.querySelectorAll('#dots i').forEach((d,k)=>d.classList.toggle('on',k===i))},{passive:true});
 }
 function bookedSet(id){const s=new Set();for(let d=1;d<28;d++)if(hash(id+':'+d)%5===0)s.add(d);return s}
 function renderBook(){
@@ -1328,6 +1367,7 @@ function renderAdd(){
     <div class="field"><label for="aBaths">الحمامات</label><input id="aBaths" type="number" inputmode="numeric" min="0" value="${d.baths??''}"></div></div>
     <div class="toggles">${tg('aFurn','مفروش',d.furnished)}${tg('aPark','موقف سيارة',d.parking)}${tg('aElev','مصعد',d.elevator)}${tg('aSea','قريب من البحر',d.sea)}</div>
     <div class="photos-f" id="phBox">${photosField()}</div>
+    <div class="vbox" id="vBox">${videoField()}</div>
     <div class="err" id="aErr"></div>
     <div class="form-actions" style="display:flex;gap:8px"><button class="btn ghost" data-act="add-back">رجوع</button><button class="btn" style="flex:1" data-act="add-next">التالي</button></div>`;
   if(s===3)h+=`<h3 class="step-h">العنوان والتواصل</h3>
@@ -1358,6 +1398,7 @@ async function addPhotos(files){const d=state.draft;d.photos=d.photos||[];const 
 function collectAdd(){
   const d=state.draft,v=id=>{const e=$('#'+id);return e?e.value.trim():undefined},c=id=>{const e=$('#'+id);return e?e.checked:undefined};
   if(state.addStep===1)Object.assign(d,{kind:v('aKind'),type:v('aType'),city:v('aCity'),area:v('aArea')});
+  if(state.addStep===2){const vl=$('#aVlink');if(vl)d.vtext=vl.value.trim()}
   if(state.addStep===2)Object.assign(d,{price:+v('aPrice')||0,size:+v('aSize')||null,beds:v('aBeds')===''?null:+v('aBeds'),baths:v('aBaths')===''?null:+v('aBaths'),furnished:c('aFurn'),parking:c('aPark'),elevator:c('aElev'),sea:c('aSea')});
   if(state.addStep===3)Object.assign(d,{title:v('aTitle'),desc:v('aDesc'),name:v('aName'),phone:v('aPhone'),loc:v('aLoc')});
 }
@@ -1568,7 +1609,7 @@ async function loadCloud(){try{const rows=await sb('/rest/v1/listings?select=id,
 async function uploadPhotos(id,photos){const out=[];for(let i=0;i<photos.length;i++){const x=photos[i];if(isCloudPhoto(x)){out.push(x);continue}if(!String(x).startsWith('data:'))continue;
     const path=`${id}/${Date.now().toString(36)}-${i}.jpg`;await sb('/storage/v1/object/photos/'+path,{method:'POST',raw:true,body:dataUrlToFile(x,'p.jpg'),headers:{'Content-Type':'image/jpeg','x-upsert':'false'},auth:true});
     out.push(cloud.url+'/storage/v1/object/public/photos/'+path)}return out}
-async function cloudSubmit(l,status){const photos=await uploadPhotos(l.id,photosOf(l));const data=slim(Object.assign({},l,{photos}));if(status!=='active')data.verify='none';if(!photos.length)delete data.photos;
+async function cloudSubmit(l,status){const photos=await uploadPhotos(l.id,photosOf(l));let video=null;try{video=await uploadVideo(l)}catch(e){toast('لم يُرفع الفيديو، وأُرسل الإعلان بدونه')}const data=slim(Object.assign({},l,{photos,video:video||undefined}));if(status!=='active')data.verify='none';if(!photos.length)delete data.photos;
   await sb('/rest/v1/listings',{method:'POST',body:{id:l.id,status:status||'review',data},headers:{Prefer:'return=minimal'},auth:status==='active'});return photos}
 async function tokenFresh(){const t=cloud.tok;if(!t)return false;if(Date.now()<t.exp-60e3)return true;
   try{const j=await sb('/auth/v1/token?grant_type=refresh_token',{method:'POST',body:{refresh_token:t.refresh_token}});cloud.tok={access_token:j.access_token,refresh_token:j.refresh_token,exp:Date.now()+j.expires_in*1000,email:t.email};store.set('cloudTok',cloud.tok);return true}
@@ -1645,6 +1686,8 @@ document.addEventListener('keydown',e=>{
 document.addEventListener('change',e=>{
   if(e.target.id==='aCity'){state.draft.city=e.target.value;state.draft.area=null;collectAdd();renderAdd()}
   if(e.target.id==='bulkFile'){const f=e.target.files&&e.target.files[0];if(f){const r=new FileReader();r.onload=()=>{$('#bulkTxt').value=r.result;showBulk(r.result)};r.readAsText(f,'utf-8')}return}
+  if(e.target.id==='aVideo'){const f=e.target.files&&e.target.files[0];if(f)addVideo(f);return}
+  if(e.target.id==='aVlink'){state.draft.vtext=e.target.value.trim();const t=state.draft.vtext;if(t&&!parseYT(t)&&!okVLink(t))toast('الرابط غير مدعوم. استخدم رابط يوتيوب أو فيسبوك أو تيك توك');renderVideoBox();return}
   if(e.target.id==='aPhotos'){const fs=e.target.files;if(fs&&fs.length)addPhotos(fs);return}
   if(e.target.type==='file'){const box=e.target.closest('.filebox');if(box&&e.target.files.length){box.classList.add('done');box.querySelector('.fname').textContent='تم اختيار الصورة ✓'}}
   if(e.target.name==='pm'){$('#rcptBox').hidden=e.target.value!=='bank';$('#payErr').textContent=''}
@@ -1656,7 +1699,7 @@ document.addEventListener('click',e=>{
     case 'ob-next':if(obStep<OB.length-1){obStep++;renderOB()}else closeOB();break;
     case 'ob-skip':closeOB();break;
     case 'pin-go':pinGo();break;
-    case 'dup-mine':{const l=state.mine.find(x=>x.id===id);if(!l)break;state.draft={kind:l.kind,type:l.type,city:l.city,area:l.area,price:l.price,size:l.size,beds:l.beds,baths:l.baths,furnished:l.furnished,parking:l.parking,elevator:l.elevator,sea:l.sea,title:l.title,desc:l.desc,name:l.owner.name,phone:l.phone,loc:l.loc?l.loc.lat+', '+l.loc.lng:'',photos:[...photosOf(l)].filter(x=>String(x).startsWith('data:'))};state.addStep=1;go('add');toast('نُسخ الإعلان. عدّل ما تريد ثم أرسله');break}
+    case 'dup-mine':{const l=state.mine.find(x=>x.id===id);if(!l)break;state.draft={kind:l.kind,type:l.type,city:l.city,area:l.area,price:l.price,size:l.size,beds:l.beds,baths:l.baths,furnished:l.furnished,parking:l.parking,elevator:l.elevator,sea:l.sea,title:l.title,desc:l.desc,name:l.owner.name,phone:l.phone,loc:l.loc?l.loc.lat+', '+l.loc.lng:'',photos:[...photosOf(l)].filter(x=>String(x).startsWith('data:')),videoFile:state.videoBlobs[l.id]||null,vtext:l.yt?'https://youtu.be/'+l.yt:(l.vlink||'')};state.addStep=1;go('add');toast('نُسخ الإعلان. عدّل ما تريد ثم أرسله');break}
     case 'bulk-tpl':bulkTemplate();toast('نُزّل النموذج. افتحه في Excel أو Google Sheets');break;
     case 'bulk-read':showBulk($('#bulkTxt').value);break;
     case 'bulk-add':{const ls=bulkPending;if(!ls.length)break;bulkPending=[];
@@ -1686,10 +1729,12 @@ document.addEventListener('click',e=>{
     case 'pick-me':locateMe(ll=>{if(PICK)PICK.m.setView(ll,18)});break;
     case 'pick-ok':{if(!PICK){closeSheet(true);break}const c=PICK.m.getCenter(),v=c.lat.toFixed(6)+', '+c.lng.toFixed(6);state.draft.loc=v;PICK.m.remove();PICK=null;closeSheet(true);const inp=$('#aLoc');if(inp)inp.value=v;toast('ثُبّت موقع العقار ✓');break}
     case 'notif-on':enableNotifs();break;
+    case 'go-video':{const v=document.querySelector('#gal .vslide');if(v){v.scrollIntoView({behavior:'smooth',inline:'center',block:'nearest'});const vid=v.querySelector('video');if(vid)setTimeout(()=>vid.play().catch(()=>{}),450)}break}
+    case 'v-del':{const d=state.draft;if(d._vurl)URL.revokeObjectURL(d._vurl);d._vurl=null;d.videoFile=null;renderVideoBox();break}
     case 'ph-del':{const i=+el.dataset.i;(state.draft.photos||[]).splice(i,1);renderPhotos();break}
     case 'fb-photos':sharePhotos(id);break;
     case 'del-mine':{const l=state.mine.find(x=>x.id===id);if(!l||!confirm(`حذف الإعلان «${l.title}» نهائياً من هاتفك؟`))break;
-      state.mine=state.mine.filter(x=>x.id!==id);store.set('mine',state.mine);delete state.photos[id];photoDB.del(id).catch(()=>{});state.favs=state.favs.filter(x=>x!==id);store.set('favs',state.favs);
+      state.mine=state.mine.filter(x=>x.id!==id);store.set('mine',state.mine);delete state.photos[id];photoDB.del(id).catch(()=>{});delete state.videoBlobs[id];photoDB.del('v:'+id).catch(()=>{});state.favs=state.favs.filter(x=>x!==id);store.set('favs',state.favs);
       toast(state.pub.some(x=>x.id===id)?'حُذف من هاتفك. صدّر ملف الإعلانات وارفعه ليُحذف عند الجميع':'حُذف الإعلان');renderAll();break}
     case 'export-pub':{const act=state.mine.filter(l=>l.status==='active').map(l=>{const o={};SHARE_KEYS.concat(['created','oldPrice']).forEach(k=>{if(l[k]!==undefined&&l[k]!==null&&l[k]!==false&&l[k]!=='')o[k]=l[k]});const ph=photosOf(l);if(ph.length)o.photos=ph;return o});
       const blob=new Blob([JSON.stringify({app:'aqarna',version:1,updated:new Date().toISOString(),listings:act},null,1)],{type:'application/json'});
@@ -1765,6 +1810,10 @@ document.addEventListener('click',e=>{
         price:d.price,size:d.size,beds:d.beds,baths:d.baths,floor:null,elevator:!!d.elevator,parking:!!d.parking,furnished:!!d.furnished,sea:!!d.sea,
         features:[d.furnished&&'مفروش',d.parking&&'موقف سيارة',d.elevator&&'مصعد',d.sea&&'قريب من البحر'].filter(Boolean),
         verify:state.me.verify,owner:{name:d.name||'صاحب الإعلان',role:state.me.plan==='agent'?'وسيط عقاري':state.me.plan==='company'?'شركة عقارية':'مالك عقار'},title:d.title,desc:d.desc||'',phone:(d.phone||'').replace(/\D/g,''),loc,status:'review',created:Date.now()};
+      {const t=d.vtext||'';if(t&&!parseYT(t)&&!okVLink(t)){$('#aErr').textContent='رابط الفيديو غير مدعوم. ارجع للخطوة 2 واستخدم رابط يوتيوب أو فيسبوك أو تيك توك، أو احذفه.';break}
+       const y=parseYT(t);if(y)l.yt=y;else if(t)l.vlink=t;
+       if(d.videoFile){state.videoBlobs[l.id]=d.videoFile;photoDB.set('v:'+l.id,d.videoFile).catch(()=>toast('لم نستطع حفظ الفيديو على هاتفك. المساحة ممتلئة؟'))}
+       if(d._vurl){URL.revokeObjectURL(d._vurl)}}
       const phs=(d.photos||[]).slice(0,MAX_PHOTOS);if(phs.length){state.photos[l.id]=phs;photoDB.set(l.id,phs).catch(()=>toast('لم نستطع حفظ الصور على هاتفك. المساحة ممتلئة؟'))}
       state.mine.unshift(l);store.set('mine',state.mine);state.draft={};state.addStep=1;
       if(cloud.on){l.cloud=true;store.set('mine',state.mine);cloudSubmit(l,'review').then(()=>toast('أُرسل إعلانك للمراجعة ✓')).catch(e=>{l.cloud=false;store.set('mine',state.mine);if(e.status===409){toast('حدث تعارض في رقم الإعلان. انسخه وأرسله مرة أخرى')}else toast('لم يُرسل الإعلان للسحابة. تحقق من الإنترنت وحاول لاحقاً')})}
@@ -1814,7 +1863,7 @@ if(/^https?:$/.test(location.protocol))fetch('listings.json',{cache:'no-cache'})
   state.pub=j.listings.slice(0,500).map(o=>cleanListing(o,true)).filter(Boolean).map(l=>Object.assign(l,{pub:true}));
   if(state.pub.length&&!$('#sheet').classList.contains('show'))renderAll()}).catch(()=>{});
 cfgLoad().then(()=>{if(cloud.on){loadCloud();setInterval(()=>{if(!document.hidden)loadCloud()},120000)}});
-photoDB.all().then(o=>{state.photos=Object.assign(o||{},state.photos);if(Object.keys(o||{}).length&&!$('#sheet').classList.contains('show'))renderAll()}).catch(()=>{});
+photoDB.all().then(o=>{o=o||{};Object.keys(o).forEach(k=>{if(k.startsWith('v:')){state.videoBlobs[k.slice(2)]=o[k];delete o[k]}});state.photos=Object.assign(o,state.photos);if(Object.keys(o||{}).length&&!$('#sheet').classList.contains('show'))renderAll()}).catch(()=>{});
 const sh=readShared();
 if(sh){state.shared=[sh];store.set('onboarded',true)}
 if('serviceWorker' in navigator&&location.protocol==='https:'&&!/claude|anthropic|usercontent/.test(location.hostname))navigator.serviceWorker.register('sw.js').catch(()=>{});
